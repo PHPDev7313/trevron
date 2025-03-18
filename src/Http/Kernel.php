@@ -23,7 +23,6 @@ class Kernel
 	public function handle(Request $request): Response
 	{
 		try {
-			throw new InvalidArgumentException('Invalid Argument');
 			$response = $this->requestHandler->handle($request);
 		} catch (\Exception $exception) {
 			$response = $this->createExceptionResponse($exception);

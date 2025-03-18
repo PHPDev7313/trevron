@@ -22,7 +22,6 @@ final class Kernel
 
 	public function handle(): int
 	{
-		throw new InvalidArgumentException('There was a huge problem that cannot be solved. Please contact admin.');
 		// register commands with the container
 		$this->registerCommands();
 
