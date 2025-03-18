@@ -1,0 +1,8 @@
+.idea
+.env
+.env.local
+schema.json
+docs
+logs
+framework_error.log
+
