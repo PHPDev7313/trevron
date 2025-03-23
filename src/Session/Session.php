@@ -18,6 +18,7 @@ class Session implements SessionInterface
     public const REFRESH_TOKEN = 'refresh_token';
     public const AUTH_ADMIN = 'auth_admin'; // bool
 
+
     public function __construct(string $prefix=null)
     {
         if (is_null($prefix)) {
@@ -141,7 +142,7 @@ class Session implements SessionInterface
     public function setAdmin(): self
     {
         if (!is_null($this->get(self::AUTH_KEY))) {
-            $this->set(self::AUTH_ADMIN, ($this->get(self::AUTH_ROLE_WEIGHT) == 0 && $this->get(self::AUTH_BITWISE) == 0));
+            $this->set(self::AUTH_ADMIN, ($this->get(self::ADMINISTRATOR)));
         } else {
             $this->set(self::AUTH_ADMIN, false);
         }

@@ -18,4 +18,6 @@ interface AuthUserInterface
 
     public function getRoleWeight(): ?int;
 
+    public function isAdmin(): bool;
+
 }

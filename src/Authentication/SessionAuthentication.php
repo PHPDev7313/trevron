@@ -84,6 +84,7 @@ class SessionAuthentication extends AbstractSession implements SessionAuthInterf
         $this->session->set($this->session::AUTH_PERMISSION, $user->getPermissionId());
         $this->session->set($this->session::AUTH_ROLE_WEIGHT, $user->getRoleWeight());
         $this->session->set($this->session::AUTH_ROLE, $user->getRoleId());
+        $this->session->set($this->session::AUTH_ADMIN, $user->isAdmin());
         $this->setAdmin(); // determine if this is an admin (true) or not (false)
 
         // set the user
