@@ -17,14 +17,16 @@ class Session implements SessionInterface
     public const ACCESS_TOKEN = 'access_token';
     public const REFRESH_TOKEN = 'refresh_token';
     public const AUTH_ADMIN = 'auth_admin'; // bool
-
+    public const ADMINISTRATOR = 'admin';
 
     public function __construct(string $prefix=null)
     {
         if (is_null($prefix)) {
             throw new CannotBeNullException('Session prefix not defined');
         }
-        defined("PREFIX") ? null : define("PREFIX", $prefix);
+        if (!defined("PREFIX")) {
+            define("PREFIX", $prefix);
+        }
     }
 
     /**
@@ -142,7 +144,7 @@ class Session implements SessionInterface
     public function setAdmin(): self
     {
         if (!is_null($this->get(self::AUTH_KEY))) {
-            $this->set(self::AUTH_ADMIN, ($this->get(self::ADMINISTRATOR)));
+            $this->set(self::AUTH_ADMIN, true);
         } else {
             $this->set(self::AUTH_ADMIN, false);
         }
