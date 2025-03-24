@@ -143,5 +143,17 @@ class AbstractForm
         // reject unsupported types
         return null;
     }
+
+    public function validatePassword(string $password): bool|string
+    {
+        if (str_starts_with($password, '$2y$')) {
+            return $password;
+        }
+        $pattern = "^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$";
+        if (preg_match("/$pattern/", $password) === 1) {
+            return $password;
+        }
+        return false;
+    }
 }
 
