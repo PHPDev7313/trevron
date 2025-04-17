@@ -4,6 +4,7 @@ namespace JDS\Controller;
 
 use JDS\Auditor\CentralizedLogger;
 use JDS\Http\FileNotFoundException;
+use JDS\Http\HttpRuntimeException;
 use JDS\Http\InvalidArgumentException;
 use JDS\Http\Request;
 use JDS\Http\Response;
@@ -579,5 +580,30 @@ abstract class AbstractController
             exit($exitCode);
         }
     }
+    
+    public function setPathToJson(?string $path=null): string|bool
+    {
+        if (is_null($path)) {
+            return false;
+        }
+        // build the full path to the file
+        $basePath = $this->container->get('config')->get('appPath');
+        $fullPath = $basePath . $path;
+        
+        // extract the directory path
+        $directory = dirname($fullPath);
+        
+        // check if the directory exists, if not, create it
+        if (!is_dir($directory)) {
+            if (!mkdir($directory, 0777, true) && !is_dir($directory)) {
+                // if directory cannot be created, handle the error
+                throw new HttpRuntimeException('Directory could not be created.');
+            }
+        }
+        
+        // Set the path to the JSON file
+        return $fullPath;
+    }
+    
 }
 
