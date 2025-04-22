@@ -13,7 +13,7 @@ class MenuGenerator
     {
         $filename = ($this->path) . ($this->file);
         $jsonMenu = json_decode(file_get_contents($filename), true);
-        
+        return $jsonMenu;
         $menu = [];
         foreach ($this->routes as $route) {
             if ($route[0] === 'GET') {
