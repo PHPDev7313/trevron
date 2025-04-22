@@ -4,12 +4,18 @@ namespace JDS\Http\Generators;
 
 class MenuGenerator
 {
-	public function __construct(private readonly array $routes, private readonly string $routePrefix)
+ 
+	public function __construct(private string $path, private string $file)
 	{
 	}
 
     public function generateMenu(): array
     {
+        $filename = ($this->path) . ($this->file);
+        $jsonMenu = json_decode(file_get_contents($filename), true);
+        
+        dd($jsonMenu);
+        
         $menu = [];
         foreach ($this->routes as $route) {
             if ($route[0] === 'GET') {
