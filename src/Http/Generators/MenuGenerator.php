@@ -15,8 +15,8 @@ class MenuGenerator
         $jsonMenu = json_decode(file_get_contents($filename), true);
         
         $menus = [];
-        foreach ($jsonMenu as $json) {
-            dd($json);
+        foreach ($jsonMenu as $key => $json) {
+            dd($key, $json);
             if (!empty($json['menu'])) {
                 $menus[] = [
                     'route' => $this->mergeAndNormalizeRoutePath($this->routePrefix, $route[1]),
