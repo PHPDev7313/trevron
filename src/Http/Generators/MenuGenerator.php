@@ -13,11 +13,12 @@ class MenuGenerator
     {
         $filename = ($this->path) . ($this->file);
         $jsonMenu = json_decode(file_get_contents($filename), true);
-        return $jsonMenu;
-        $menu = [];
-        foreach ($this->routes as $route) {
-            if ($route[0] === 'GET') {
-                $menu[] = [
+        
+        $menus = [];
+        foreach ($jsonMenu as $json) {
+            dd($json);
+            if (!empty($json['menu'])) {
+                $menus[] = [
                     'route' => $this->mergeAndNormalizeRoutePath($this->routePrefix, $route[1]),
                     'lastArray' => $route[2][3]
                 ];
