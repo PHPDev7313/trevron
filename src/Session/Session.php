@@ -156,9 +156,9 @@ class Session implements SessionInterface
         return $this->get(self::AUTH_ADMIN) ?? false;
     }
     
-    public function getRole(): string
+    public function getRole(): ?string
     {
-        return $this->get(self::AUTH_ROLE) ?? '';
+        return $this->get(self::AUTH_ROLE) ?? null;
     }
     
     public function getWeight(): int
