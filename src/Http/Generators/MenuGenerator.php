@@ -2,6 +2,9 @@
 
 namespace JDS\Http\Generators;
 
+
+use JDS\Dbal\Entity;
+
 class MenuGenerator
 {
  
@@ -9,19 +12,21 @@ class MenuGenerator
 	{
 	}
 
-    public function generateMenu(): array
+    public function generateMenu(?string $roleId=null): array
     {
         $filename = ($this->path) . ($this->file);
         $jsonMenu = json_decode(file_get_contents($filename), true);
         
         $menus = [];
         foreach ($jsonMenu as $key => $json) {
-            dd($key, $json);
-            if (!empty($json['menu'])) {
-                $menus[] = [
-                    'route' => $this->mergeAndNormalizeRoutePath($this->routePrefix, $route[1]),
-                    'lastArray' => $route[2][3]
-                ];
+//            dd($key, $json);
+            if ($key === 'menu') {
+                if (!empty($json)) {
+                    $menus[] = [
+                        'route' => $this->mergeAndNormalizeRoutePath($this->routePrefix, $route[1]),
+                        'lastArray' => $route[2][3]
+                    ];
+                }
             }
         }
         $onlyRoutes = [];
