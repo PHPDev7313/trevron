@@ -22,6 +22,9 @@ class MenuGenerator
 //            dd($key, $json);
             if ($key === 'menu') {
                 if (!empty($json)) {
+                    foreach ($json as $menu) {
+                        dd($menu);
+                    }
                     $menus[] = [
                         'route' => $this->mergeAndNormalizeRoutePath($this->routePrefix, $route[1]),
                         'lastArray' => $route[2][3]
