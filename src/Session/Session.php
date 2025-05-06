@@ -8,10 +8,27 @@ use Random\RandomException;
 class Session implements SessionInterface
 {
     private const FLASH_KEY = 'flash';
+    /**
+     * authenticated User ID
+     *
+     * string(12): User ID
+     */
     public const AUTH_KEY = 'auth_id'; // string users.user_id
+    /**
+     * integer(2): Bitwise (Permission)
+     */
     public const AUTH_BITWISE = 'auth_bitwise'; // integer from permissions.bitwise
+    /**
+     * string(12): Permission ID
+     */
     public const AUTH_PERMISSION = 'auth_permission_id'; // string from permissions.permission_id
+    /**
+     * string(12): Role ID
+     */
     public const AUTH_ROLE = 'auth_role_id'; // string from roles.role_id
+    /**
+     * integer(2): Role Weight (Role)
+     */
     public const AUTH_ROLE_WEIGHT = 'auth_role_weight'; // integer from roles.role_weight
     public const CSRF_TOKEN = 'csrf_token';
     public const ACCESS_TOKEN = 'access_token';
@@ -156,14 +173,45 @@ class Session implements SessionInterface
         return $this->get(self::AUTH_ADMIN) ?? false;
     }
     
+    /**
+     * Retrieves the role ID related to the authenticated User.
+     *
+     * @return string|null Returns the role if available, or null if not set.
+     */
     public function getRole(): ?string
     {
         return $this->get(self::AUTH_ROLE) ?? null;
     }
     
+    /**
+     * Retrieves the role weight value associated with the authenticated users role.
+     *
+     * @return int The weight value, or 24 if no value is set.
+     */
     public function getWeight(): int
     {
         return $this->get(self::AUTH_ROLE_WEIGHT) ?? 24;
+    }
+    
+    /**
+     * Retrieves the permission associated with the current authenticated users role and permission.
+     *
+     * @return string|null The permission string if available, or null if not set.
+     */
+    public function getPermission(): ?string
+    {
+        return $this->get(self::AUTH_PERMISSION) ?? null;
+    }
+    
+    /**
+     * Retrieves the bitwise value associated with authenticated user and role from the user's permissions.
+     * If the key does not exist, a default value of 24 is returned.
+     *
+     * @return int The bitwise value or the default value of 24.
+     */
+    public function getBitwise(): int
+    {
+        return $this->get(self::AUTH_BITWISE) ?? 24;
     }
 }
 
