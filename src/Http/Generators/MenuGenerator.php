@@ -11,33 +11,35 @@ class MenuGenerator
 	public function __construct(private string $path, private string $file)
 	{
 	}
-
-    public function generateMenu(?string $roleId=null): array
+    
+    public function generateMenu(?string $roleId=null): ?array
     {
         $filename = ($this->path) . ($this->file);
         $jsonMenu = json_decode(file_get_contents($filename), true);
-        
-        $menus = [];
-        foreach ($jsonMenu as $key => $json) {
-//            dd($key, $json);
-            if ($key === 'menu') {
-                if (!empty($json)) {
-                    foreach ($json as $menu) {
-                        dd($menu);
-                    }
-                    $menus[] = [
-                        'route' => $this->mergeAndNormalizeRoutePath($this->routePrefix, $route[1]),
-                        'lastArray' => $route[2][3]
-                    ];
-                }
+        $generatedMenus = [];
+        $menus = $jsonMenu['menus'];
+        $smenus = $jsonMenu['smenus'];
+        $tmenus = $jsonMenu['tmenus'];;
+        foreach ($menus as $menu) {
+            // filter through the smenus where menu_id matches
+            $filteredSmenus = array_filter($smenus, function ($smenu) use ($menu) {
+                return $menu['menu_id'] === $smenu['menu_id'];
+            });
+            
+            // add the filterd smenus to the menu
+            $menu['smenu'] = [];
+            foreach ($filteredSmenus as $smenu) {
+                // filter through tmenus where smenu_id matches
+                $filteredTmenus = array_filter($tmenus, function ($tmenu) use ($smenu) {
+                    return $smenu['smenu_id'] === $tmenu['smenu_id'];
+                });
+                // add the filtered tmenus to the smenu
+                $smenu['tmenu'] = $filteredTmenus;
+                $menu['smenu'][] = $smenu;
             }
+            $generatedMenus[] = $menu;
         }
-        $onlyRoutes = [];
-        for ($x=0; $x < count($menu); $x++) {
-            $onlyRoutes[] = $menu[$x];
-        }
-
-        return $onlyRoutes;
+        return $generatedMenus;
     }
 
      private function mergeAndNormalizeRoutePath(string $routePath, string $route): string
