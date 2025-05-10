@@ -4,6 +4,7 @@ namespace JDS\Http\Generators;
 
 
 use JDS\Dbal\Entity;
+use JDS\Http\InvalidArgumentException;
 
 class MenuGenerator
 {
@@ -14,13 +15,21 @@ class MenuGenerator
     
     public function generateMenu(?string $roleId=null): ?array
     {
+        if ($roleId === null) {
+            throw new InvalidArgumentException('There must be a Role ID. User MUST be logged in!');
+        }
         $filename = ($this->path) . ($this->file);
         $jsonMenu = json_decode(file_get_contents($filename), true);
         $generatedMenus = [];
         $menus = $jsonMenu['menus'];
         $smenus = $jsonMenu['smenus'];
-        $tmenus = $jsonMenu['tmenus'];;
-        foreach ($menus as $menu) {
+        $tmenus = $jsonMenu['tmenus'];
+        
+        // filter menus based on role_id
+        $filteredMenus = array_filter($menus, function ($menu) use ($roleId) {
+            return isset($menu['role_id']) && $menu['role_id'] === $roleId;
+        });
+        foreach ($filteredMenus as $menu) {
             // filter through the smenus where menu_id matches
             $filteredSmenus = array_filter($smenus, function ($smenu) use ($menu) {
                 return $menu['menu_id'] === $smenu['menu_id'];
