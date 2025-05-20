@@ -44,8 +44,10 @@
     "mockery/mockery": "^1.6"
   },
   "config": {
+    "optimize-autoloader": true,
     "allow-plugins": {
       "pestphp/pest-plugin": true
+
     }
   }
 
