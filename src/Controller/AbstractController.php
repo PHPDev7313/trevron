@@ -537,8 +537,63 @@ abstract class AbstractController
         $response->setContent($message);
         $response->setStatus(500);
     }
-
     private function convertImage(string $filename, string $outfile): void // keep for now for reference
+    {
+        // Validate input file
+        if (!file_exists($filename)) {
+            $exitCode = 77;
+            ErrorProcessor::process(
+                new FileNotFoundException("File not found: $filename"),
+                $exitCode,
+                sprintf("Unable to find image file: %s", $filename)
+            );
+            exit($exitCode);
+        }
+        
+        $thumbnailPath = str_replace(".webp", "_thumbnail.webp", $outfile);
+        
+        // Wrap the command execution in a try-catch block
+        try {
+            // Convert the image
+            $output = [];
+            $returnCode = null;
+            exec("magick " . escapeshellarg($filename) . " " . escapeshellarg($outfile) . " 2>&1", $output, $returnCode);
+            if ($returnCode !== 0) {
+                throw new ImageProcessingException(
+                    "Image conversion failed for $filename: " . implode("\n", $output)
+                );
+            }
+            
+            // Generate the thumbnail
+            $returnCode = null;
+            exec("magick " . escapeshellarg($filename) . " -thumbnail 150x150 " . escapeshellarg($thumbnailPath) . " 2>&1", $output, $returnCode);
+            if ($returnCode !== 0) {
+                throw new ImageProcessingException(
+                    "Thumbnail generation failed for $filename: " . implode("\n", $output)
+                );
+            }
+        } catch (ImageProcessingException $e) {
+            // Handle specific image processing errors
+            $exitCode = 77;
+            ErrorProcessor::process(
+                $e,
+                $exitCode,
+                $e->getMessage()
+            );
+            exit($exitCode);
+        } catch (Throwable $e) {
+            // Handle unexpected errors
+            $exitCode = 79;
+            ErrorProcessor::process(
+                $e,
+                $exitCode,
+                "An unexpected error occurred during image processing."
+            );
+            exit($exitCode);
+        }
+    }
+
+    private function olderconvertImage(string $filename, string $outfile): void // keep for now for reference
     {
         // Validate input file
         if (!file_exists($filename)) {
