@@ -198,7 +198,7 @@ abstract class AbstractController
     private function checkFileUploadName(string $filename): bool
     {
         try {
-            return (bool)preg_match("~^[-0-9A-Z_.]{1,75}$~i", $filename);
+            return (bool)preg_match("~^[- 0-9A-Z_.]{1,75}$~i", $filename);
             // [^\\s]+
         } catch (Throwable $e) {
             // see StatusCodeManager->CODES for code 73 explanation
