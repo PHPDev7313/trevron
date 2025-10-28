@@ -5,17 +5,13 @@ namespace JDS\Handlers;
 class JsonBuilder implements BuilderInterface
 {
 
-    public function __construct(private string $filePath)
-    {
-    }
-
     /**
      * Build and validate JSON from mixed input
      *
      * @param mixed $data Array, object, or JSON string
      * @return array ['success' => bool, 'data' => string|null, 'error' => string|null ]
      */
-    public function build($data): array
+    public function build(mixed $data): array
     {
 
         // 1. Validate input type
