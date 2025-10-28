@@ -112,8 +112,8 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'Whoops\\' => 
         array (
@@ -912,6 +912,7 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\Http\\Middleware\\Dummy' => __DIR__ . '/../..' . '/src/Http/Middleware/Dummy.php',
         'JDS\\Http\\Middleware\\ExtractRouteInfo' => __DIR__ . '/../..' . '/src/Http/Middleware/ExtractRouteInfo.php',
         'JDS\\Http\\Middleware\\Guest' => __DIR__ . '/../..' . '/src/Http/Middleware/Guest.php',
+        'JDS\\Http\\Middleware\\JsonBuilder' => __DIR__ . '/../..' . '/src/Http/Middleware/JsonBuilder.php',
         'JDS\\Http\\Middleware\\Jwt\\JwtAuthenticate' => __DIR__ . '/../..' . '/src/Http/Middleware/Jwt/JwtAuthenticate.php',
         'JDS\\Http\\Middleware\\MiddlewareInterface' => __DIR__ . '/../..' . '/src/Http/Middleware/MiddlewareInterface.php',
         'JDS\\Http\\Middleware\\OldAuthenticate' => __DIR__ . '/../..' . '/src/Http/Middleware/OldAuthenticate.php',

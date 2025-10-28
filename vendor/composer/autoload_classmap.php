@@ -640,6 +640,7 @@ return array(
     'JDS\\Http\\Middleware\\Dummy' => $baseDir . '/src/Http/Middleware/Dummy.php',
     'JDS\\Http\\Middleware\\ExtractRouteInfo' => $baseDir . '/src/Http/Middleware/ExtractRouteInfo.php',
     'JDS\\Http\\Middleware\\Guest' => $baseDir . '/src/Http/Middleware/Guest.php',
+    'JDS\\Http\\Middleware\\JsonBuilder' => $baseDir . '/src/Http/Middleware/JsonBuilder.php',
     'JDS\\Http\\Middleware\\Jwt\\JwtAuthenticate' => $baseDir . '/src/Http/Middleware/Jwt/JwtAuthenticate.php',
     'JDS\\Http\\Middleware\\MiddlewareInterface' => $baseDir . '/src/Http/Middleware/MiddlewareInterface.php',
     'JDS\\Http\\Middleware\\OldAuthenticate' => $baseDir . '/src/Http/Middleware/OldAuthenticate.php',
