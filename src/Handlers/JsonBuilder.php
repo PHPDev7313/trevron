@@ -1,8 +1,8 @@
 <?php
 
-namespace JDS\Http\Generators;
+namespace JDS\Handlers;
 
-class JsonBuilder
+class JsonBuilder implements BuilderInterface
 {
 
     public function __construct(private string $filePath)
