@@ -2,8 +2,6 @@
 
 namespace JDS\Http\Generators;
 
-use JDS\Routing\BreadcrumbGeneratorInterface;
-use League\Container\Container;
 
 class BreadcrumbGenerator implements BreadcrumbGeneratorInterface
 {
