@@ -1,6 +1,6 @@
 <?php
 
-namespace JDS\Routing;
+namespace JDS\Http\Generators;
 
 interface MenuGeneratorInterface
 {

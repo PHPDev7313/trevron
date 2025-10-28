@@ -3,10 +3,10 @@
 namespace JDS\Http\Generators;
 
 
-use JDS\Dbal\Entity;
 use JDS\Http\InvalidArgumentException;
+use Mockery\Generator\Generator;
 
-class MenuGenerator
+class MenuGenerator implements MenuGeneratorInterface
 {
  
 	public function __construct(private string $path, private string $file)
