@@ -4,8 +4,8 @@ namespace JDS\Handlers;
 
 interface BuilderInterface
 {
-    public function build(): array;
+    public function build(mixed $data): array;
 
-    public function saveToFile(): array;
+    public function saveToFile(mixed $data): array;
 
 }
