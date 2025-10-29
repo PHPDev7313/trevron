@@ -9,3 +9,4 @@ interface BuilderInterface
     public function saveToFile(mixed $data): array;
 
 }
+
