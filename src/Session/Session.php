@@ -97,6 +97,7 @@ class Session implements SessionInterface
 
     public function setFlash(string $type, string $message): void
     {
+        $type = strtolower($type);
         $flash = $this->get(self::FLASH_KEY) ?? [];
         $flash[$type][] = $message;
         $this->set(self::FLASH_KEY, $flash);
