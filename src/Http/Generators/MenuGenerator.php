@@ -13,7 +13,7 @@ class MenuGenerator implements MenuGeneratorInterface
 	{
 	}
     
-    public function generateMenu(?string $roleId=null): ?array
+    public function generateMenu(?string $roleId=null): array
     {
         if ($roleId === null) {
             throw new InvalidArgumentException('There must be a Role ID. User MUST be logged in!');
@@ -60,7 +60,5 @@ class MenuGenerator implements MenuGeneratorInterface
         $normalizeRoute = rtrim($routePath . '/' . ltrim(trim($route, '/'), '/'), '/');
         return ($route === '/' ? $normalizeRoute . '/' : $normalizeRoute);
     }
-
-
 }
 
