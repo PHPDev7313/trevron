@@ -66,7 +66,7 @@ class JsonBuilder implements BuilderInterface
      * @param mixed $data Array, object, or JSON string
      * @return array ['success' => bool, 'error' => string|null ]
      */
-    public function saveToFile(mixed $data): array
+    public function saveToFile(mixed $data, string $filePath): array
     {
         $result = $this->build($data);
         if (!$result['success']) {
@@ -74,7 +74,7 @@ class JsonBuilder implements BuilderInterface
         }
 
         try {
-            file_put_contents($this->filePath, $result['data']);
+            file_put_contents($filePath, $result['data']);
         } catch (\Throwable $e) {
             return [
                 'success' => false,
