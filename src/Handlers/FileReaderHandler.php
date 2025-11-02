@@ -15,18 +15,12 @@ class FileReaderHandler
     /**
      * @return array ['success' => bool, 'filename' => string|null, 'content' => mixed, 'error' => string|null ]
      */
-    public function getFilesData(): array
+    public function getFilesData(): array|bool
     {
         $data = [];
 
         if (!is_dir($this->directory)) {
-            $data[] = [
-                'success' => false,
-                'filename' => null,
-                'content' => null,
-                'error' => "Directory '{$this->directory}' does not exist!"
-            ];
-            return $data;
+            return false;
         }
 
         /**
@@ -55,15 +49,10 @@ class FileReaderHandler
                 }
             }
         } else {
-            $data[] = [
-                'success' => false,
-                'filename' => null,
-                'content' => null,
-                'error' => 'Unable to find any files in "' . $this->directory . '"! Directory does not exist'
-            ];
+            return false;
         }
-
-        return $data;
+        // only return those where 'success' = true
+        return $this->filterSuccess($data);
     }
 
     public function deleteFile(string $filename): array
@@ -92,6 +81,14 @@ class FileReaderHandler
                 'error' => 'Could not delete file'
             ];
         }
+    }
+
+    private function filterSuccess(array $data): array
+    {
+        $filteredData = array_filter($data, function($item) {
+            return isset($item['success']) && $item['success'] === true;
+        });
+        return array_values($filteredData);
     }
 
 }
