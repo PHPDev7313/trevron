@@ -503,6 +503,7 @@ return array(
     'JDS\\Handlers\\ExceptionHandler' => $baseDir . '/src/Handlers/ExceptionHandler.php',
     'JDS\\Handlers\\FilePathHandler' => $baseDir . '/src/Handlers/FilePathHandler.php',
     'JDS\\Handlers\\FilePathInterface' => $baseDir . '/src/Handlers/FilePathInterface.php',
+    'JDS\\Handlers\\FileReaderHandler' => $baseDir . '/src/Handlers/FileReaderHandler.php',
     'JDS\\Handlers\\HandlerRuntimeException' => $baseDir . '/src/Handlers/HandlerRuntimeException.php',
     'JDS\\Handlers\\JsonBuilder' => $baseDir . '/src/Handlers/JsonBuilder.php',
     'JDS\\Http\\AlreadyExistsException' => $baseDir . '/src/Http/AlreadyExistsException.php',
