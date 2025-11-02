@@ -626,6 +626,7 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\Handlers\\ExceptionHandler' => __DIR__ . '/../..' . '/src/Handlers/ExceptionHandler.php',
         'JDS\\Handlers\\FilePathHandler' => __DIR__ . '/../..' . '/src/Handlers/FilePathHandler.php',
         'JDS\\Handlers\\FilePathInterface' => __DIR__ . '/../..' . '/src/Handlers/FilePathInterface.php',
+        'JDS\\Handlers\\FileReaderHandler' => __DIR__ . '/../..' . '/src/Handlers/FileReaderHandler.php',
         'JDS\\Handlers\\HandlerRuntimeException' => __DIR__ . '/../..' . '/src/Handlers/HandlerRuntimeException.php',
         'JDS\\Handlers\\JsonBuilder' => __DIR__ . '/../..' . '/src/Handlers/JsonBuilder.php',
         'JDS\\Http\\AlreadyExistsException' => __DIR__ . '/../..' . '/src/Http/AlreadyExistsException.php',
