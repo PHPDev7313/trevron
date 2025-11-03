@@ -48,6 +48,7 @@ class FileReaderHandler
                     ];
                 }
             }
+            return $data;
         } else {
             return false;
         }
