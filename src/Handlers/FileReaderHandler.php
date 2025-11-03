@@ -21,17 +21,10 @@ class FileReaderHandler
     {
         $data = [];
 
-        if (!is_dir($this->directory)) {
-            return false;
-        }
-
-        /**
-         * glob returns array | false
-         */
         $files = $this->getContactFiles();
         if (is_array($files)) {
             foreach ($files as $file) {
-                $contents = file_get_contents($file);
+                $contents = file_get_contents($this->directory . '/' . $file);
                 $decoded = json_decode($contents, true);
 
                 if (json_last_error() !== JSON_ERROR_NONE) {
@@ -102,7 +95,7 @@ class FileReaderHandler
             });
             return $filteredFiles;
         } catch (Throwable $e) {
-            $exitCode = 100;
+            $exitCode = 12;
             ErrorProcessor::process(
                 $e,
                 $exitCode,
