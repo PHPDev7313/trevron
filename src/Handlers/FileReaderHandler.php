@@ -102,7 +102,7 @@ class FileReaderHandler
             });
             return $filteredFiles;
         } catch (Throwable $e) {
-            $exitCode = 12;
+            $exitCode = 100;
             ErrorProcessor::process(
                 $e,
                 $exitCode,
