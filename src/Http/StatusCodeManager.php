@@ -53,6 +53,7 @@ final class StatusCodeManager
         80 => "Database:Migration:Migrate Failed",
         89 => "Unknown Database:Migration:Migrate Error",
         90 => "Add Container Service Failed",
+        100 => "Unable to access file",
         200 => "Auditor General Error",
 
         205 => "Failed to Log Entry for Database Logger",
