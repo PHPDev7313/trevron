@@ -3,6 +3,8 @@
 namespace JDS\Handlers;
 
 use JDS\Http\HttpRuntimeException;
+use JDS\Processing\ErrorProcessor;
+use Throwable;
 
 class FileReaderHandler
 {
@@ -26,7 +28,7 @@ class FileReaderHandler
         /**
          * glob returns array | false
          */
-        $files = glob($this->directory . '/*.json');
+        $files = $this->getContactFiles();
         if (is_array($files)) {
             foreach ($files as $file) {
                 $contents = file_get_contents($file);
@@ -48,12 +50,11 @@ class FileReaderHandler
                     ];
                 }
             }
-            return $data;
+            // only return those where 'success' = true
+            return $this->filterSuccess($data);
         } else {
             return false;
         }
-        // only return those where 'success' = true
-        return $this->filterSuccess($data);
     }
 
     public function deleteFile(string $filename): array
@@ -90,6 +91,25 @@ class FileReaderHandler
             return isset($item['success']) && $item['success'] === true;
         });
         return array_values($filteredData);
+    }
+
+    private function getContactFiles(): array
+    {
+        try {
+            $contactFiles = scandir($this->directory);
+            $filteredFiles = array_filter($contactFiles, function($file) {
+                return !in_array($file, ['.', '..']);
+            });
+            return $filteredFiles;
+        } catch (Throwable $e) {
+            $exitCode = 12;
+            ErrorProcessor::process(
+                $e,
+                $exitCode,
+                "Error retrieving contact files",
+            );
+            exit($exitCode);
+        }
     }
 
 }
