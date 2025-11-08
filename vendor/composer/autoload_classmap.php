@@ -611,6 +611,8 @@ return array(
     'JDS\\Dbal\\Example\\SchemaExtensionInterface' => $baseDir . '/src/Dbal/Example/SchemaExtensionInterface.php',
     'JDS\\Dbal\\Example\\SchemaManager' => $baseDir . '/src/Dbal/Example/SchemaManager.php',
     'JDS\\Dbal\\GenerateNewId' => $baseDir . '/src/Dbal/GenerateNewId.php',
+    'JDS\\Dbal\\JSONValidator' => $baseDir . '/src/Dbal/JSONValidator.php',
+    'JDS\\Dbal\\JSONValidatorInterface' => $baseDir . '/src/Dbal/JSONValidatorInterface.php',
     'JDS\\Dbal\\MenuServiceInterface' => $baseDir . '/src/Dbal/MenuServiceInterface.php',
     'JDS\\Dbal\\RepositoryInterface' => $baseDir . '/src/Dbal/RepositoryInterface.php',
     'JDS\\Dbal\\ServiceInterface' => $baseDir . '/src/Dbal/ServiceInterface.php',

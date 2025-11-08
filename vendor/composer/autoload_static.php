@@ -112,8 +112,8 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'Whoops\\' => 
         array (
@@ -883,6 +883,8 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\Dbal\\Example\\SchemaExtensionInterface' => __DIR__ . '/../..' . '/src/Dbal/Example/SchemaExtensionInterface.php',
         'JDS\\Dbal\\Example\\SchemaManager' => __DIR__ . '/../..' . '/src/Dbal/Example/SchemaManager.php',
         'JDS\\Dbal\\GenerateNewId' => __DIR__ . '/../..' . '/src/Dbal/GenerateNewId.php',
+        'JDS\\Dbal\\JSONValidator' => __DIR__ . '/../..' . '/src/Dbal/JSONValidator.php',
+        'JDS\\Dbal\\JSONValidatorInterface' => __DIR__ . '/../..' . '/src/Dbal/JSONValidatorInterface.php',
         'JDS\\Dbal\\MenuServiceInterface' => __DIR__ . '/../..' . '/src/Dbal/MenuServiceInterface.php',
         'JDS\\Dbal\\RepositoryInterface' => __DIR__ . '/../..' . '/src/Dbal/RepositoryInterface.php',
         'JDS\\Dbal\\ServiceInterface' => __DIR__ . '/../..' . '/src/Dbal/ServiceInterface.php',
