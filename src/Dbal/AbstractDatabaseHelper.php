@@ -12,26 +12,22 @@ abstract class AbstractDatabaseHelper
     /**
      * @throws Exception
      */
-    public function bind(Statement $statement, string $parameter, $value, $type = null): void {
-        switch (is_null($type)) {
-            case is_int($value):
+    public function bind(Statement $statement, string $parameter, mixed $value, ?int $type = null): void
+    {
+        // Automatically determine type if not specified
+        if ($type === null) {
+            if (is_int($value)) {
                 $type = ParameterType::INTEGER;
-                break;
-
-            case is_float($value):
+            } elseif (is_float($value)) {
+                $value = (string)$value;
                 $type = ParameterType::STRING;
-                break;
-
-            case is_bool($value):
+            } elseif (is_bool($value)) {
                 $type = ParameterType::BOOLEAN;
-                break;
-
-            case is_null($value):
+            } elseif (is_null($value)) {
                 $type = ParameterType::NULL;
-                break;
-
-            default:
+            } else {
                 $type = ParameterType::STRING;
+            }
         }
         $statement->bindValue($parameter, $value, $type);
     }
