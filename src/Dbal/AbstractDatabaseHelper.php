@@ -31,5 +31,13 @@ abstract class AbstractDatabaseHelper
         }
         $statement->bindValue($parameter, $value, $type);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function bindLikeParameter(Statement $statement, string $parameter, string $value): void
+    {
+        $statement->bindValue($parameter, '%' . $value . '%', ParameterType::STRING);
+    }
 }
 
