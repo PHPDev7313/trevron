@@ -18,6 +18,10 @@ abstract class AbstractDatabaseHelper
                 $type = ParameterType::INTEGER;
                 break;
 
+            case is_float($value):
+                $type = ParameterType::STRING;
+                break;
+
             case is_bool($value):
                 $type = ParameterType::BOOLEAN;
                 break;
