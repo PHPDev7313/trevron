@@ -35,7 +35,7 @@
     "monolog/monolog": "^3.8",
     "twig/twig": "^v3.20",
     "league/container": "^4.2",
-    "phpmailer/phpmailer": "^6.9",
+    "phpmailer/phpmailer": "^v7.0.0",
     "tinymce/tinymce": "^7.6"
   },
   "require-dev": {
@@ -50,5 +50,4 @@
 
     }
   }
-
 }
