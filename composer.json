@@ -1,6 +1,6 @@
 {
   "name": "jds/trevron",
-  "description": "Basic Framework with Authorization, Events, Migrations, Middleware, CSRF Tokens and JWT tokens. Only to be used by JDS (Jessop Digital Systems) or for Educational Purposes. Not for Production Use!",
+  "description": "Basic Framework with Authorization, Events, Migrations, Middleware, CSRF Tokens and JWT tokens. Only to be used by JDS (Jessop Digital Systems) or for Educational Purposes. Not for General Production Use!",
   "homepage": "https://jessdigisys.com",
   "authors": [
     {
@@ -36,7 +36,7 @@
     "twig/twig": "^v3.20",
     "league/container": "^4.2",
     "phpmailer/phpmailer": "^v7.0.0",
-    "tinymce/tinymce": "^7.6"
+    "tinymce/tinymce": "^8.0"
   },
   "require-dev": {
     "symfony/var-dumper": "^7.0",
