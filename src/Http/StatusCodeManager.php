@@ -87,6 +87,7 @@ final class StatusCodeManager
 
         500 => 'Internal Server Error',
         1109 => "Unknown Command Registration Error",
+        1150 => "MailService Error"
     ];
 
     /**
