@@ -44,28 +44,6 @@ class Config implements ConfigInterface
         return $this->config[$key] ?? $default;
     }
 
-//    public function get2and3(mixed $data, ?string $key, ?string $key1, mixed $default = null): mixed
-//    {
-//        // if $data is not an array, return it directly
-//        if (!is_array($data)) {
-//            return $data;
-//        }
-//
-//        // if data is an array, proceed with the lookup
-//        foreach ($data as $k => $v) {
-//            // if $v is not an array, return $k
-//            if (!is_array($v)) {
-//                return $v;
-//            }
-//            // if $v is an array, look for $key1 inside it
-//            if ($k === $key && isset($v[$key1])) {
-//                return $v[$key1];
-//            }
-//        }
-//        return $default;
-//    }
-
-
     /**
      * {@inheritDoc}
      */
