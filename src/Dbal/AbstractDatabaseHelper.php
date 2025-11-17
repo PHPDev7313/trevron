@@ -25,11 +25,18 @@ abstract class AbstractDatabaseHelper
                 $type = ParameterType::BOOLEAN;
             } elseif (is_null($value)) {
                 $type = ParameterType::NULL;
+            } elseif ($this->isBinary($value)) {
+                $type = ParameterType::BINARY;
             } else {
                 $type = ParameterType::STRING;
             }
         }
         $statement->bindValue($parameter, $value, $type);
+    }
+
+    private function isBinary(string $value): bool
+    {
+        return (bool) preg_match('~[^\x20-\x7E\t\r\n]~', $value);
     }
 
     /**
