@@ -75,7 +75,7 @@ class RequestHandler implements RequestHandlerInterface
      * @param mixed $value The metadata attribute value to be set.
      * @return void
      */
-    public function setMetadataAttribute(string $key, mixed $value): void
+    public function setAttribute(string $key, mixed $value): void
     {
         $this->routeMeta[$key] = $value;
     }
@@ -87,7 +87,7 @@ class RequestHandler implements RequestHandlerInterface
      * @param string $key The attribute key to retrieve
      * @return mixed The value of the specified attribute, or null if the key does not exist
      */
-    public function getMetadataAttribute(string $key): mixed
+    public function getAttribute(string $key): mixed
     {
         return $this->routeMeta[$key] ?? null;
     }

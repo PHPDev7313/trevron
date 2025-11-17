@@ -185,7 +185,7 @@ class Session implements SessionInterface
     }
     
     /**
-     * Retrieves the role weight value associated with the authenticated users role.
+     * Retrieves the role weight value associated with the authenticated user's role.
      *
      * @return int The weight value, or 24 if no value is set.
      */
