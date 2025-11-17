@@ -64,6 +64,6 @@ interface MagicLinkInterface
      * @param string $magiclinkIdHex
      * @return void
      */
-    public function revoke(string $magiclinkIdHex): void;
+    public function revoke(string $magiclinkId): void;
 
 }
