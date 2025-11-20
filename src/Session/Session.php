@@ -70,6 +70,9 @@ class Session implements SessionInterface
 
     public function get(string $key, $default = null)
     {
+        if (strtolower($key) === 'all') {
+            return $_SESSION[PREFIX] ?? $default;
+        }
         return $_SESSION[PREFIX][$key] ?? $default;
     }
 
