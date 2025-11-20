@@ -111,6 +111,29 @@ class AbstractForm
         return null;
     }
 
+    protected function toDate(mixed $value, string $format = "Y-m-d"): ?DateTime
+    {
+        if ($value instanceof DateTime) {
+            // normalize time - date-only fields should always be midnight
+            return (clone $value)->setTime(0, 0, 0);
+        }
+        if (is_string($value)) {
+            // normalize and validate string input
+            $value = trim($value);
+            // try creating DateTime from a specific format
+            $dateTime = DateTime::createFromFormat($format, $value);
+            $errors = DateTime::getLastErrors();
+
+            // reject if parsing failed OR if PHP had to "guess"
+            if ($dateTime !== false && empty($errors['warning_count']) && empty($errors['error_count'])) {
+                // normalize to midnight
+                return $dateTime->setTime(0, 0, 0);
+            }
+        }
+        // if nothing else is caught, this will fire
+        return null;
+    }
+
     protected function toDateTimeImmutable(mixed $value, string $format = "Y-m-d H:i:s"): ?DateTimeImmutable
     {
         if ($value instanceof DateTimeImmutable) {
