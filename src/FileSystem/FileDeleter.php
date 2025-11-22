@@ -2,19 +2,27 @@
 
 namespace JDS\FileSystem;
 
-use JDS\Http\FileNotFoundException;
-
 class FileDeleter implements FileDeleterInterface
 {
-    public function delete(string $path): void
+    public function delete(string $path): array
     {
         if (!file_exists($path)) {
-            throw new FileNotFoundException("File not found: $path");
+            return [
+                'success' => false,
+                'error' => 'File does not exist!'
+            ];
         }
 
         if (!unlink($path)) {
-            throw new FileDeleterException("Unable to delete file: $path");
+            return [
+                'success' => false,
+                'error' => 'Unable to remove file!'
+            ];
         }
+        return [
+            'success' => true,
+            'message' => 'File has been removed!'
+            ];
     }
 }
 
