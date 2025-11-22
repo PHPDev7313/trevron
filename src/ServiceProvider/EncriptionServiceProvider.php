@@ -6,51 +6,35 @@ use JDS\ServiceProvider\Encryption\Decryptor;
 use JDS\ServiceProvider\Encryption\Encryptor;
 use JDS\ServiceProvider\Encryption\KeyProvider;
 use JDS\ServiceProvider\Encryption\NonceProvider;
-use JDS\ServiceProvider\ServiceProviderInterface;
-use Psr\Container\ContainerInterface;
+use League\Container\Argument\Literal\StringArgument;
+use League\Container\Container;
 
 class EncriptionServiceProvider implements ServiceProviderInterface
 {
-    private $container=null;
-    protected $providers = [
-        KeyProvider::class,
-        NonceProvider::class,
-        Encryptor::class,
-        Decryptor::class
-    ];
-
-    public function __construct(ContainerInterface $container)
+    public function __construct(private Container $container)
     {
-    }
-
-    public function initContainer(ContainerInterface $container)
-    {
-        $this->container = $container;
     }
 
     public function register(): void
     {
-        global $container;
+        // pull from config added by the application before bootstrap runs
         $config = $this->container->get('config');
-        // resolve encryption key from env/config
-        $this->container->add(KeyProvider::class, function ()  {
-            $secret = $this->container->get('config')->get('crypt') ?: 'fallback-secret-2025-secret-fallback';
-            return new KeyProvider($secret);
-        });
+        $key = $config->get('crypt') ?? 'fallback-secret-2025-secret-fallback';
 
-        $this->container->add(NonceProvider::class, fn() => new NonceProvider());
+        // Add KeyProvider
+        $this->container->add(KeyProvider::class)
+            ->addArgument(new StringArgument($key));
 
-        $this->container->add(Encryptor::class, function () {
-            return new Encryptor(
-                $this->container->get(KeyProvider::class),
-                $this->container->get(NonceProvider::class)
-            );
-        });
+        // Add NonceProvider
+        $this->container->add(NonceProvider::class);
 
-        $this->container->add(Decryptor::class, function () {
-            return new Decryptor(
-                $this->container->get(KeyProvider::class),
-            );
-        });
+        // Add Encryptor
+        $this->container->add(Encryptor::class)
+            ->addArguments([KeyProvider::class, NonceProvider::class]);
+
+        // Add Decryptor
+        $this->container->add(Decryptor::class)
+            ->addArgument( KeyProvider::class);
     }
 }
+

@@ -681,6 +681,7 @@ return array(
     'JDS\\Routing\\Router' => $baseDir . '/src/Routing/Router.php',
     'JDS\\Routing\\RouterInterface' => $baseDir . '/src/Routing/RouterInterface.php',
     'JDS\\ServiceProvider\\AbstractLocationServiceProvider' => $baseDir . '/src/ServiceProvider/AbstractLocationServiceProvider.php',
+    'JDS\\ServiceProvider\\EncriptionServiceProvider' => $baseDir . '/src/ServiceProvider/EncriptionServiceProvider.php',
     'JDS\\ServiceProvider\\Encryption\\CipherPackage' => $baseDir . '/src/ServiceProvider/Encryption/CipherPackage.php',
     'JDS\\ServiceProvider\\Encryption\\CipherRuntimeException' => $baseDir . '/src/ServiceProvider/Encryption/CipherRuntimeException.php',
     'JDS\\ServiceProvider\\Encryption\\Decryptor' => $baseDir . '/src/ServiceProvider/Encryption/Decryptor.php',
