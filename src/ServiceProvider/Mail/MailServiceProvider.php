@@ -5,6 +5,7 @@ namespace JDS\ServiceProvider\Mail;
 use JDS\ServiceProvider\ServiceProviderInterface;
 use League\Container\Argument\Literal\BooleanArgument;
 use League\Container\Container;
+use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
@@ -21,6 +22,8 @@ class MailServiceProvider implements ServiceProviderInterface
         );
 
         $this->container->add(SMTP::class);
+
+        $this->container->add(Exception::class);
 
         $this->container->add(MailService::class)
             ->addArguments([
