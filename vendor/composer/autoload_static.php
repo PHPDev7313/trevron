@@ -112,8 +112,8 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'Whoops\\' => 
         array (
@@ -953,6 +953,7 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\Routing\\Router' => __DIR__ . '/../..' . '/src/Routing/Router.php',
         'JDS\\Routing\\RouterInterface' => __DIR__ . '/../..' . '/src/Routing/RouterInterface.php',
         'JDS\\ServiceProvider\\AbstractLocationServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/AbstractLocationServiceProvider.php',
+        'JDS\\ServiceProvider\\EncriptionServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/EncriptionServiceProvider.php',
         'JDS\\ServiceProvider\\Encryption\\CipherPackage' => __DIR__ . '/../..' . '/src/ServiceProvider/Encryption/CipherPackage.php',
         'JDS\\ServiceProvider\\Encryption\\CipherRuntimeException' => __DIR__ . '/../..' . '/src/ServiceProvider/Encryption/CipherRuntimeException.php',
         'JDS\\ServiceProvider\\Encryption\\Decryptor' => __DIR__ . '/../..' . '/src/ServiceProvider/Encryption/Decryptor.php',
