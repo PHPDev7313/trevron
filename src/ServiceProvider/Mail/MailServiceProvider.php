@@ -22,7 +22,7 @@ class MailServiceProvider implements ServiceProviderInterface
 
         $this->container->add('smtp', Smtp::class);
 
-        $this->container->add('mail', MailService::class)
+        $this->container->add('mailPrep', MailService::class)
             ->addArguments([
                 $this->container->get('mailer'),
                 $this->container->get('config'),
