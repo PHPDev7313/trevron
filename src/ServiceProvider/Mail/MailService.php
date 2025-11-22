@@ -47,6 +47,23 @@ class MailService
                 $options['to'],
                 $options['to_name'] ?? ''
             );
+            $required = false;
+            if (empty($options['subject'])) {
+                $required = true;
+            }
+            if (empty($options['body'])) {
+                $required = true;
+            }
+            if (!empty($options['altbody'])) {
+                $this->mail->AltBody = $options['altbody'];
+            }
+            if ($required) {
+                return false;
+            }
+            $this->mail->Subject = $options['subject'];
+            $this->mail->Body = $options['body'];
+            $this->mail->isHTML($options['is_html']);
+
 
             if (!empty($options['cc'])) {
                 foreach ($options['cc'] as $cc) {
