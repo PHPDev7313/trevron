@@ -2,6 +2,7 @@
 
 namespace JDS\ServiceProvider;
 
+use JDS\FileSystem\FileDeleter;
 use JDS\FileSystem\FileNameGenerator;
 use JDS\FileSystem\FilePathValidator;
 use JDS\FileSystem\JsonFileWriter;
@@ -22,6 +23,7 @@ class JsonServiceProvider implements ServiceProviderInterface
         $this->container->add(FilePathValidator::class);
         $this->container->add(FileNameGenerator::class);
         $this->container->add(JsonFileWriter::class);
+        $this->container->add(FileDeleter::class);
 
         // Core JSON services
         $this->container->add(JsonEncoder::class);
