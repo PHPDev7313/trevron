@@ -2,19 +2,23 @@
 
 namespace JDS\ServiceProvider\Mail;
 
+use JDS\Configuration\Config;
 use JDS\Processing\ErrorProcessor;
+use League\Container\Container;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-use JDS\ServiceProvider\Mail\MailException;
+
 
 class MailService
 {
+    private Config $config;
     public function __construct(
         private PHPMailer $mail,
-        private Config $config,
+        private Container $container,
         private SMTP $smtp
     )
     {
+        $this->config = $this->container->get('config');
         $this->setup();
     }
 

@@ -16,17 +16,17 @@ class MailServiceProvider implements ServiceProviderInterface
 
     public function register(): void
     {
-        $this->container->add('mailer', PHPMailer::class)
+        $this->container->add(PHPMailer::class)
             ->addArgument(new BooleanArgument(true)
         );
 
-        $this->container->add('smtp', Smtp::class);
+        $this->container->add(SMTP::class);
 
-        $this->container->add('mailPrep', MailService::class)
+        $this->container->add(MailService::class)
             ->addArguments([
-                $this->container->get('mailer'),
-                $this->container->get('config'),
-                $this->container->get('smtp'),
+                $this->container->get(PHPMailer::class),
+                $this->container,
+                $this->container->get(SMTP::class),
             ]
         );
     }
