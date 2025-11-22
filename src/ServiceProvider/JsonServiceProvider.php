@@ -18,6 +18,11 @@ class JsonServiceProvider implements ServiceProviderInterface
 
     public function register(): void
     {
+        // file system helpers
+        $this->container->add(FilePathValidator::class);
+        $this->container->add(FileNameGenerator::class);
+        $this->container->add(JsonFileWriter::class);
+
         // Core JSON services
         $this->container->add(JsonEncoder::class);
         $this->container->add(JsonBuilder::class)
@@ -28,10 +33,6 @@ class JsonServiceProvider implements ServiceProviderInterface
                FileNameGenerator::class
             ]);
 
-        // file system helpers
-        $this->container->add(FilePathValidator::class);
-        $this->container->add(FileNameGenerator::class);
-        $this->container->add(JsonFileWriter::class);
     }
 }
 
