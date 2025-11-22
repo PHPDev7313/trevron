@@ -26,14 +26,15 @@ final class Decryptor
             return $plaintext;
         }
 
+        // AES-256-GCM
         if ($pkg->alg === 'aes-256-gcm') {
             // blob is iv + ciphertext + tag - we must split
             $ivLen = openssl_cipher_iv_length('aes-256-gcm');
             $iv = substr($pkg->ciphertext, 0, $ivLen);
             $tag = substr($pkg->ciphertext, -16); // tag is 16 bytes
-            $ciphertext_raw = substr($pkg->ciphertext, $ivLen, -16);
-            $plaintext = openssl_decrypt(
-                $ciphertext_raw,
+            $data = substr($pkg->ciphertext, $ivLen, -16);
+            $plain = openssl_decrypt(
+                $data,
                 'aes-256-gcm',
                 $key,
                 OPENSSL_RAW_DATA,
@@ -41,10 +42,10 @@ final class Decryptor
                 $tag,
                 $pkg->aad ?? ''
             );
-            if ($plaintext === false) {
+            if ($plain === false) {
                 throw new CipherRuntimeException('Decryption failed (openssl/aes).');
             }
-            return $plaintext;
+            return $plain;
         }
         throw new CipherRuntimeException('Unsupported algorithm or missing extension.');
     }

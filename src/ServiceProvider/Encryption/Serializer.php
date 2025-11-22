@@ -4,32 +4,32 @@ namespace JDS\ServiceProvider\Encryption;
 
 final class Serializer
 {
-    public static function toStoredString(CipherPackage $p): string
+    public static function encode(CipherPackage $p): string
     {
-        $obj = [
+        $payload = [
             'v' => $p->version,
             'alg' => $p->alg,
             'nonce' => base64_encode($p->nonce),
             'ct' => base64_encode($p->ciphertext)
         ];
         if ($p->aad !== null) {
-            $obj['aad'] = base64_encode($p->aad);
+            $payload['aad'] = base64_encode($p->aad);
         }
-        return json_encode($obj);
+        return json_encode($payload);
     }
 
-    public static function fromStoredString(string $stored): CipherPackage
+    public static function decode(string $encoded): CipherPackage
     {
-        $data = json_decode($stored, true);
-        if (!is_array($data) || !isset($data['alg'], $data['nonce'], $data['ct'])) {
+        $arr = json_decode($encoded, true);
+        if (!isset($arr['alg'], $arr['nonce'], $arr['ct'])) {
             throw new CipherRuntimeException('Invalid Cipher package');
         }
-        $aad = $data['aad'] ?? null;
+
         return new CipherPackage(
-            $data['alg'],
-            base64_decode($data['nonce']),
-            base64_decode($data['ct']),
-            $aad ? base64_decode($aad) : null
+            $arr['alg'],
+            base64_decode($arr['nonce']),
+            base64_decode($arr['ct']),
+            isset($arr['aad']) ? base64_decode($arr['aad']) : null
         );
     }
 }
