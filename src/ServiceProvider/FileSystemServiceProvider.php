@@ -1,10 +1,13 @@
 <?php
 
-namespace JDS\FileSystem;
+namespace JDS\ServiceProvider;
 
+use JDS\FileSystem\DirectoryScanner;
+use JDS\FileSystem\FileDataService;
+use JDS\FileSystem\FileDeleter;
+use JDS\FileSystem\FileReader;
 use JDS\Parsing\JsonDecoder;
 use JDS\Parsing\JsonEncoder;
-use JDS\ServiceProvider\ServiceProviderInterface;
 use League\Container\Argument\Literal\StringArgument;
 use League\Container\Container;
 
