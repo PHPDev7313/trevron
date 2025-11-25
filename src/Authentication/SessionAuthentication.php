@@ -3,8 +3,10 @@
 namespace JDS\Authentication;
 
 use Firebase\JWT\JWT;
-use JDS\Session\Session;
-use JDS\Session\SessionInterface;
+use JDS\Contracts\Authentication\AuthRepositoryInterface;
+use JDS\Contracts\Authentication\AuthUserInterface;
+use JDS\Contracts\Authentication\SessionAuthInterface;
+use JDS\Contracts\Session\SessionInterface;
 
 class SessionAuthentication extends AbstractSession implements SessionAuthInterface
 {

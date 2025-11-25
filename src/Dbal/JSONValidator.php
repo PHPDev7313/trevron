@@ -2,6 +2,8 @@
 
 namespace JDS\Dbal;
 
+use JDS\Contracts\Dbal\JSONValidatorInterface;
+
 class JSONValidator implements JSONValidatorInterface
 {
 

@@ -3,11 +3,9 @@
 namespace JDS\Http;
 
 
+use JDS\Contracts\Middleware\RequestHandlerInterface;
 use JDS\EventDispatcher\EventDispatcher;
 use JDS\Http\Event\ResponseEvent;
-use JDS\Http\Middleware\RequestHandlerInterface;
-use JDS\Routing\RouterInterface;
-use Psr\Container\ContainerInterface;
 
 class Kernel
 {

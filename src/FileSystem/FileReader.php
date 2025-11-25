@@ -2,6 +2,7 @@
 
 namespace JDS\FileSystem;
 
+use JDS\Contracts\FileSystem\FileReaderInterface;
 use JDS\Http\FileNotFoundException;
 
 class FileReader implements FileReaderInterface

@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use JDS\Authentication\RuntimeException;
 use JDS\Console\ConsoleException;
 use JDS\Console\DatabaseNotFoundException;
+use JDS\Contracts\Console\Command\CommandInterface;
 use JDS\Dbal\GenerateNewId;
 use JDS\Http\FileNotFoundException;
 use JDS\Http\FileWriteException;

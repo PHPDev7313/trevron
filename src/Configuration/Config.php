@@ -2,7 +2,7 @@
 
 namespace JDS\Configuration;
 
-use JDS\Configuration\ConfigInterface;
+use JDS\Contracts\Configuration\ConfigInterface;
 
 class Config implements ConfigInterface
 {

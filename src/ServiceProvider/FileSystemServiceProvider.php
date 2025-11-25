@@ -2,6 +2,7 @@
 
 namespace JDS\ServiceProvider;
 
+use JDS\Contracts\ServiceProvider\ServiceProviderInterface;
 use JDS\FileSystem\DirectoryScanner;
 use JDS\FileSystem\FileDataService;
 use JDS\FileSystem\FileDeleter;

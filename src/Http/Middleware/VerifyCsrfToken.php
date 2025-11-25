@@ -2,7 +2,8 @@
 
 namespace JDS\Http\Middleware;
 
-use JDS\Http\Middleware\MiddlewareInterface;
+use JDS\Contracts\Middleware\MiddlewareInterface;
+use JDS\Contracts\Middleware\RequestHandlerInterface;
 use JDS\Http\Request;
 use JDS\Http\Response;
 use JDS\Http\TokenMismatchException;

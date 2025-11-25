@@ -4,9 +4,9 @@ namespace JDS\Auditor\Handlers;
 
 use Doctrine\DBAL\Connection;
 use JDS\Auditor\Exception\InvalidArgumentException;
-use JDS\Auditor\Interfaces\LogHandlerInterface;
 use JDS\Auditor\Provider\LogLevelProvider;
 use JDS\Auditor\Validators\DatabaseLogJsonValidator;
+use JDS\Contracts\Auditor\LogHandlerInterface;
 use JDS\Dbal\AbstractDatabaseHelper;
 use JDS\Dbal\GenerateNewId;
 use JDS\Processing\ErrorProcessor;

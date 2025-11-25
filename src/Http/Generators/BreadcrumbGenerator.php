@@ -3,6 +3,8 @@
 namespace JDS\Http\Generators;
 
 
+use JDS\Contracts\Http\Generators\BreadcrumbGeneratorInterface;
+
 class BreadcrumbGenerator implements BreadcrumbGeneratorInterface
 {
 	public function __construct(private readonly array $routes, private readonly string $routePrefix)

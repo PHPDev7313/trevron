@@ -2,6 +2,8 @@
 
 namespace JDS\Parsing;
 
+use JDS\Contracts\Parsing\JsonDecoderInterface;
+
 class JsonDecoder implements JsonDecoderInterface
 {
     public function decode(string $json): mixed

@@ -2,6 +2,7 @@
 
 namespace JDS\ServiceProvider;
 
+use JDS\Contracts\ServiceProvider\ServiceProviderInterface;
 use JDS\ServiceProvider\Encryption\Decryptor;
 use JDS\ServiceProvider\Encryption\Encryptor;
 use JDS\ServiceProvider\Encryption\KeyProvider;

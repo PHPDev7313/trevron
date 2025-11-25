@@ -2,6 +2,8 @@
 
 namespace JDS\Http\Middleware\Services;
 
+use JDS\Contracts\Middleware\Services\ChecksumInterface;
+
 class ChecksumService implements ChecksumInterface
 {
     public function generate(object $entity): string

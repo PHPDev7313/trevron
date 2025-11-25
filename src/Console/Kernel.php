@@ -3,8 +3,7 @@
 namespace JDS\Console;
 
 use JDS\Authentication\RuntimeException;
-use JDS\Console\Command\CommandInterface;
-use JDS\Http\InvalidArgumentException;
+use JDS\Contracts\Console\Command\CommandInterface;
 use JDS\Processing\ErrorProcessor;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;

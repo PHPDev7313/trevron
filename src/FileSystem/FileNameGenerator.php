@@ -2,6 +2,8 @@
 
 namespace JDS\FileSystem;
 
+use JDS\Contracts\FileSystem\FileNameGeneratorInterface;
+
 class FileNameGenerator implements FileNameGeneratorInterface
 {
     public function generate(string $baseName, string $extension = 'json'): string

@@ -2,8 +2,8 @@
 
 namespace JDS\Routing;
 
+use JDS\Contracts\Routing\RouterInterface;
 use JDS\Controller\AbstractController;
-use JDS\Routing\RouterInterface;
 use JDS\Http\Request;
 use Psr\Container\ContainerInterface;
 

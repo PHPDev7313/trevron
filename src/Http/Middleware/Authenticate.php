@@ -2,11 +2,13 @@
 
 namespace JDS\Http\Middleware;
 
+use JDS\Contracts\Middleware\MiddlewareInterface;
+use JDS\Contracts\Middleware\RequestHandlerInterface;
+use JDS\Contracts\Session\SessionInterface;
 use JDS\Http\ForbiddenException;
 use JDS\Http\RedirectResponse;
 use JDS\Http\Request;
 use JDS\Http\Response;
-use JDS\Session\SessionInterface;
 
 class Authenticate implements MiddlewareInterface
 {

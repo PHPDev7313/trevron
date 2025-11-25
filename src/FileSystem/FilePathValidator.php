@@ -2,6 +2,8 @@
 
 namespace JDS\FileSystem;
 
+use JDS\Contracts\FileSystem\FilePathValidatorInterface;
+
 class FilePathValidator implements FilePathValidatorInterface
 {
     public function validate(string $path): array
