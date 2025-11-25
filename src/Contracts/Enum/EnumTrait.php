@@ -2,6 +2,7 @@
 
 namespace JDS\Contracts\Enum;
 
+use BackedEnum;
 use JDS\Http\InvalidArgumentException;
 
 /**
@@ -41,7 +42,7 @@ trait EnumTrait
     {
         $inst = static::tryFrom($status);
         if ($inst === null) {
-            throw new InvalidArgumentException("Invalid enum value {$status}");
+            throw new InvalidArgumentException("Invalid enum value: $status");
         }
         return $inst;
     }

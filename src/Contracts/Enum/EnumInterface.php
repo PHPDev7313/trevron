@@ -5,7 +5,7 @@ namespace JDS\Contracts\Enum;
 use BackedEnum;
 use JDS\Http\InvalidArgumentException;
 
-interface EnumInterface extends BackedEnum
+interface EnumInterface
 {
 
     /**
