@@ -2,10 +2,18 @@
 
 namespace JDS\Contracts\Enum;
 
+use BackedEnum;
 use JDS\Http\InvalidArgumentException;
 
-interface EnumInterface
+interface EnumInterface extends BackedEnum
 {
+
+    /**
+     * Return the native backed value (string)
+     *
+     * @return string
+     */
+    public function value(): string;
 
     /**
      * Validate if the provided value is a valid enum value.
@@ -17,6 +25,7 @@ interface EnumInterface
 
     /**
      * Get an enum instance from a string value.
+     *
      * Returns null if the provided value is not valid.
      *
      * @param string|null $value
@@ -80,3 +89,4 @@ interface EnumInterface
      */
     public static function fromString(string $status): self;
 }
+
