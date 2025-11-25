@@ -2,6 +2,7 @@
 
 namespace JDS\FileSystem;
 
+use JDS\Contracts\FileSystem\FileDataServiceInterface;
 use JDS\Parsing\JsonDecoder;
 use Throwable;
 

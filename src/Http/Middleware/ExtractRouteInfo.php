@@ -6,6 +6,8 @@ namespace JDS\Http\Middleware;
 use Exception;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
+use JDS\Contracts\Middleware\MiddlewareInterface;
+use JDS\Contracts\Middleware\RequestHandlerInterface;
 use JDS\Http\HttpException;
 use JDS\Http\HttpRequestMethodException;
 use JDS\Http\Request;

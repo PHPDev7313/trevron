@@ -2,6 +2,7 @@
 
 namespace JDS\FileSystem;
 
+use JDS\Contracts\FileSystem\DirectoryScannerInterface;
 use JDS\Http\HttpRuntimeException;
 
 class DirectoryScanner implements DirectoryScannerInterface

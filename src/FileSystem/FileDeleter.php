@@ -2,6 +2,8 @@
 
 namespace JDS\FileSystem;
 
+use JDS\Contracts\FileSystem\FileDeleterInterface;
+
 class FileDeleter implements FileDeleterInterface
 {
     public function delete(string $path): array

@@ -2,6 +2,8 @@
 
 namespace JDS\Json;
 
+use JDS\Contracts\Json\JsonEncoderInterface;
+
 class JsonEncoder implements JsonEncoderInterface
 {
     public function encode($data): array

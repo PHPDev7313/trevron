@@ -2,7 +2,7 @@
 
 namespace JDS\ServiceProvider\Mail;
 
-use JDS\ServiceProvider\ServiceProviderInterface;
+use JDS\Contracts\ServiceProvider\ServiceProviderInterface;
 use League\Container\Argument\Literal\BooleanArgument;
 use League\Container\Container;
 use PHPMailer\PHPMailer\Exception;

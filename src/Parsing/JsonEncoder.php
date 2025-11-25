@@ -2,6 +2,8 @@
 
 namespace JDS\Parsing;
 
+use JDS\Contracts\Parsing\JsonEncoderInterface;
+
 class JsonEncoder implements JsonEncoderInterface
 {
     public function encode(string $json): string

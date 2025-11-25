@@ -2,10 +2,11 @@
 
 namespace JDS\Http\Middleware;
 
-use JDS\Http\Middleware\MiddlewareInterface;
+use JDS\Contracts\Middleware\MiddlewareInterface;
+use JDS\Contracts\Middleware\RequestHandlerInterface;
+use JDS\Contracts\Routing\RouterInterface;
 use JDS\Http\Request;
 use JDS\Http\Response;
-use JDS\Routing\RouterInterface;
 use Psr\Container\ContainerInterface;
 
 class RouterDispatch implements MiddlewareInterface

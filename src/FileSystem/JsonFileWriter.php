@@ -2,6 +2,7 @@
 
 namespace JDS\FileSystem;
 
+use JDS\Contracts\FileSystem\JsonFileWriterInterface;
 use Throwable;
 
 class JsonFileWriter implements JsonFileWriterInterface

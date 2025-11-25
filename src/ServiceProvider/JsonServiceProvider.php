@@ -2,6 +2,7 @@
 
 namespace JDS\ServiceProvider;
 
+use JDS\Contracts\ServiceProvider\ServiceProviderInterface;
 use JDS\FileSystem\FileDeleter;
 use JDS\FileSystem\FileNameGenerator;
 use JDS\FileSystem\FilePathValidator;

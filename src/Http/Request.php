@@ -7,7 +7,7 @@
 namespace JDS\Http;
 
 use Exception;
-use JDS\Session\SessionInterface;
+use JDS\Contracts\Session\SessionInterface;
 use Throwable;
 
 class Request

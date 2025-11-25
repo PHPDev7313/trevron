@@ -2,6 +2,7 @@
 
 namespace JDS\Json;
 
+use JDS\Contracts\Json\JsonBuilderInterface;
 use JDS\FileSystem\FileNameGenerator;
 use JDS\FileSystem\FilePathValidator;
 use JDS\FileSystem\JsonFileWriter;

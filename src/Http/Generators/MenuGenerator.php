@@ -3,8 +3,8 @@
 namespace JDS\Http\Generators;
 
 
+use JDS\Contracts\Http\Generators\MenuGeneratorInterface;
 use JDS\Http\InvalidArgumentException;
-use Mockery\Generator\Generator;
 
 class MenuGenerator implements MenuGeneratorInterface
 {

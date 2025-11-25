@@ -4,6 +4,7 @@ namespace JDS\Dbal\Example;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
+use JDS\Contracts\Dbal\Example\SchemaExtensionInterface;
 
 abstract class AbstractSchemaExtension implements SchemaExtensionInterface
 {

@@ -4,6 +4,7 @@ namespace JDS\Dbal\Example;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use JDS\Contracts\Dbal\Example\SchemaExtensionInterface;
 use JDS\Dbal\DataMapper;
 
 class SchemaManager

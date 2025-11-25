@@ -2,6 +2,7 @@
 
 namespace JDS\Session;
 
+use JDS\Contracts\Session\SessionInterface;
 use JDS\Http\CannotBeNullException;
 use Random\RandomException;
 

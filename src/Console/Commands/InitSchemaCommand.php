@@ -2,7 +2,7 @@
 
 namespace JDS\Console\Commands;
 
-use JDS\Console\Command\CommandInterface;
+use JDS\Contracts\Console\Command\CommandInterface;
 use JDS\Dbal\Schema\SchemaManager;
 
 class InitSchemaCommand implements CommandInterface

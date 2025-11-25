@@ -2,23 +2,21 @@
 
 namespace JDS\Http\Middleware\Jwt;
 
-
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use JDS\Http\Middleware\MiddlewareInterface;
-use JDS\Http\Middleware\RequestHandlerInterface;
+use JDS\Contracts\Middleware\MiddlewareInterface;
+use JDS\Contracts\Middleware\RequestHandlerInterface;
 use JDS\Http\Request;
 use JDS\Http\Response;
 
-class JwtAuthenticate implements MiddlewareInterface
+class JwtAuthenticate implements middlewareInterface
 {
 	public function __construct(private string $jwtSecretKey)
 	{
 	}
 
-
-	public function process(Request $request, RequestHandlerInterface $requestHandler): Response
+    public function process(Request $request, RequestHandlerInterface $requestHandler): Response
 	{
 		// get the authorization header
 		$authHeader = $request->getServerVariable('HTTP_AUTHORIZATION');
@@ -56,7 +54,7 @@ class JwtAuthenticate implements MiddlewareInterface
 			$session->set('user', $payload['user']);
 
 			return $requestHandler->handle($request);
-			// catch whatever exceptions you wanna handle individually
+			// catch whatever exceptions you want to handle individually
 		} catch (ExpiredException) {
 			return new Response(
 				'Auth token has expired',
@@ -71,14 +69,6 @@ class JwtAuthenticate implements MiddlewareInterface
 			);
 		}
  	}
-
-	 private function saveMe() {
-		 // validate the token
-
-		 // continue processing the request
-//		 return $requestHandler->handle($request);
-
-	 }
 }
 
 

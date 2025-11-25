@@ -3,6 +3,7 @@
 namespace JDS\Http\Middleware;
 
 use JDS\Authentication\RuntimeException;
+use JDS\Contracts\Middleware\RequestHandlerInterface;
 use JDS\Http\Request;
 use JDS\Http\Response;
 use Psr\Container\ContainerExceptionInterface;
