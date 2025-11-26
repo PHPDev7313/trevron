@@ -5,15 +5,8 @@ namespace JDS\Contracts\Enum;
 use BackedEnum;
 use JDS\Http\InvalidArgumentException;
 
-interface EnumInterface
+interface EnumInterface extends BackedEnum
 {
-
-    /**
-     * Return the native backed value (string)
-     *
-     * @return string
-     */
-    public function value(): string;
 
     /**
      * Validate if the provided value is a valid enum value.
@@ -46,13 +39,6 @@ interface EnumInterface
      * @return string
      */
     public function label(): string;
-
-    /**
-     * Determine if the job can be verified (typically after admin review).
-     *
-     * @return bool
-     */
-    public function canBeVerified(): bool;
 
     /**
      * Define allowed transitions between statuses.

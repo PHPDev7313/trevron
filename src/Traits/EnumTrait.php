@@ -1,8 +1,7 @@
 <?php
 
-namespace JDS\Contracts\Enum;
+namespace JDS\Traits;
 
-use BackedEnum;
 use JDS\Http\InvalidArgumentException;
 
 /**
