@@ -18,7 +18,7 @@ class Session implements SessionInterface
     /**
      * integer(2): Bitwise (Permission)
      */
-    public const AUTH_BITWISE = 'auth_bitwise'; // integer from permissions.bitwise
+    public const AUTH_ACCESS_LEVEL = 'auth_access_level'; // integer from permissions.bitwise
     /**
      * string(12): Permission ID
      */
@@ -28,15 +28,22 @@ class Session implements SessionInterface
      */
     public const AUTH_ROLE = 'auth_role_id'; // string from roles.role_id
     /**
-     * integer(2): Role Weight (Role)
+     * string(12) Company ID
      */
-    public const AUTH_ROLE_WEIGHT = 'auth_role_weight'; // integer from roles.role_weight
+    public const AUTH_COMPANY = 'auth_company_id';
+    /**
+     *  array
+     */
+    public const AUTH_PERMISSION_LIST = 'auth_permission_list';
     public const CSRF_TOKEN = 'csrf_token';
     public const ACCESS_TOKEN = 'access_token';
     public const REFRESH_TOKEN = 'refresh_token';
     public const AUTH_ADMIN = 'auth_admin'; // bool
     public const ADMINISTRATOR = 'admin';
 
+    /**
+     * @throws CannotBeNullException
+     */
     public function __construct(string $prefix=null)
     {
         if (is_null($prefix)) {
@@ -173,6 +180,11 @@ class Session implements SessionInterface
         return $this;
     }
 
+    /**
+     * Returns if the user is Admin or not
+     *
+     * @return bool
+     */
     public function isAdmin(): bool
     {
         return $this->get(self::AUTH_ADMIN) ?? false;
@@ -187,17 +199,7 @@ class Session implements SessionInterface
     {
         return $this->get(self::AUTH_ROLE) ?? null;
     }
-    
-    /**
-     * Retrieves the role weight value associated with the authenticated user's role.
-     *
-     * @return int The weight value, or 24 if no value is set.
-     */
-    public function getWeight(): int
-    {
-        return $this->get(self::AUTH_ROLE_WEIGHT) ?? 24;
-    }
-    
+
     /**
      * Retrieves the permission associated with the current authenticated users role and permission.
      *
@@ -214,9 +216,9 @@ class Session implements SessionInterface
      *
      * @return int The bitwise value or the default value of 24.
      */
-    public function getBitwise(): int
+    public function getAccessLevel(): int
     {
-        return $this->get(self::AUTH_BITWISE) ?? 24;
+        return $this->get(self::AUTH_ACCESS_LEVEL) ?? 24;
     }
 }
 
