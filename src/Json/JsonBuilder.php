@@ -33,7 +33,7 @@ class JsonBuilder implements JsonBuilderInterface
             return $pathCheck;
         }
 
-        return $this->writer->write($pathCheck['path'], $encode['data']);
+        return $this->writer->write($pathCheck['path'], $encode['json']);
     }
 }
 

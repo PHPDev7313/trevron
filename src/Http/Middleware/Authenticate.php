@@ -32,7 +32,7 @@ class Authenticate implements MiddlewareInterface
         $requiredPermissions = $routeMeta['permissions'] ?? []; // Uses permission bitwise values
         // Retrieve user's session data
         $userRole = $this->session->get($this->session::AUTH_ROLE); // String: role_id
-        $userPermissionBitwise = (int)$this->session->get($this->session::AUTH_BITWISE); // Integer for permission comparison
+        $userPermissionBitwise = (int)$this->session->get($this->session::AUTH_ACCESS_LEVEL); // Integer for permission comparison
         // Role validation
         if (!empty($requiredRoles) && !$this->hasRequiredRole($userRole, $requiredRoles)) {
             throw new ForbiddenException('403 Forbidden: Insufficient role to access this route.');
@@ -76,3 +76,4 @@ class Authenticate implements MiddlewareInterface
         return true;
     }
 }
+

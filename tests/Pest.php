@@ -1,4 +1,8 @@
 <?php
+use function PHPUnit\Framework\assertFileExists;
+use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertTrue;
+use function PHPUnit\Framework\assertFalse;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +45,34 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+uses()->beforeEach(function () {
+    // per-test temporary dir name
+    $this->tmpDir = sys_get_temp_dir() . '/jds_json_test_' . bin2hex(random_bytes(6));
+    if (!is_dir($this->tmpDir)) {
+        mkdir($this->tmpDir, 0755, true);
+    }
+})->afterEach(function () {
+    // recursive cleanup
+    if (isset($this->tmpDir) && is_dir($this->tmpDir)) {
+        $it = new RecursiveDirectoryIterator($this->tmpDir, RecursiveDirectoryIterator::SKIP_DOTS);
+        $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($files as $file) {
+            if ($file->isDir()) {
+                @rmdir($file->getRealPath());
+            } else {
+                @unlink($file->getRealPath());
+            }
+        }
+        @rmdir($this->tmpDir);
+    }
+});
+
+/**
+ * Create a temporary file with content.
+ */
+function create_tmp_file(string $dir, string $name, string $content): string
 {
-    // ..
+    $path = rtrim($dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $name;
+    file_put_contents($path, $content);
+    return $path;
 }
