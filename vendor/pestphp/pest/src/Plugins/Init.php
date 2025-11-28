@@ -15,17 +15,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @internal
  */
-final class Init implements HandlesArguments
+final readonly class Init implements HandlesArguments
 {
     /**
      * The option the triggers the init job.
      */
-    private const INIT_OPTION = '--init';
+    private const string INIT_OPTION = '--init';
 
     /**
      * The files that will be created.
      */
-    private const STUBS = [
+    private const array STUBS = [
         'phpunit.xml.stub' => 'phpunit.xml',
         'Pest.php.stub' => 'tests/Pest.php',
         'TestCase.php.stub' => 'tests/TestCase.php',
@@ -37,9 +37,9 @@ final class Init implements HandlesArguments
      * Creates a new Plugin instance.
      */
     public function __construct(
-        private readonly TestSuite $testSuite,
-        private readonly InputInterface $input,
-        private readonly OutputInterface $output
+        private TestSuite $testSuite,
+        private InputInterface $input,
+        private OutputInterface $output
     ) {
         // ..
     }
@@ -119,6 +119,6 @@ final class Init implements HandlesArguments
      */
     private function isLaravelInstalled(): bool
     {
-        return InstalledVersions::isInstalled('laravel/laravel');
+        return InstalledVersions::isInstalled('laravel/framework');
     }
 }

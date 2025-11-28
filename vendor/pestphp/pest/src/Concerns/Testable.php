@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace Pest\Concerns;
 
 use Closure;
-use Pest\Exceptions\DatasetArgsCountMismatch;
+use Pest\Exceptions\DatasetArgumentsMismatch;
+use Pest\Panic;
+use Pest\Preset;
 use Pest\Support\ChainableClosure;
 use Pest\Support\ExceptionTrace;
 use Pest\Support\Reflection;
+use Pest\Support\Shell;
 use Pest\TestSuite;
+use PHPUnit\Framework\Attributes\PostCondition;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use ReflectionFunction;
+use ReflectionParameter;
 use Throwable;
 
 /**
@@ -33,9 +38,40 @@ trait Testable
     private static string $__latestDescription;
 
     /**
-     * The test's describing, if any.
+     * The test's assignees.
      */
-    public ?string $__describing = null;
+    private static array $__latestAssignees = [];
+
+    /**
+     * The test's notes.
+     */
+    private static array $__latestNotes = [];
+
+    /**
+     * The test's issues.
+     *
+     * @var array<int, int>
+     */
+    private static array $__latestIssues = [];
+
+    /**
+     * The test's PRs.
+     *
+     * @var array<int, int>
+     */
+    private static array $__latestPrs = [];
+
+    /**
+     * The test's describing, if any.
+     *
+     * @var array<int, string>
+     */
+    public array $__describing = [];
+
+    /**
+     * Whether the test has ran or not.
+     */
+    public bool $__ran = false;
 
     /**
      * The test's test closure.
@@ -77,20 +113,15 @@ trait Testable
     }
 
     /**
-     * Creates a new Test Case instance.
+     * Adds a new "note" to the Test Case.
      */
-    public function __construct(string $name)
+    public function note(array|string $note): self
     {
-        parent::__construct($name);
+        $note = is_array($note) ? $note : [$note];
 
-        $test = TestSuite::getInstance()->tests->get(self::$__filename);
+        self::$__latestNotes = array_merge(self::$__latestNotes, $note);
 
-        if ($test->hasMethod($name)) {
-            $method = $test->getMethod($name);
-            $this->__description = self::$__latestDescription = $method->description;
-            $this->__describing = $method->describing;
-            $this->__test = $method->getClosure($this);
-        }
+        return $this;
     }
 
     /**
@@ -164,7 +195,11 @@ trait Testable
             $beforeAll = ChainableClosure::boundStatically(self::$__beforeAll, $beforeAll);
         }
 
-        call_user_func(Closure::bind($beforeAll, null, self::class));
+        try {
+            call_user_func(Closure::bind($beforeAll, null, self::class));
+        } catch (Throwable $e) {
+            Panic::with($e);
+        }
     }
 
     /**
@@ -186,14 +221,20 @@ trait Testable
     /**
      * Gets executed before the Test Case.
      */
-    protected function setUp(): void
+    protected function setUp(...$arguments): void
     {
         TestSuite::getInstance()->test = $this;
 
         $method = TestSuite::getInstance()->tests->get(self::$__filename)->getMethod($this->name());
 
-        $description = $this->dataName() ? $method->description.' with '.$this->dataName() : $method->description;
-        $description = htmlspecialchars(html_entity_decode($description), ENT_NOQUOTES);
+        $description = $method->description;
+        if ($this->dataName()) {
+            $description = str_contains((string) $description, ':dataset')
+                ? str_replace(':dataset', str_replace('dataset ', '', $this->dataName()), (string) $description)
+                : $description.' with '.$this->dataName();
+        }
+
+        $description = htmlspecialchars(html_entity_decode((string) $description), ENT_NOQUOTES);
 
         if ($method->repetitions > 1) {
             $matches = [];
@@ -211,6 +252,10 @@ trait Testable
         }
 
         $this->__description = self::$__latestDescription = $description;
+        self::$__latestAssignees = $method->assignees;
+        self::$__latestNotes = $method->notes;
+        self::$__latestIssues = $method->issues;
+        self::$__latestPrs = $method->prs;
 
         parent::setUp();
 
@@ -220,13 +265,40 @@ trait Testable
             $beforeEach = ChainableClosure::bound($this->__beforeEach, $beforeEach);
         }
 
-        $this->__callClosure($beforeEach, func_get_args());
+        $this->__callClosure($beforeEach, $arguments);
+    }
+
+    /**
+     * Initialize test case properties from TestSuite.
+     */
+    public function __initializeTestCase(): void
+    {
+        // Return if the test case has already been initialized
+        if (isset($this->__test)) {
+            return;
+        }
+
+        $name = $this->name();
+        $test = TestSuite::getInstance()->tests->get(self::$__filename);
+
+        if ($test->hasMethod($name)) {
+            $method = $test->getMethod($name);
+            $this->__description = self::$__latestDescription = $method->description;
+            self::$__latestAssignees = $method->assignees;
+            self::$__latestNotes = $method->notes;
+            self::$__latestIssues = $method->issues;
+            self::$__latestPrs = $method->prs;
+            $this->__describing = $method->describing;
+            $this->__test = $method->getClosure();
+
+            $method->setUp($this);
+        }
     }
 
     /**
      * Gets executed after the Test Case.
      */
-    protected function tearDown(): void
+    protected function tearDown(...$arguments): void
     {
         $afterEach = TestSuite::getInstance()->afterEach->get(self::$__filename);
 
@@ -240,6 +312,9 @@ trait Testable
             parent::tearDown();
 
             TestSuite::getInstance()->test = null;
+
+            $method = TestSuite::getInstance()->tests->get(self::$__filename)->getMethod($this->name());
+            $method->tearDown($this);
         }
     }
 
@@ -251,7 +326,7 @@ trait Testable
     private function __runTest(Closure $closure, ...$args): mixed
     {
         $arguments = $this->__resolveTestArguments($args);
-        $this->__ensureDatasetArgumentNumberMatches($arguments);
+        $this->__ensureDatasetArgumentNameAndNumberMatches($arguments);
 
         return $this->__callClosure($closure, $arguments);
     }
@@ -266,7 +341,12 @@ trait Testable
         $method = TestSuite::getInstance()->tests->get(self::$__filename)->getMethod($this->name());
 
         if ($method->repetitions > 1) {
-            array_shift($arguments);
+            // If the test is repeated, the first argument is the iteration number
+            // we need to move it to the end of the arguments list
+            // so that the datasets are the first n arguments
+            // and the iteration number is the last argument
+            $firstArgument = array_shift($arguments);
+            $arguments[] = $firstArgument;
         }
 
         $underlyingTest = Reflection::getFunctionVariable($this->__test, 'closure');
@@ -288,7 +368,7 @@ trait Testable
             return $arguments;
         }
 
-        if (! $arguments[0] instanceof Closure) {
+        if (! isset($arguments[0]) || ! $arguments[0] instanceof Closure) {
             return $arguments;
         }
 
@@ -311,9 +391,9 @@ trait Testable
      * Ensures dataset items count matches underlying test case required parameters
      *
      * @throws ReflectionException
-     * @throws DatasetArgsCountMismatch
+     * @throws DatasetArgumentsMismatch
      */
-    private function __ensureDatasetArgumentNumberMatches(array $arguments): void
+    private function __ensureDatasetArgumentNameAndNumberMatches(array $arguments): void
     {
         if ($arguments === []) {
             return;
@@ -324,11 +404,21 @@ trait Testable
         $requiredParametersCount = $testReflection->getNumberOfRequiredParameters();
         $suppliedParametersCount = count($arguments);
 
-        if ($suppliedParametersCount >= $requiredParametersCount) {
+        $datasetParameterNames = array_keys($arguments);
+        $testParameterNames = array_map(
+            fn (ReflectionParameter $reflectionParameter): string => $reflectionParameter->getName(),
+            array_filter($testReflection->getParameters(), fn (ReflectionParameter $reflectionParameter): bool => ! $reflectionParameter->isOptional()),
+        );
+
+        if (array_diff($testParameterNames, $datasetParameterNames) === []) {
             return;
         }
 
-        throw new DatasetArgsCountMismatch($requiredParametersCount, $suppliedParametersCount);
+        if (isset($testParameterNames[0]) && $suppliedParametersCount >= $requiredParametersCount) {
+            return;
+        }
+
+        throw new DatasetArgumentsMismatch($requiredParametersCount, $suppliedParametersCount);
     }
 
     /**
@@ -339,22 +429,22 @@ trait Testable
         return ExceptionTrace::ensure(fn (): mixed => call_user_func_array(Closure::bind($closure, $this, $this::class), $arguments));
     }
 
-    /** @postCondition */
+    /**
+     * Uses the given preset on the test.
+     */
+    public function preset(): Preset
+    {
+        return new Preset;
+    }
+
+    #[PostCondition]
     protected function __MarkTestIncompleteIfSnapshotHaveChanged(): void
     {
         if (count($this->__snapshotChanges) === 0) {
             return;
         }
 
-        if (count($this->__snapshotChanges) === 1) {
-            $this->markTestIncomplete($this->__snapshotChanges[0]);
-
-            return;
-        }
-
-        $messages = implode(PHP_EOL, array_map(static fn (string $message): string => '- $message', $this->__snapshotChanges));
-
-        $this->markTestIncomplete($messages);
+        $this->markTestIncomplete(implode('. ', $this->__snapshotChanges));
     }
 
     /**
@@ -378,6 +468,27 @@ trait Testable
      */
     public static function getLatestPrintableTestCaseMethodName(): string
     {
-        return self::$__latestDescription;
+        return self::$__latestDescription ?? '';
+    }
+
+    /**
+     * The printable test case method context.
+     */
+    public static function getPrintableContext(): array
+    {
+        return [
+            'assignees' => self::$__latestAssignees,
+            'issues' => self::$__latestIssues,
+            'prs' => self::$__latestPrs,
+            'notes' => self::$__latestNotes,
+        ];
+    }
+
+    /**
+     * Opens a shell for the test case.
+     */
+    public function shell(): void
+    {
+        Shell::open();
     }
 }

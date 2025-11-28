@@ -26,18 +26,16 @@ final class HigherOrderTapProxy
      */
     public function __set(string $property, mixed $value): void
     {
-        $this->target->{$property} = $value; // @phpstan-ignore-line
+        $this->target->{$property} = $value;
     }
 
     /**
      * Dynamically pass properties gets to the target.
-     *
-     * @return mixed
      */
-    public function __get(string $property)
+    public function __get(string $property): mixed
     {
         if (property_exists($this->target, $property)) {
-            return $this->target->{$property}; // @phpstan-ignore-line
+            return $this->target->{$property};
         }
 
         $className = (new ReflectionClass($this->target))->getName();

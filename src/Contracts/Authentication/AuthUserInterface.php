@@ -10,14 +10,6 @@ interface AuthUserInterface
 
 	public function getPassword(): string;
 
-    public function getRoleId(): ?string;
-
-    public function getPermissionId(): ?string;
-
-    public function getBitwise(): ?int;
-
-    public function getRoleWeight(): ?int;
-
     public function isAdmin(): bool;
-
 }
+

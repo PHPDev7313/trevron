@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace Pest\PendingCalls;
 
 use Closure;
+use Pest\Concerns\Testable;
 use Pest\Exceptions\InvalidArgumentException;
-use Pest\Factories\Covers\CoversClass;
-use Pest\Factories\Covers\CoversFunction;
-use Pest\Factories\Covers\CoversNothing;
+use Pest\Exceptions\TestDescriptionMissing;
+use Pest\Factories\Attribute;
 use Pest\Factories\TestCaseMethodFactory;
+use Pest\Mutate\Repositories\ConfigurationRepository;
 use Pest\PendingCalls\Concerns\Describable;
+use Pest\Plugins\Environment;
 use Pest\Plugins\Only;
 use Pest\Support\Backtrace;
+use Pest\Support\Container;
 use Pest\Support\Exporter;
 use Pest\Support\HigherOrderCallables;
 use Pest\Support\NullClosure;
@@ -24,11 +27,18 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  *
- * @mixin HigherOrderCallables|TestCase
+ * @mixin HigherOrderCallables|TestCase|Testable
  */
-final class TestCall
+final class TestCall // @phpstan-ignore-line
 {
     use Describable;
+
+    /**
+     * The list of test case factory attributes.
+     *
+     * @var array<int, Attribute>
+     */
+    private array $testCaseFactoryAttributes = [];
 
     /**
      * The Test Case Factory.
@@ -46,16 +56,52 @@ final class TestCall
     public function __construct(
         private readonly TestSuite $testSuite,
         private readonly string $filename,
-        ?string $description = null,
+        private ?string $description = null,
         ?Closure $closure = null
     ) {
-        $this->testCaseMethod = new TestCaseMethodFactory($filename, $description, $closure);
+        $this->testCaseMethod = new TestCaseMethodFactory($filename, $closure);
 
         $this->descriptionLess = $description === null;
 
         $this->describing = DescribeCall::describing();
 
         $this->testSuite->beforeEach->get($this->filename)[0]($this);
+    }
+
+    /**
+     * Runs the given closure after the test.
+     */
+    public function after(Closure $closure): self
+    {
+        if ($this->description === null) {
+            throw new TestDescriptionMissing($this->filename);
+        }
+
+        $description = $this->describing === []
+            ? $this->description
+            : Str::describe($this->describing, $this->description);
+
+        $filename = $this->filename;
+
+        $when = function () use ($closure, $filename, $description): void {
+            if ($this::$__filename !== $filename) { // @phpstan-ignore-line
+                return;
+            }
+
+            if ($this->__description !== $description) { // @phpstan-ignore-line
+                return;
+            }
+
+            if ($this->__ran !== true) { // @phpstan-ignore-line
+                return;
+            }
+
+            $closure->call($this);
+        };
+
+        new AfterEachCall($this->testSuite, $this->filename, $when->bindTo(new \stdClass));
+
+        return $this;
     }
 
     /**
@@ -133,10 +179,9 @@ final class TestCall
     }
 
     /**
-     * Runs the current test multiple times with
-     * each item of the given `iterable`.
+     * Runs the current test multiple times with each item of the given `iterable`.
      *
-     * @param  array<\Closure|iterable<int|string, mixed>|string>  $data
+     * @param  Closure|iterable<array-key, mixed>|string  $data
      */
     public function with(Closure|iterable|string ...$data): self
     {
@@ -165,7 +210,10 @@ final class TestCall
     public function group(string ...$groups): self
     {
         foreach ($groups as $group) {
-            $this->testCaseMethod->groups[] = $group;
+            $this->testCaseMethod->attributes[] = new Attribute(
+                \PHPUnit\Framework\Attributes\Group::class,
+                [$group],
+            );
         }
 
         return $this;
@@ -176,7 +224,7 @@ final class TestCall
      */
     public function only(): self
     {
-        Only::enable($this);
+        Only::enable($this, ...func_get_args());
 
         return $this;
     }
@@ -268,6 +316,61 @@ final class TestCall
     }
 
     /**
+     * Weather the current test is running on a CI environment.
+     */
+    private function runningOnCI(): bool
+    {
+        foreach ([
+            'CI',
+            'GITHUB_ACTIONS',
+            'GITLAB_CI',
+            'CIRCLECI',
+            'TRAVIS',
+            'APPVEYOR',
+            'BITBUCKET_BUILD_NUMBER',
+            'BUILDKITE',
+            'TEAMCITY_VERSION',
+            'JENKINS_URL',
+            'SYSTEM_COLLECTIONURI',
+            'CI_NAME',
+            'TASKCLUSTER_ROOT_URL',
+            'DRONE',
+            'WERCKER',
+            'NEVERCODE',
+            'SEMAPHORE',
+            'NETLIFY',
+            'NOW_BUILDER',
+        ] as $env) {
+            if (getenv($env) !== false) {
+                return true;
+            }
+        }
+
+        return Environment::name() === Environment::CI;
+    }
+
+    /**
+     * Skips the current test when running on a CI environments.
+     */
+    public function skipOnCI(): self
+    {
+        if ($this->runningOnCI()) {
+            return $this->skip('This test is skipped on [CI].');
+        }
+
+        return $this;
+    }
+
+    public function skipLocally(): self
+    {
+        if ($this->runningOnCI() === false) {
+            return $this->skip('This test is skipped [locally].');
+        }
+
+        return $this;
+    }
+
+    /**
      * Skips the current test unless the given test is running on Windows.
      */
     public function onlyOnWindows(): self
@@ -306,32 +409,186 @@ final class TestCall
     }
 
     /**
-     * Sets the test as "todo".
+     * Marks the test as "todo".
      */
-    public function todo(): self
-    {
+    public function todo(// @phpstan-ignore-line
+        array|string|null $note = null,
+        array|string|null $assignee = null,
+        array|string|int|null $issue = null,
+        array|string|int|null $pr = null,
+    ): self {
         $this->skip('__TODO__');
 
         $this->testCaseMethod->todo = true;
+
+        if ($issue !== null) {
+            $this->issue($issue);
+        }
+
+        if ($pr !== null) {
+            $this->pr($pr);
+        }
+
+        if ($assignee !== null) {
+            $this->assignee($assignee);
+        }
+
+        if ($note !== null) {
+            $this->note($note);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets the test as "work in progress".
+     */
+    public function wip(// @phpstan-ignore-line
+        array|string|null $note = null,
+        array|string|null $assignee = null,
+        array|string|int|null $issue = null,
+        array|string|int|null $pr = null,
+    ): self {
+        if ($issue !== null) {
+            $this->issue($issue);
+        }
+
+        if ($pr !== null) {
+            $this->pr($pr);
+        }
+
+        if ($assignee !== null) {
+            $this->assignee($assignee);
+        }
+
+        if ($note !== null) {
+            $this->note($note);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets the test as "done".
+     */
+    public function done(// @phpstan-ignore-line
+        array|string|null $note = null,
+        array|string|null $assignee = null,
+        array|string|int|null $issue = null,
+        array|string|int|null $pr = null,
+    ): self {
+        if ($issue !== null) {
+            $this->issue($issue);
+        }
+
+        if ($pr !== null) {
+            $this->pr($pr);
+        }
+
+        if ($assignee !== null) {
+            $this->assignee($assignee);
+        }
+
+        if ($note !== null) {
+            $this->note($note);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Associates the test with the given issue(s).
+     *
+     * @param  array<int, string|int>|string|int  $number
+     */
+    public function issue(array|string|int $number): self
+    {
+        $number = is_array($number) ? $number : [$number];
+
+        $number = array_map(fn (string|int $number): int => (int) ltrim((string) $number, '#'), $number);
+
+        $this->testCaseMethod->issues = array_merge($this->testCaseMethod->issues, $number);
+
+        return $this;
+    }
+
+    /**
+     * Associates the test with the given ticket(s). (Alias for `issue`)
+     *
+     * @param  array<int, string|int>|string|int  $number
+     */
+    public function ticket(array|string|int $number): self
+    {
+        return $this->issue($number);
+    }
+
+    /**
+     * Sets the test assignee(s).
+     *
+     * @param  array<int, string>|string  $assignee
+     */
+    public function assignee(array|string $assignee): self
+    {
+        $assignees = is_array($assignee) ? $assignee : [$assignee];
+
+        $this->testCaseMethod->assignees = array_unique(array_merge($this->testCaseMethod->assignees, $assignees));
+
+        return $this;
+    }
+
+    /**
+     * Associates the test with the given pull request(s).
+     *
+     * @param  array<int, string|int>|string|int  $number
+     */
+    public function pr(array|string|int $number): self
+    {
+        $number = is_array($number) ? $number : [$number];
+
+        $number = array_map(fn (string|int $number): int => (int) ltrim((string) $number, '#'), $number);
+
+        $this->testCaseMethod->prs = array_unique(array_merge($this->testCaseMethod->prs, $number));
+
+        return $this;
+    }
+
+    /**
+     * Adds a note to the test.
+     *
+     * @param  array<int, string>|string  $note
+     */
+    public function note(array|string $note): self
+    {
+        $notes = is_array($note) ? $note : [$note];
+
+        $this->testCaseMethod->notes = array_unique(array_merge($this->testCaseMethod->notes, $notes));
 
         return $this;
     }
 
     /**
      * Sets the covered classes or methods.
+     *
+     * @param  array<int, string>|string  $classesOrFunctions
      */
-    public function covers(string ...$classesOrFunctions): self
+    public function covers(array|string ...$classesOrFunctions): self
     {
-        foreach ($classesOrFunctions as $classOrFunction) {
-            $isClass = class_exists($classOrFunction) || trait_exists($classOrFunction);
-            $isMethod = function_exists($classOrFunction);
+        /** @var array<int, string> $classesOrFunctions */
+        $classesOrFunctions = array_reduce($classesOrFunctions, fn ($carry, $item): array => is_array($item) ? array_merge($carry, $item) : array_merge($carry, [$item]), []); // @pest-ignore-type
 
-            if (! $isClass && ! $isMethod) {
-                throw new InvalidArgumentException(sprintf('No class or method named "%s" has been found.', $classOrFunction));
+        foreach ($classesOrFunctions as $classOrFunction) {
+            $isClass = class_exists($classOrFunction) || interface_exists($classOrFunction) || enum_exists($classOrFunction);
+            $isTrait = trait_exists($classOrFunction);
+            $isFunction = function_exists($classOrFunction);
+
+            if (! $isClass && ! $isTrait && ! $isFunction) {
+                throw new InvalidArgumentException(sprintf('No class, trait or method named "%s" has been found.', $classOrFunction));
             }
 
             if ($isClass) {
                 $this->coversClass($classOrFunction);
+            } elseif ($isTrait) {
+                $this->coversTrait($classOrFunction);
             } else {
                 $this->coversFunction($classOrFunction);
             }
@@ -346,7 +603,41 @@ final class TestCall
     public function coversClass(string ...$classes): self
     {
         foreach ($classes as $class) {
-            $this->testCaseMethod->covers[] = new CoversClass($class);
+            $this->testCaseFactoryAttributes[] = new Attribute(
+                \PHPUnit\Framework\Attributes\CoversClass::class,
+                [$class],
+            );
+        }
+
+        /** @var ConfigurationRepository $configurationRepository */
+        $configurationRepository = Container::getInstance()->get(ConfigurationRepository::class);
+        $paths = $configurationRepository->cliConfiguration->toArray()['paths'] ?? false;
+
+        if (! is_array($paths)) {
+            $configurationRepository->globalConfiguration('default')->class(...$classes); // @phpstan-ignore-line
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets the covered classes.
+     */
+    public function coversTrait(string ...$traits): self
+    {
+        foreach ($traits as $trait) {
+            $this->testCaseFactoryAttributes[] = new Attribute(
+                \PHPUnit\Framework\Attributes\CoversTrait::class,
+                [$trait],
+            );
+        }
+
+        /** @var ConfigurationRepository $configurationRepository */
+        $configurationRepository = Container::getInstance()->get(ConfigurationRepository::class);
+        $paths = $configurationRepository->cliConfiguration->toArray()['paths'] ?? false;
+
+        if (! is_array($paths)) {
+            $configurationRepository->globalConfiguration('default')->class(...$traits); // @phpstan-ignore-line
         }
 
         return $this;
@@ -358,20 +649,37 @@ final class TestCall
     public function coversFunction(string ...$functions): self
     {
         foreach ($functions as $function) {
-            $this->testCaseMethod->covers[] = new CoversFunction($function);
+            $this->testCaseFactoryAttributes[] = new Attribute(
+                \PHPUnit\Framework\Attributes\CoversFunction::class,
+                [$function],
+            );
         }
 
         return $this;
     }
 
     /**
-     * Sets that the current test covers nothing.
+     * Adds one or more references to the tested method or class. This helps
+     * to link test cases to the source code for easier navigation.
+     *
+     * @param  array<class-string|string>|class-string  ...$classes
      */
-    public function coversNothing(): self
+    public function references(string|array ...$classes): self
     {
-        $this->testCaseMethod->covers = [new CoversNothing];
+        assert($classes !== []);
 
         return $this;
+    }
+
+    /**
+     * Adds one or more references to the tested method or class. This helps
+     * to link test cases to the source code for easier navigation.
+     *
+     * @param  array<class-string|string>|class-string  ...$classes
+     */
+    public function see(string|array ...$classes): self
+    {
+        return $this->references(...$classes);
     }
 
     /**
@@ -420,10 +728,11 @@ final class TestCall
         if ($this->descriptionLess) {
             Exporter::default();
 
-            if ($this->testCaseMethod->description !== null) {
-                $this->testCaseMethod->description .= ' → ';
+            if ($this->description !== null) {
+                $this->description .= ' → ';
             }
-            $this->testCaseMethod->description .= $arguments === null
+
+            $this->description .= $arguments === null
                 ? $name
                 : sprintf('%s %s', $name, $exporter->shortenedRecursiveExport($arguments));
         }
@@ -436,11 +745,26 @@ final class TestCall
      */
     public function __destruct()
     {
-        if (! is_null($this->describing)) {
+        if ($this->description === null) {
+            throw new TestDescriptionMissing($this->filename);
+        }
+
+        if ($this->describing !== []) {
             $this->testCaseMethod->describing = $this->describing;
-            $this->testCaseMethod->description = Str::describe($this->describing, $this->testCaseMethod->description); // @phpstan-ignore-line
+            $this->testCaseMethod->description = Str::describe($this->describing, $this->description);
+        } else {
+            $this->testCaseMethod->description = $this->description;
         }
 
         $this->testSuite->tests->set($this->testCaseMethod);
+
+        if (! is_null($testCase = $this->testSuite->tests->get($this->filename))) {
+            $attributesToMerge = array_filter(
+                $this->testCaseFactoryAttributes,
+                fn (Attribute $attributeToMerge): bool => array_filter($testCase->attributes, fn (Attribute $attribute): bool => serialize($attributeToMerge) === serialize($attribute)) === []
+            );
+
+            $testCase->attributes = array_merge($testCase->attributes, $attributesToMerge);
+        }
     }
 }

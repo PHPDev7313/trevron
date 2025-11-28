@@ -33,7 +33,6 @@
  */
 
 declare(strict_types=1);
-
 /*
  * This file is part of PHPUnit.
  *
@@ -46,6 +45,7 @@ declare(strict_types=1);
 namespace PHPUnit\TextUI;
 
 use Pest\Plugins\Only;
+use Pest\Runner\Filter\EnsureTestCaseIsInitiatedFilter;
 use PHPUnit\Event;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Runner\Filter\Factory;
@@ -57,7 +57,7 @@ use function array_map;
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final class TestSuiteFilterProcessor
+final readonly class TestSuiteFilterProcessor
 {
     /**
      * @throws Event\RuntimeException
@@ -67,27 +67,35 @@ final class TestSuiteFilterProcessor
     {
         $factory = new Factory;
 
+        // @phpstan-ignore-next-line
+        (fn () => $this->filters[] = [
+            'className' => EnsureTestCaseIsInitiatedFilter::class,
+            'argument' => '',
+        ])->call($factory);
+
         if (! $configuration->hasFilter() &&
             ! $configuration->hasGroups() &&
             ! $configuration->hasExcludeGroups() &&
+            ! $configuration->hasExcludeFilter() &&
             ! $configuration->hasTestsCovering() &&
             ! $configuration->hasTestsUsing() &&
-            ! Only::isEnabled()
-        ) {
+            ! Only::isEnabled()) {
+            $suite->injectFilter($factory);
+
             return;
         }
 
         if ($configuration->hasExcludeGroups()) {
             $factory->addExcludeGroupFilter(
-                $configuration->excludeGroups()
+                $configuration->excludeGroups(),
             );
         }
 
         if (Only::isEnabled()) {
-            $factory->addIncludeGroupFilter(['__pest_only']);
+            $factory->addIncludeGroupFilter([Only::group()]);
         } elseif ($configuration->hasGroups()) {
             $factory->addIncludeGroupFilter(
-                $configuration->groups()
+                $configuration->groups(),
             );
         }
 
@@ -95,8 +103,8 @@ final class TestSuiteFilterProcessor
             $factory->addIncludeGroupFilter(
                 array_map(
                     static fn (string $name): string => '__phpunit_covers_'.$name,
-                    $configuration->testsCovering()
-                )
+                    $configuration->testsCovering(),
+                ),
             );
         }
 
@@ -104,21 +112,27 @@ final class TestSuiteFilterProcessor
             $factory->addIncludeGroupFilter(
                 array_map(
                     static fn (string $name): string => '__phpunit_uses_'.$name,
-                    $configuration->testsUsing()
-                )
+                    $configuration->testsUsing(),
+                ),
+            );
+        }
+
+        if ($configuration->hasExcludeFilter()) {
+            $factory->addExcludeNameFilter(
+                $configuration->excludeFilter(),
             );
         }
 
         if ($configuration->hasFilter()) {
-            $factory->addNameFilter(
-                $configuration->filter()
+            $factory->addIncludeNameFilter(
+                $configuration->filter(),
             );
         }
 
         $suite->injectFilter($factory);
 
         Event\Facade::emitter()->testSuiteFiltered(
-            Event\TestSuite\TestSuiteBuilder::from($suite)
+            Event\TestSuite\TestSuiteBuilder::from($suite),
         );
     }
 }

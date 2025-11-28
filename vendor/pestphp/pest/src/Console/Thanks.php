@@ -15,17 +15,21 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 /**
  * @internal
  */
-final class Thanks
+final readonly class Thanks
 {
     /**
      * The support options.
      *
      * @var array<string, string>
      */
-    private const FUNDING_MESSAGES = [
+    private const array FUNDING_MESSAGES = [
         'Star' => 'https://github.com/pestphp/pest',
-        'News' => 'https://twitter.com/pestphp',
-        'Videos' => 'https://youtube.com/@nunomaduro',
+        'YouTube' => 'https://youtube.com/@nunomaduro',
+        'TikTok' => 'https://tiktok.com/@enunomaduro',
+        'Twitch' => 'https://twitch.tv/nunomaduro',
+        'LinkedIn' => 'https://linkedin.com/in/nunomaduro',
+        'Instagram' => 'https://instagram.com/enunomaduro',
+        'X' => 'https://x.com/enunomaduro',
         'Sponsor' => 'https://github.com/sponsors/nunomaduro',
     ];
 
@@ -33,8 +37,8 @@ final class Thanks
      * Creates a new Console Command instance.
      */
     public function __construct(
-        private readonly InputInterface $input,
-        private readonly OutputInterface $output
+        private InputInterface $input,
+        private OutputInterface $output
     ) {
         // ..
     }
@@ -72,13 +76,13 @@ final class Thanks
         }
 
         if ($wantsToSupport === true) {
-            if (PHP_OS_FAMILY == 'Darwin') {
+            if (PHP_OS_FAMILY === 'Darwin') {
                 exec('open https://github.com/pestphp/pest');
             }
-            if (PHP_OS_FAMILY == 'Windows') {
+            if (PHP_OS_FAMILY === 'Windows') {
                 exec('start https://github.com/pestphp/pest');
             }
-            if (PHP_OS_FAMILY == 'Linux') {
+            if (PHP_OS_FAMILY === 'Linux') {
                 exec('xdg-open https://github.com/pestphp/pest');
             }
         }
