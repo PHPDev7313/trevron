@@ -27,14 +27,14 @@ use Whoops\Exception\Inspector;
 /**
  * @internal
  */
-final class Kernel
+final readonly class Kernel
 {
     /**
      * The Kernel bootstrappers.
      *
      * @var array<int, class-string>
      */
-    private const BOOTSTRAPPERS = [
+    private const array BOOTSTRAPPERS = [
         Bootstrappers\BootOverrides::class,
         Bootstrappers\BootSubscribers::class,
         Bootstrappers\BootFiles::class,
@@ -47,8 +47,8 @@ final class Kernel
      * Creates a new Kernel instance.
      */
     public function __construct(
-        private readonly Application $application,
-        private readonly OutputInterface $output,
+        private Application $application,
+        private OutputInterface $output,
     ) {
         //
     }
@@ -71,7 +71,7 @@ final class Kernel
             $output,
         );
 
-        register_shutdown_function(fn () => $kernel->shutdown());
+        register_shutdown_function($kernel->shutdown(...));
 
         foreach (self::BOOTSTRAPPERS as $bootstrapper) {
             $bootstrapper = Container::getInstance()->get($bootstrapper);

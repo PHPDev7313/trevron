@@ -9,11 +9,16 @@ use ParaTest\JUnit\LogMerger;
 use ParaTest\JUnit\Writer;
 use ParaTest\Options;
 use ParaTest\RunnerInterface;
-use PHPUnit\Event\Facade as EventFacade;
+use ParaTest\TestDox\TestDoxResultsMerger;
+use PHPUnit\Logging\TestDox\HtmlRenderer as TestDoxHtmlRenderer;
+use PHPUnit\Logging\TestDox\PlainTextRenderer as TestDoxPlainTextRenderer;
+use PHPUnit\Logging\TestDox\TestResultCollection as TestDoxTestResultCollection;
 use PHPUnit\Runner\CodeCoverage;
+use PHPUnit\Runner\ResultCache\DefaultResultCache;
 use PHPUnit\TestRunner\TestResult\Facade as TestResultFacade;
 use PHPUnit\TestRunner\TestResult\TestResult;
 use PHPUnit\TextUI\Configuration\CodeCoverageFilterRegistry;
+use PHPUnit\TextUI\Output\DefaultPrinter;
 use PHPUnit\TextUI\ShellExitCodeCalculator;
 use PHPUnit\Util\ExcludeList;
 use SplFileInfo;
@@ -56,7 +61,9 @@ final class WrapperRunner implements RunnerInterface
     /** @var list<SplFileInfo> */
     private array $unexpectedOutputFiles = [];
     /** @var list<SplFileInfo> */
-    private array $testresultFiles = [];
+    private array $resultCacheFiles = [];
+    /** @var list<SplFileInfo> */
+    private array $testResultFiles = [];
     /** @var list<SplFileInfo> */
     private array $coverageFiles = [];
     /** @var list<SplFileInfo> */
@@ -65,7 +72,7 @@ final class WrapperRunner implements RunnerInterface
     private array $teamcityFiles = [];
     /** @var list<SplFileInfo> */
     private array $testdoxFiles = [];
-    /** @var non-empty-string[] */
+    /** @var array<non-empty-string> */
     private readonly array $parameters;
     private CodeCoverageFilterRegistry $codeCoverageFilterRegistry;
 
@@ -82,8 +89,11 @@ final class WrapperRunner implements RunnerInterface
         $phpFinder = new PhpExecutableFinder();
         $phpBin    = $phpFinder->find(false);
         assert($phpBin !== false);
+        assert($phpBin !== '');
         $parameters = [$phpBin];
-        $parameters = array_merge($parameters, $phpFinder->findArguments());
+        /** @var array<non-empty-string> $arguments */
+        $arguments  = $phpFinder->findArguments();
+        $parameters = array_merge($parameters, $arguments);
 
         if ($options->passthruPhp !== null) {
             $parameters = array_merge($parameters, $options->passthruPhp);
@@ -100,8 +110,6 @@ final class WrapperRunner implements RunnerInterface
         $directory = dirname(__DIR__);
         assert($directory !== '');
         ExcludeList::addDirectory($directory);
-        TestResultFacade::init();
-        EventFacade::instance()->seal();
         $suiteLoader = new SuiteLoader(
             $this->options,
             $this->output,
@@ -214,7 +222,11 @@ final class WrapperRunner implements RunnerInterface
         $this->statusFiles[]           = $worker->statusFile;
         $this->progressFiles[]         = $worker->progressFile;
         $this->unexpectedOutputFiles[] = $worker->unexpectedOutputFile;
-        $this->testresultFiles[]       = $worker->testresultFile;
+        $this->testResultFiles[]       = $worker->testResultFile;
+
+        if (isset($worker->resultCacheFile)) {
+            $this->resultCacheFiles[] = $worker->resultCacheFile;
+        }
 
         if (isset($worker->junitFile)) {
             $this->junitFiles[] = $worker->junitFile;
@@ -248,7 +260,7 @@ final class WrapperRunner implements RunnerInterface
 
     private function complete(TestResult $testResultSum): int
     {
-        foreach ($this->testresultFiles as $testresultFile) {
+        foreach ($this->testResultFiles as $testresultFile) {
             if (! $testresultFile->isFile()) {
                 continue;
             }
@@ -270,8 +282,10 @@ final class WrapperRunner implements RunnerInterface
                 array_merge_recursive($testResultSum->testMarkedIncompleteEvents(), $testResult->testMarkedIncompleteEvents()),
                 array_merge_recursive($testResultSum->testTriggeredPhpunitDeprecationEvents(), $testResult->testTriggeredPhpunitDeprecationEvents()),
                 array_merge_recursive($testResultSum->testTriggeredPhpunitErrorEvents(), $testResult->testTriggeredPhpunitErrorEvents()),
+                array_merge_recursive($testResultSum->testTriggeredPhpunitNoticeEvents(), $testResult->testTriggeredPhpunitNoticeEvents()),
                 array_merge_recursive($testResultSum->testTriggeredPhpunitWarningEvents(), $testResult->testTriggeredPhpunitWarningEvents()),
                 array_merge_recursive($testResultSum->testRunnerTriggeredDeprecationEvents(), $testResult->testRunnerTriggeredDeprecationEvents()),
+                array_merge_recursive($testResultSum->testRunnerTriggeredNoticeEvents(), $testResult->testRunnerTriggeredNoticeEvents()),
                 array_merge_recursive($testResultSum->testRunnerTriggeredWarningEvents(), $testResult->testRunnerTriggeredWarningEvents()),
                 array_merge_recursive($testResultSum->errors(), $testResult->errors()),
                 array_merge_recursive($testResultSum->deprecations(), $testResult->deprecations()),
@@ -284,30 +298,39 @@ final class WrapperRunner implements RunnerInterface
             );
         }
 
+        if ($this->options->configuration->cacheResult()) {
+            $resultCacheSum = new DefaultResultCache($this->options->configuration->testResultCacheFile());
+            foreach ($this->resultCacheFiles as $resultCacheFile) {
+                $resultCache = new DefaultResultCache($resultCacheFile->getPathname());
+                $resultCache->load();
+
+                $resultCacheSum->mergeWith($resultCache);
+            }
+
+            $resultCacheSum->persist();
+        }
+
+        $testdoxResults = (new TestDoxResultsMerger())->getResultsFromTestdoxFiles($this->testdoxFiles);
+
         $this->printer->printResults(
             $testResultSum,
             $this->teamcityFiles,
-            $this->testdoxFiles,
+            $testdoxResults,
         );
         $this->generateCodeCoverageReports();
-        $this->generateLogs();
+        $this->generateJunitLog();
+        $this->generateTestDoxLogs($testdoxResults);
 
         $exitcode = (new ShellExitCodeCalculator())->calculate(
-            $this->options->configuration->failOnDeprecation(),
-            $this->options->configuration->failOnPhpunitDeprecation(),
-            $this->options->configuration->failOnEmptyTestSuite(),
-            $this->options->configuration->failOnIncomplete(),
-            $this->options->configuration->failOnNotice(),
-            $this->options->configuration->failOnRisky(),
-            $this->options->configuration->failOnSkipped(),
-            $this->options->configuration->failOnWarning(),
+            $this->options->configuration,
             $testResultSum,
         );
 
         $this->clearFiles($this->statusFiles);
         $this->clearFiles($this->progressFiles);
         $this->clearFiles($this->unexpectedOutputFiles);
-        $this->clearFiles($this->testresultFiles);
+        $this->clearFiles($this->testResultFiles);
+        $this->clearFiles($this->resultCacheFiles);
         $this->clearFiles($this->coverageFiles);
         $this->clearFiles($this->junitFiles);
         $this->clearFiles($this->teamcityFiles);
@@ -339,7 +362,7 @@ final class WrapperRunner implements RunnerInterface
         );
     }
 
-    private function generateLogs(): void
+    private function generateJunitLog(): void
     {
         if ($this->junitFiles === []) {
             return;
@@ -354,6 +377,22 @@ final class WrapperRunner implements RunnerInterface
             $testSuite,
             $this->options->configuration->logfileJunit(),
         );
+    }
+
+    /** @param array<string,TestDoxTestResultCollection> $testdoxResults */
+    private function generateTestDoxLogs(array $testdoxResults): void
+    {
+        if ($this->options->configuration->hasLogfileTestdoxText()) {
+            $testdoxTextContent = (new TestDoxPlainTextRenderer())->render($testdoxResults);
+            DefaultPrinter::from($this->options->configuration->logfileTestdoxText())->print($testdoxTextContent);
+        }
+
+        if (! $this->options->configuration->hasLogfileTestdoxHtml()) {
+            return;
+        }
+
+        $testdoxHtmlContent = (new TestDoxHtmlRenderer())->render($testdoxResults);
+        DefaultPrinter::from($this->options->configuration->logfileTestdoxHtml())->print($testdoxHtmlContent);
     }
 
     /** @param list<SplFileInfo> $files */

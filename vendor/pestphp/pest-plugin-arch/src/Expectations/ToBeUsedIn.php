@@ -17,9 +17,11 @@ final class ToBeUsedIn
      * Creates an "ToBeUsedIn" expectation.
      *
      * @param  array<int, string>|string  $targets
+     * @param  Expectation<array<int, string>|string>  $expectation
      */
     public static function make(Expectation $expectation, array|string $targets): GroupArchExpectation
     {
+        // @phpstan-ignore-next-line
         assert(is_string($expectation->value) || is_array($expectation->value));
 
         $targets = is_string($targets) ? [$targets] : $targets;
@@ -27,7 +29,8 @@ final class ToBeUsedIn
         return GroupArchExpectation::fromExpectations(
             $expectation,
             array_map(
-                static fn ($target): SingleArchExpectation => ToUse::make(expect($target), $expectation->value), $targets
+                // @phpstan-ignore-next-line
+                static fn (string $target): SingleArchExpectation => ToUse::make(expect($target), $expectation->value), $targets
             )
         );
     }

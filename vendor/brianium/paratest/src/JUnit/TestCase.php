@@ -17,15 +17,15 @@ use function sprintf;
  *
  * @immutable
  */
-class TestCase
+readonly class TestCase
 {
     public function __construct(
-        public readonly string $name,
-        public readonly string $class,
-        public readonly string $file,
-        public readonly int $line,
-        public readonly int $assertions,
-        public readonly float $time
+        public string $name,
+        public string $class,
+        public string $file,
+        public int $line,
+        public int $assertions,
+        public float $time
     ) {
     }
 
@@ -48,6 +48,7 @@ class TestCase
         };
 
         if (($errors = $node->xpath('error')) !== []) {
+            assert($errors !== null);
             $error = $getFirstNode($errors);
             $type  = $getType($error);
             $text  = (string) $error;
@@ -66,6 +67,7 @@ class TestCase
         }
 
         if (($failures = $node->xpath('failure')) !== []) {
+            assert($failures !== null);
             $failure = $getFirstNode($failures);
             $type    = $getType($failure);
             $text    = (string) $failure;

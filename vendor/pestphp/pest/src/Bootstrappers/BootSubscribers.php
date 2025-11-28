@@ -13,14 +13,14 @@ use PHPUnit\Event\Subscriber;
 /**
  * @internal
  */
-final class BootSubscribers implements Bootstrapper
+final readonly class BootSubscribers implements Bootstrapper
 {
     /**
      * The list of Subscribers.
      *
      * @var array<int, class-string<Subscriber>>
      */
-    private const SUBSCRIBERS = [
+    private const array SUBSCRIBERS = [
         Subscribers\EnsureConfigurationIsAvailable::class,
         Subscribers\EnsureIgnorableTestCasesAreIgnored::class,
         Subscribers\EnsureKernelDumpIsFlushed::class,
@@ -31,7 +31,7 @@ final class BootSubscribers implements Bootstrapper
      * Creates a new instance of the Boot Subscribers.
      */
     public function __construct(
-        private readonly Container $container,
+        private Container $container,
     ) {}
 
     /**
