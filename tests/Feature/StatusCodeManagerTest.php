@@ -8,7 +8,7 @@ it('returns success message for status code 0', function () {
    $manager = new StatusCodeManager();
    $message = $manager::getMessage(0);
 
-   expect($message)->toBe('Success');
+   expect($message)->toBe('[0] Success');
 
 });
 
@@ -16,7 +16,7 @@ it('returns a general error message for status code 1', function () {
    $manager = new StatusCodeManager();
    $message = $manager::getMessage(1);
 
-   expect($message)->toBe('General Error');
+   expect($message)->toBe('[1] General Error');
 });
 
 it('returns a custom unknown status code message if status code does not exist', function () {
