@@ -2,20 +2,33 @@
 
 namespace JDS\ServiceProvider;
 
-use JDS\Contracts\ServiceProvider\ServiceProviderInterface;
 use JDS\FileSystem\DirectoryScanner;
 use JDS\FileSystem\FileDataService;
 use JDS\FileSystem\FileDeleter;
 use JDS\FileSystem\FileReader;
-use JDS\Parsing\JsonDecoder;
-use JDS\Parsing\JsonEncoder;
+use JDS\Json\JsonDecoder;
+use JDS\Json\JsonEncoder;
 use League\Container\Argument\Literal\StringArgument;
-use League\Container\Container;
+use League\Container\ServiceProvider\AbstractServiceProvider;
+use League\Container\ServiceProvider\ServiceProviderInterface;
 
-class FileSystemServiceProvider implements ServiceProviderInterface
+class FileSystemServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
 {
-    public function __construct(private Container $container)
+    /**
+     * @var array<string>
+     */
+    protected array  $povides = [
+        DirectoryScanner::class,
+        FileReader::class,
+        JsonDecoder::class,
+        JsonEncoder::class,
+        FileDeleter::class,
+        FileDataService::class,
+    ];
+
+    public function provides(string $id): bool
     {
+        return in_array($id, $this->povides, true);
     }
 
     public function register(): void
