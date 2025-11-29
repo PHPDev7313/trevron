@@ -1,8 +1,4 @@
 <?php
-/*
- * Copyright (c) 2024 Jessop Digital Systems All Rights Reserved
- *
- */
 
 namespace JDS\Http;
 
@@ -15,6 +11,9 @@ class Request
     private SessionInterface $session;
     private mixed $routeHandler;
     private array $routeHandlerArgs;
+
+    /** @var array<string, mixed> */
+    private array $attributes = [];
 
     public function __construct(
         public array $getParams, // $_GET
@@ -92,6 +91,28 @@ class Request
     public function getServerVariable(string $serverVariable): ?string
     {
         return $this->server[$serverVariable] ?? null;
+    }
+
+    // ==================================
+    //          Attribute System
+    // ==================================
+
+
+    public function withAttribute(string $name, mixed $value): self
+    {
+        $clone = clone $this;
+        $clone->attributes[$name] = $value;
+        return $clone;
+    }
+
+    public function getAttribute(string $name, mixed $default=null): mixed
+    {
+        return $this->attributes[$name] ?? $default;
+    }
+
+    public function getAttributes(): array
+    {
+        return $this->attributes;
     }
 }
 
