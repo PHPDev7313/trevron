@@ -82,7 +82,7 @@ class SessionAuthentication extends AbstractSession implements SessionAuthInterf
         $this->session->set($this->session::AUTH_KEY, $user->getAuthId());
         $this->session->set($this->session::ACCESS_TOKEN, $this->accessToken);
         $this->session->set($this->session::REFRESH_TOKEN, $this->refreshToken);
-        $this->session->set($this->session::AUTH_ACCESS_LEVEL, $user->getPer getAccessLevel());
+        $this->session->set($this->session::AUTH_ACCESS_LEVEL, $user->getAccessLevel());
         $this->session->set($this->session::AUTH_PERMISSION, $user->getPermissions());
         $this->session->set($this->session::AUTH_ROLE, $user->getRoleId());
         $this->session->set($this->session::AUTH_ADMIN, $user->isAdmin());
