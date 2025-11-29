@@ -2,17 +2,28 @@
 
 namespace JDS\ServiceProvider\Mail;
 
-use JDS\Contracts\ServiceProvider\ServiceProviderInterface;
+
 use League\Container\Argument\Literal\BooleanArgument;
 use League\Container\Container;
+use League\Container\ServiceProvider\AbstractServiceProvider;
+use League\Container\ServiceProvider\ServiceProviderInterface;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
-class MailServiceProvider implements ServiceProviderInterface
+class MailServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
 {
-    public function __construct(private Container $container)
+
+    protected array $provides = [
+        PHPMailer::class,
+        SMTP::class,
+        Exception::class,
+        MailService::class
+    ];
+
+    public function provides(string $id): bool
     {
+        return in_array($id, $this->provides, true);
     }
 
     public function register(): void
