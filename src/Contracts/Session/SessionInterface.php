@@ -26,5 +26,9 @@ interface SessionInterface
     public function isAdmin(): bool;
 
 	public function isAuthenticated(): bool;
+
+    public function clear(): void;
+
+    public function destroy(): void;
 }
 

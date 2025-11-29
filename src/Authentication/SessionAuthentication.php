@@ -74,7 +74,6 @@ class SessionAuthentication extends AbstractSession implements SessionAuthInterf
             'email' => $user->getEmail(),
             'role_id' => $user->getRoleId(),
             'permission_id' => $user->getPermission(),
-            'bitwise' => $user->getBitwise()
         ]);
         $this->refreshToken = JWT::encode($refreshPayload, $this->jwtRefreshSecretKey, 'HS256');
 

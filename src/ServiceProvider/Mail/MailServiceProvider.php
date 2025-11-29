@@ -4,7 +4,6 @@ namespace JDS\ServiceProvider\Mail;
 
 
 use League\Container\Argument\Literal\BooleanArgument;
-use League\Container\Container;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use League\Container\ServiceProvider\ServiceProviderInterface;
 use PHPMailer\PHPMailer\Exception;
