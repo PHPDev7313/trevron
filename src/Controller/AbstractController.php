@@ -9,7 +9,6 @@ use JDS\Http\InvalidArgumentException;
 use JDS\Http\Request;
 use JDS\Http\Response;
 use JDS\Processing\ErrorProcessor;
-use Monolog\Logger;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -22,10 +21,10 @@ use Twig\Error\SyntaxError;
 abstract class AbstractController
 {
 
-    protected ?ContainerInterface $container = null;
-    protected Request $request;
-    protected string $routePath;
-    protected CentralizedLogger $logger;
+    private ?ContainerInterface $container = null;
+    private Request $request;
+    private string $routePath;
+    private CentralizedLogger $logger;
 
     /**
      * Sets the container instance and configures the application mode based on the container's APP_DEV setting.
@@ -660,6 +659,23 @@ abstract class AbstractController
         // Set the path to the JSON file
         return $fullPath;
     }
+
+    public function getContainer(): ?ContainerInterface
+    {
+        return $this->container;
+    }
+
+    public function getRequest(): Request
+    {
+        return $this->request;
+    }
+
+    public function getLogger(): CentralizedLogger
+    {
+        return $this->logger;
+    }
+
+
     
 }
 
