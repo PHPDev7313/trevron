@@ -18,10 +18,10 @@ class SessionAuthentication extends AbstractSession implements SessionAuthInterf
 
 
     public function __construct(
-        private AuthRepositoryInterface $authRepository,
-        private SessionInterface        $session,
-        private readonly string $jwtSecretKey,
-        private readonly string $jwtRefreshSecretKey
+        private readonly AuthRepositoryInterface $authRepository,
+        private readonly SessionInterface        $session,
+        private readonly string         $jwtSecretKey,
+        private readonly string         $jwtRefreshSecretKey
     )
     {
     }
@@ -73,7 +73,7 @@ class SessionAuthentication extends AbstractSession implements SessionAuthInterf
             'user_id' => $user->getAuthId(),
             'email' => $user->getEmail(),
             'role_id' => $user->getRoleId(),
-            'permission_id' => $user->getPermissionId(),
+            'permission_id' => $user->getPermission(),
             'bitwise' => $user->getBitwise()
         ]);
         $this->refreshToken = JWT::encode($refreshPayload, $this->jwtRefreshSecretKey, 'HS256');
@@ -82,9 +82,8 @@ class SessionAuthentication extends AbstractSession implements SessionAuthInterf
         $this->session->set($this->session::AUTH_KEY, $user->getAuthId());
         $this->session->set($this->session::ACCESS_TOKEN, $this->accessToken);
         $this->session->set($this->session::REFRESH_TOKEN, $this->refreshToken);
-        $this->session->set($this->session::AUTH_BITWISE, $user->getBitwise());
-        $this->session->set($this->session::AUTH_PERMISSION, $user->getPermissionId());
-        $this->session->set($this->session::AUTH_ROLE_WEIGHT, $user->getRoleWeight());
+        $this->session->set($this->session::AUTH_ACCESS_LEVEL, $user->getPer getAccessLevel());
+        $this->session->set($this->session::AUTH_PERMISSION, $user->getPermissions());
         $this->session->set($this->session::AUTH_ROLE, $user->getRoleId());
         $this->session->set($this->session::AUTH_ADMIN, $user->isAdmin());
 
@@ -100,9 +99,8 @@ class SessionAuthentication extends AbstractSession implements SessionAuthInterf
         $this->session->remove($this->session::AUTH_KEY);
         $this->session->remove($this->session::ACCESS_TOKEN);
         $this->session->remove($this->session::REFRESH_TOKEN);
-        $this->session->remove($this->session::AUTH_BITWISE);
+        $this->session->remove($this->session::AUTH_ACCESS_LEVEL);
         $this->session->remove($this->session::AUTH_PERMISSION);
-        $this->session->remove($this->session::AUTH_ROLE_WEIGHT);
         $this->session->remove($this->session::AUTH_ROLE);
         $this->session->remove($this->session::AUTH_ADMIN);
 

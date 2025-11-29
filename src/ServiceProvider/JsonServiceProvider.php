@@ -9,13 +9,22 @@ use JDS\FileSystem\FilePathValidator;
 use JDS\FileSystem\JsonFileWriter;
 use JDS\Json\JsonBuilder;
 use JDS\Json\JsonEncoder;
-use League\Container\Container;
+use League\Container\ServiceProvider\AbstractServiceProvider;
+use Psr\Container\ContainerInterface;
 
-class JsonServiceProvider implements ServiceProviderInterface
+class JsonServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
 {
+    protected array $provides = [
 
-    public function __construct(private Container $container)
+    ];
+
+    public function __construct(protected $container)
     {
+    }
+
+    public function provides(string $id): bool
+    {
+
     }
 
     public function register(): void
