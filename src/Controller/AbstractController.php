@@ -17,14 +17,13 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
-
 abstract class AbstractController
 {
 
-    private ?ContainerInterface $container = null;
-    private Request $request;
-    private string $routePath;
-    private CentralizedLogger $logger;
+    protected ?ContainerInterface $container = null;
+    protected Request $request;
+    protected string $routePath;
+    protected CentralizedLogger $logger;
 
     /**
      * Sets the container instance and configures the application mode based on the container's APP_DEV setting.
@@ -659,23 +658,6 @@ abstract class AbstractController
         // Set the path to the JSON file
         return $fullPath;
     }
-
-    public function getContainer(): ?ContainerInterface
-    {
-        return $this->container;
-    }
-
-    public function getRequest(): Request
-    {
-        return $this->request;
-    }
-
-    public function getLogger(): CentralizedLogger
-    {
-        return $this->logger;
-    }
-
-
     
 }
 
