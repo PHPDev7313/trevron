@@ -11,7 +11,7 @@ class UserIdentity implements UserIdentityInterface
         public string $companyId,
         public array $roleIds,
         public array $permissionIds,
-        public int $access_level,
+        public int $accessLevel,
         public bool $isAdmin,
         public string $email
     ) {}
@@ -20,7 +20,7 @@ class UserIdentity implements UserIdentityInterface
     public function getCompanyId(): string { return $this->companyId; }
     public function getRoleIds(): array { return $this->roleIds; }
     public function getPermissionIds(): array { return $this->permissionIds; }
-    public function getAccessLevel(): int { return $this->access_level; }
+    public function getAccessLevel(): int { return $this->accessLevel; }
     public function isAdmin(): bool { return $this->isAdmin; }
     public function getEmail(): string { return $this->email; }
 }
