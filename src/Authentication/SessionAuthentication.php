@@ -6,6 +6,7 @@ use Firebase\JWT\JWT;
 use JDS\Contracts\Authentication\AuthRepositoryInterface;
 use JDS\Contracts\Authentication\AuthUserInterface;
 use JDS\Contracts\Authentication\SessionAuthInterface;
+use JDS\Contracts\Authentication\UserIdentityProviderInterface;
 use JDS\Contracts\Session\SessionInterface;
 
 class SessionAuthentication extends AbstractSession implements SessionAuthInterface
@@ -18,13 +19,12 @@ class SessionAuthentication extends AbstractSession implements SessionAuthInterf
 
 
     public function __construct(
-        private readonly AuthRepositoryInterface $authRepository,
-        private readonly SessionInterface        $session,
-        private readonly string         $jwtSecretKey,
-        private readonly string         $jwtRefreshSecretKey
-    )
-    {
-    }
+        private readonly AuthRepositoryInterface        $authRepository,
+        private readonly SessionInterface               $session,
+        private readonly UserIdentityProviderInterface  $identityProvider,
+        private readonly string                         $jwtSecretKey,
+        private readonly string                         $jwtRefreshSecretKey
+    ) {}
 
     public function authenticate(string $email, string $password): bool
     {
@@ -52,63 +52,87 @@ class SessionAuthentication extends AbstractSession implements SessionAuthInterf
 
         // start a session
         $this->session->start();
-        $issuedAt = time();
-        $commonPayload = [
-            'iss' => $this->session->get('SERVER_NAME'),
-            'aud' => $this->session->get('HTTP_HOST'),
+
+        //
+        // Build authorization identiy
+        //
+        $identity = $this->identityProvider->buildIdentity($user);
+
+        //
+        // store identity in session
+        //
+        $this->session->set('auth_identity', $identity);
+
+        //
+        // Generate JWT token
+        //
+        $issueAt = time();
+
+        $companyPayload = [
+            'iss' => $_SERVER['SERVER_NAME'] ?? 'localhost',
+            'aud' => $_SERVER['HTTP_HOST'] ?? 'localhost',
+            'sup' => $identity->userId,
         ];
 
-        $accessPayload = [
-            'iat' => $issuedAt,
-            'exp' => $issuedAt + (15 + 60),
-            'token_type' => 'access'
-        ];
+        $accessPayload = array_merge($companyPayload, [
+            'iat' => $issueAt,
+            'exp' => $issueAt + (15 * 60),
+            'token_type' => 'access',
+        ]);
 
         $this->accessToken = JWT::encode($accessPayload, $this->jwtSecretKey, 'HS256');
 
-        $refreshPayload = array_merge($commonPayload, [
-            'iat' => $issuedAt,
-            'exp' => $issuedAt + (60 * 60 * 24 * 14),
+        $refreshPayload = array_merge($companyPayload, [
+            'iat' => $issueAt,
+            'exp' => $issueAt + (60 * 60 * 24 * 14), // 14 days
             'token_type' => 'refresh',
-            'user_id' => $user->getAuthId(),
-            'email' => $user->getEmail(),
-            'role_id' => $user->getRoleId(),
-            'permission_id' => $user->getPermission(),
+            'email' => $identity->email,
+            'company_id' => $identity->companyId,
+            'role_ids' => $identity->roleIds,
+            'permission_ids' => $identity->permissionIds,
+            'access_token' => $this->accessToken,
+            'admin' => $identity->isAdmin,
         ]);
+
         $this->refreshToken = JWT::encode($refreshPayload, $this->jwtRefreshSecretKey, 'HS256');
 
-        // log the user in
-        $this->session->set($this->session::AUTH_KEY, $user->getAuthId());
+        //
+        // Store the tokens
+        //
+
         $this->session->set($this->session::ACCESS_TOKEN, $this->accessToken);
         $this->session->set($this->session::REFRESH_TOKEN, $this->refreshToken);
-        $this->session->set($this->session::AUTH_ACCESS_LEVEL, $user->getAccessLevel());
-        $this->session->set($this->session::AUTH_PERMISSION, $user->getPermissions());
-        $this->session->set($this->session::AUTH_ROLE, $user->getRoleId());
-        $this->session->set($this->session::AUTH_ADMIN, $user->isAdmin());
 
-
-        // set the user
+        //
+        // Keep user for this request
+        ///
         $this->user = $user;
+
         session_regenerate_id(true);
     }
 
     public function logout(): void
     {
         // Remove all session keys related to the user (auth and tokens)
-        $this->session->remove($this->session::AUTH_KEY);
+        $this->session->remove('auth_identity');
         $this->session->remove($this->session::ACCESS_TOKEN);
         $this->session->remove($this->session::REFRESH_TOKEN);
-        $this->session->remove($this->session::AUTH_ACCESS_LEVEL);
-        $this->session->remove($this->session::AUTH_PERMISSION);
-        $this->session->remove($this->session::AUTH_ROLE);
-        $this->session->remove($this->session::AUTH_ADMIN);
 
-
-        // Optionally clear the entire session
+        //
+        // Clear the entire session
+        //
         $this->session->clear();
+
+        //
+        // Reset the cookie
+        //
         $this->resetCookie();
+
+        //
         // Destroy the session
+        //
         $this->session->destroy();
+
         session_regenerate_id(true);
     }
 
