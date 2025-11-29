@@ -10,21 +10,21 @@ use JDS\FileSystem\JsonFileWriter;
 use JDS\Json\JsonBuilder;
 use JDS\Json\JsonEncoder;
 use League\Container\ServiceProvider\AbstractServiceProvider;
-use Psr\Container\ContainerInterface;
 
 class JsonServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
 {
     protected array $provides = [
-
+        FilePathValidator::class,
+        FileNameGenerator::class,
+        JsonFileWriter::class,
+        FileDeleter::class,
+        JsonEncoder::class,
+        JsonBuilder::class,
     ];
-
-    public function __construct(protected $container)
-    {
-    }
 
     public function provides(string $id): bool
     {
-
+        return in_array($id, $this->provides, true);
     }
 
     public function register(): void
@@ -44,7 +44,6 @@ class JsonServiceProvider extends AbstractServiceProvider implements ServiceProv
                FilePathValidator::class,
                FileNameGenerator::class
             ]);
-
     }
 }
 
