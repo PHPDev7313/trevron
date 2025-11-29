@@ -7,6 +7,15 @@ use JDS\Processing\ErrorProcessor;
 
 class Level
 {
+
+//    public const INFO = 200;
+//    public const WARNING = 300;
+//    public const ERROR = 400;
+//    public const DEBUG = 500;
+//    public const CRITICAL = 600;
+//    public const ALERT = 700;
+//    public const NOTICE = 800;
+
     // Define allowed levels as constants
     private const VALID_LEVELS = [
         'INFO',
