@@ -5,6 +5,7 @@ namespace JDS\Logging\Entity;
 class EntityActivityRecord
 {
     public function __construct(
+        public string $log_id,
         public readonly string $entityName,
         public readonly string $entityId,
         public readonly string $action,
