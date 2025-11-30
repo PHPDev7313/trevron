@@ -5,6 +5,7 @@ namespace JDS\Security;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use JDS\Contracts\Security\TokenManagerInterface;
+use Throwable;
 
 class TokenManager implements TokenManagerInterface
 {
@@ -26,25 +27,43 @@ class TokenManager implements TokenManagerInterface
         if ($ttlSeconds <= 0) {
             throw new \InvalidArgumentException("TTL must be a positive integer.");
         }
+        $tokenId = bin2hex(random_bytes(16));
+        $issuedAt = time();
+        $expiresAt = $issuedAt + $ttlSeconds;
 
-        $now = time();
-
-        $baseClaims = [
+        $payload = array_merge([
+            'token_id' => $tokenId,
             'purpose' => $purpose,
-            'expires' => $now + $ttlSeconds,
-        ];
+            'user_id' => $userId,
+            'email' => $email,
+            'iat' => $issuedAt,
+            'exp' => $expiresAt
+        ], $extraClaims);
 
-        if ($userId !== null) {
-            $baseClaims['user_id'] = $userId;
-        }
+        //
+        // 1) Store takenId for single-use
+        $this->tokenStore->store($tokenId, $expiresAt);
 
-        if ($email !== null) {
-            $baseClaims['email'] = $email;
-        }
+        return JWT::encode($payload, $this->secretKey, 'HS256');
 
-        $claims = array_merge($baseClaims, $extraClaims);
-
-        return JWT::encode($claims, $this->secretKey, $this->algo);
+//        $now = time();
+//
+//        $baseClaims = [
+//            'purpose' => $purpose,
+//            'expires' => $now + $ttlSeconds,
+//        ];
+//
+//        if ($userId !== null) {
+//            $baseClaims['user_id'] = $userId;
+//        }
+//
+//        if ($email !== null) {
+//            $baseClaims['email'] = $email;
+//        }
+//
+//        $claims = array_merge($baseClaims, $extraClaims);
+//
+//        return JWT::encode($claims, $this->secretKey, $this->algo);
     }
 
     /**
@@ -54,34 +73,63 @@ class TokenManager implements TokenManagerInterface
     {
         try {
             $decoded = JWT::decode($token, new Key($this->secretKey, $this->algo));
-            $claims = (array) $decoded;
-
-            $purpose = $claims['purpose'] ?? null;
-            $expires = $claims['expires'] ?? null;
-
-            if ($purpose === null || $expires === null) {
-                return null;
-            }
-
-            $payload = new TokenPayload(
-                purpose: $purpose,
-                userId: $claims['user_id'] ?? null,
-                email: $claims['email'] ?? null,
-                expires: (int) $expires,
-                claims: $claims
-            );
-
-            if ($payload->isExpired()) {
-                return null;
-            }
-
-            if ($expectedPurpose !== null && $payload->purpose !== $expectedPurpose) {
-                return null;
-            }
-            return $payload;
-        } catch (\Throwable $e) {
-            // Any decoding / signature / format issue => invalid token
+        } catch (Throwable $e) {
             return null;
         }
+
+        if (($decoded['purpose'] ?? null) !== $expectedPurpose) {
+            return null;
+        }
+
+        $tokenId = $decoded['token_id'] ?? null;
+        if (!$tokenId) {
+            return null;
+        }
+
+        //
+        // 2) Check single-use status
+        //
+        if ($this->tokenStore-isUsed($tokenId)) {
+            return null; // Already used! Rejected.
+        }
+
+        //
+        // 3) Mark as used
+        //
+        $this->tokenStore->markUsed($tokenId);
+
+
+//            $claims = (array) $decoded;
+//
+//            $purpose = $claims['purpose'] ?? null;
+//            $expires = $claims['expires'] ?? null;
+//
+//            if ($purpose === null || $expires === null) {
+//                return null;
+//            }
+
+
+
+            return new TokenPayload(
+                tokenId: $tokenId,
+                purpose: $decoded['purpose'],
+                userId: $decoded['user_id'] ?? null,
+                email: $decoded['email'] ?? null,
+                expires: $decoded['exp']
+            );
+
+//            if ($payload->isExpired()) {
+//                return null;
+//            }
+//
+//            if ($expectedPurpose !== null && $payload->purpose !== $expectedPurpose) {
+//                return null;
+//            }
+//            return $payload;
+//        } catch (\Throwable $e) {
+//            // Any decoding / signature / format issue => invalid token
+//            return null;
+//        }
     }
 }
+
