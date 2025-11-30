@@ -4,7 +4,7 @@ namespace JDS\ServiceProvider;
 
 use JDS\Authentication\SessionAuthentication;
 use JDS\Configuration\Config;
-use JDS\Contracts\ServiceProvider\ServiceProviderInterface;
+use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Contracts\Session\SessionInterface;
 use JDS\Session\Session;
 use League\Container\Argument\Literal\StringArgument;

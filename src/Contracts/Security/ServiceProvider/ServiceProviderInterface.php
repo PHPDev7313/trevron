@@ -1,6 +1,6 @@
 <?php
 
-namespace JDS\Contracts\ServiceProvider;
+namespace JDS\Contracts\Security\ServiceProvider;
 
 interface ServiceProviderInterface
 {

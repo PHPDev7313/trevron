@@ -3,8 +3,8 @@
 namespace JDS\Security;
 
 
+use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Contracts\Security\TokenManagerInterface;
-use JDS\Contracts\ServiceProvider\ServiceProviderInterface;
 use League\Container\Argument\Literal\StringArgument;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 

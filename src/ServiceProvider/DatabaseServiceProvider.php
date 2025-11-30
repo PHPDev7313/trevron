@@ -8,7 +8,7 @@ use JDS\Auditor\Provider\LogLevelProvider;
 use JDS\Auditor\Validators\DatabaseLogJsonValidator;
 use JDS\Configuration\Config;
 use JDS\Console\Command\MigrateDatabase;
-use JDS\Contracts\ServiceProvider\ServiceProviderInterface;
+use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Dbal\ConnectionFactory;
 use JDS\Dbal\GenerateNewId;
 use League\Container\Argument\Literal\ArrayArgument;

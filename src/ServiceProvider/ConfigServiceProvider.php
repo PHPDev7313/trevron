@@ -3,7 +3,7 @@
 namespace JDS\ServiceProvider;
 
 use JDS\Configuration\Config;
-use JDS\Contracts\ServiceProvider\ServiceProviderInterface;
+use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 
 class ConfigServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
