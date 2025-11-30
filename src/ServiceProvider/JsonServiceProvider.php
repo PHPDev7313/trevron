@@ -2,6 +2,7 @@
 
 namespace JDS\ServiceProvider;
 
+use JDS\Contracts\Json\JsonEncoderInterface;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\FileSystem\FileDeleter;
 use JDS\FileSystem\FileNameGenerator;
@@ -36,10 +37,10 @@ class JsonServiceProvider extends AbstractServiceProvider implements ServiceProv
         $this->container->add(FileDeleter::class);
 
         // Core JSON services
-        $this->container->add(JsonEncoder::class);
+        $this->container->add(jsonEncoderInterface::class, JsonEncoder::class);
         $this->container->add(JsonBuilder::class)
             ->addArguments([
-               JsonEncoder::class,
+               JsonEncoderInterface::class,
                JsonFileWriter::class,
                FilePathValidator::class,
                FileNameGenerator::class
