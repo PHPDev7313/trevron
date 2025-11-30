@@ -1,6 +1,6 @@
 [
-    "Pest\\Profanity\\Plugin",
     "Pest\\Arch\\Plugin",
+    "Pest\\Profanity\\Plugin",
     "Pest\\Mutate\\Plugins\\Mutate",
     "Pest\\Plugins\\Configuration",
     "Pest\\Plugins\\Bail",
