@@ -55,6 +55,16 @@ class Request
         return $this->postParams[$key] ?? null;
     }
 
+    public function getQueryParam(string $key, mixed $default=null): mixed
+    {
+        return $this->getParams[$key] ?? $default;
+    }
+
+    public function getPostParam(string $key, mixed $default=null): mixed
+    {
+        return $this->getParams[$key] ?? $default;
+    }
+
     public function getRouteHandler(): mixed
     {
         return $this->routeHandler;
