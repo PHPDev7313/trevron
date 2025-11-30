@@ -1,6 +1,6 @@
 <?php
 
-namespace JDS\Contracts\ServiceProvider\Payments;
+namespace JDS\Contracts\Security\ServiceProvider\Payments;
 
 use JDS\ServiceProvider\Payments\PaymentResponse;
 use JDS\ServiceProvider\Payments\PaymentStatus;

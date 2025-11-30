@@ -5,7 +5,7 @@ namespace JDS\ServiceProvider;
 use JDS\Configuration\Config;
 use JDS\Contracts\Middleware\RequestHandlerInterface;
 use JDS\Contracts\Routing\RouterInterface;
-use JDS\Contracts\ServiceProvider\ServiceProviderInterface;
+use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\EventDispatcher\EventDispatcher;
 use JDS\Http\Kernel;
 use JDS\Http\Middleware\ExtractRouteInfo;

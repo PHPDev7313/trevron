@@ -3,7 +3,7 @@
 namespace JDS\ServiceProvider;
 
 use JDS\Configuration\Config;
-use JDS\Contracts\ServiceProvider\ServiceProviderInterface;
+use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Http\Generators\BreadcrumbGenerator;
 use JDS\Http\Generators\MenuGenerator;
 use League\Container\Argument\Literal\ArrayArgument;

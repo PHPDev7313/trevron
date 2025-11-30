@@ -2,7 +2,7 @@
 
 namespace JDS\ServiceProvider;
 
-use JDS\Contracts\ServiceProvider\ServiceProviderInterface;
+use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\FileSystem\FileLister;
 use JDS\FileSystem\FilePathValidator;
 use JDS\Json\JsonDecoder;

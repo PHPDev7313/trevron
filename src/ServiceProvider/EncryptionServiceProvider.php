@@ -3,11 +3,11 @@
 namespace JDS\ServiceProvider;
 
 use JDS\Configuration\Config;
-use JDS\Contracts\ServiceProvider\ServiceProviderInterface;
+use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Crypt\Crypto;
+use JDS\ServiceProvider\EncriptionServiceProvider as LegacyEncryptProvider;
 use League\Container\Argument\Literal\StringArgument;
 use League\Container\ServiceProvider\AbstractServiceProvider;
-use JDS\ServiceProvider\EncriptionServiceProvider as LegacyEncryptProvider;
 
 class EncryptionServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
 {
