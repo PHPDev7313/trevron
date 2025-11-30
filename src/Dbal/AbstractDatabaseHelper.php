@@ -46,5 +46,10 @@ abstract class AbstractDatabaseHelper
     {
         $statement->bindValue($parameter, '%' . $value . '%', ParameterType::STRING);
     }
+
+    public function generateId(): string
+    {
+        return (new GenerateNewId())->getNewId();
+    }
 }
 
