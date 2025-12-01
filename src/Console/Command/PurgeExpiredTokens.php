@@ -8,7 +8,7 @@ use JDS\Contracts\Security\TokenStoreInterface;
 class PurgeExpiredTokens implements CommandInterface
 {
 
-    public function __construct(private TokenStoreInterface$store)
+    public function __construct(private TokenStoreInterface $store)
     {
     }
 

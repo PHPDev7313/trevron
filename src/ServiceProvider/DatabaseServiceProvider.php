@@ -83,6 +83,8 @@ class DatabaseServiceProvider extends AbstractServiceProvider implements Service
                 new ArrayArgument($migrateInit),
                 GenerateNewId::class,
             ]);
+
+        $container->add(PurgeExpiredTokenCommand)
     }
 }
 
