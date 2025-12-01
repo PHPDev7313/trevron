@@ -87,7 +87,12 @@ final class StatusCodeManager
 
         500 => 'Internal Server Error',
         1109 => "Unknown Command Registration Error",
-        1150 => "MailService Error"
+        1150 => "MailService Error",
+        2800 => "Logging",
+        2810 => "Failed to decode activity log JSON",
+        2815 => "Entity:Log:Entry",
+        2820 => "Failed to encode activity log JSON",
+        2825 => "Database:Activity:Log:Writer"
     ];
 
     /**

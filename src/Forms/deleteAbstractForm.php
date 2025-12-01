@@ -5,7 +5,7 @@ namespace JDS\Forms;
 use DateTime;
 use DateTimeImmutable;
 
-class AbstractForm
+class deleteAbstractForm
 {
     protected function generateSlug(string $title): string
     {
