@@ -2,6 +2,7 @@
 
 namespace JDS\ServiceProvider;
 
+use JDS\Contracts\Json\JsonDecoderInterface;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\FileSystem\FileLister;
 use JDS\FileSystem\FilePathValidator;
@@ -20,7 +21,7 @@ class JsonReaderServiceProvider implements ServiceProviderInterface
 
     public function register(): void
     {
-        $this->container->add(JsonDecoder::class);
+        $this->container->add(JsonDecoderInterface::class, JsonDecoder::class);
         $this->container->add(JsonFileReader::class);
         $this->container->add(JsonSorter::class);
         $this->container->add(FileLister::class);
@@ -33,7 +34,7 @@ class JsonReaderServiceProvider implements ServiceProviderInterface
                 FileLister::class,
                 JsonSorter::class,
                 JsonFileReader::class,
-                JsonDecoder::class,
+                JsonDecoderInterface::class,
                 FilePathValidator::class
             ]);
     }
