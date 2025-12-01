@@ -12,7 +12,7 @@ readonly class EntityLogEntry
         public string            $entity_name,
         public string            $entityId,
         public string            $action,
-        public string            $fields,
+        public array            $fields,
         public ?string           $userId,
         public DateTimeImmutable $timestamp,
     ) {}
