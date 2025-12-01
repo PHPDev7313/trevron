@@ -2,6 +2,8 @@
 
 namespace JDS\Logging\Entity;
 
+use DateTimeImmutable;
+
 class EntityActivityRecord
 {
     public function __construct(
@@ -11,7 +13,7 @@ class EntityActivityRecord
         public readonly string $action,
         public readonly array $fields,
         public readonly ?string $userId,
-        public readonly \DateTimeImmutable $timestamp,
+        public readonly DateTimeImmutable $timestamp,
     ) {}
 }
 
