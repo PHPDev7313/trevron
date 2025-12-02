@@ -7,7 +7,6 @@ use JDS\Diff\Strategy\ArrayDiffStrategy;
 use JDS\Diff\Strategy\ObjectDiffStrategy;
 use JDS\Diff\Strategy\ScalarDiffStrategy;
 use JDS\Diff\Strategy\TextDiffStrategy;
-use League\Container\Container;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use League\Container\ServiceProvider\ServiceProviderInterface;
 
