@@ -16,9 +16,18 @@ trait DiffableEntityTrait
         return $this->originalState;
     }
 
-    public function getEntityIdentifer(): string|int
-    {
-        return $this->getId() ?? $this->id ?? null;
-    }
+    /**
+     * This MUST be implemented by the entity itself.
+     * Never implement it here.
+     *
+     * @return string|int
+     */
+    abstract public function getEntityIdentifier(): string|int;
+
+    /**
+     * This MUST be implemented by the entity itself
+     * @return string
+     */
+    abstract public function getEntityType(): string;
 }
 
