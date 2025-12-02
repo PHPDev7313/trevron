@@ -15,27 +15,39 @@ class Application
 	{
         try {
             // use environment variables to obtain the command name
-            $argv = $_SERVER['argv'];
-            $commandName = $argv[1] ?? null;
+            $argv = $_SERVER['argv'] ?? [];
 
-            // throw an exception if no command name is provided
-            if (!$commandName) {
-                throw new ConsoleException('A command name must be provided');
+            if (empty($argv[1])){
+                throw new ConsoleException("A command name must be provided.");
             }
 
+            $commandName = $argv[1];
+
+            //
+            // global help
+            //
+            if ($commandName === '--help' || $commandName === '-h') {
+                $this->displayGeneralHelp();
+                return 0;
+            }
+
+            //
+            // fetch command from container
             // use command name to obtain a command object from the container
+            //
             $command = $this->container->get($commandName);
 
+            //
             // parse variables to obtain options and args
+            //
             $args = array_slice($argv, 2);
-
             $options = $this->parseOptions($args);
 
+            //
             // execute the command, returning the status code
-            $status = $command->execute($options);
+            //
+            return $command->execute($options);
 
-            // return the status code
-            return $status;
         } catch (ConsoleException $e) {
             $exitCode = 80;
             ErrorProcessor::process($e, $exitCode, $e->getMessage());
@@ -47,26 +59,62 @@ class Application
         }
 	}
 
+    /**
+     * Parse CLI options of the form:
+     * --key or --key=value
+     */
 	private function parseOptions(array $args): array {
 		$options = [];
 		foreach ($args as $arg) {
-            // check if the argument starts with '--' to identify it as an option
-			if (str_starts_with($arg, '--')) {
-				// split the option into key and value (if any)
-				[$key, $value] = array_pad(explode('=', substr($arg, 2), 2), 2, null);
-                // validate the option key presence
-                if (empty($key)) {
-                    throw new ConsoleException('Option name is missing');
-                }
-				// if an option has a value, ensure it follows the validation rule
-				if (!is_null($value) && (int)$value < 1)  {
-					throw new ConsoleException("Option  '{$key}' has an invalid value '{$value}'.");
-				}
-                // set the option value, 'true' is the default when no value is provided
-				$options[$key] = $value ?? true;
-			}
-		}
-		return $options;
+            if (!str_starts_with($arg, '--')) {
+                continue;
+            }
+
+            [$key, $value] = array_pad(
+                explode('=', substr($arg, 2), 2),
+                2,
+                null
+            );
+
+            if ($key === '') {
+                throw new ConsoleException("Option name is missing.");
+            }
+
+            //
+            // Do NOT enforce integer validation here - that belongs to the command layer
+            //
+            $options[$key] = $value ?? true;
+        }
+        return $options;
 	}
+
+    private function displayGeneralHelp(): void
+    {
+        echo "Usage: php console <command> [options]";
+        echo "Use --help after any command to see specific usage.\n";
+    }
 }
+
+
+
+
+//            // check if the argument starts with '--' to identify it as an option
+//			if (str_starts_with($arg, '--')) {
+//				// split the option into key and value (if any)
+//				[$key, $value] = array_pad(explode('=', substr($arg, 2), 2), 2, null);
+//                // validate the option key presence
+//                if (empty($key)) {
+//                    throw new ConsoleException('Option name is missing');
+//                }
+//				// if an option has a value, ensure it follows the validation rule
+//				if (!is_null($value) && (int)$value < 1)  {
+//					throw new ConsoleException("Option  '{$key}' has an invalid value '{$value}'.");
+//				}
+//                // set the option value, 'true' is the default when no value is provided
+//				$options[$key] = $value ?? true;
+//			}
+//		}
+//		return $options;
+
+
 

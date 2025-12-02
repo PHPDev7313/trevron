@@ -20,7 +20,7 @@ use Throwable;
 
 class MigrateDatabase implements CommandInterface
 {
-    private string $name = 'database:migrations:migrate';
+    public string $name = 'database:migrations:migrate';
 
     public function __construct(
         private Connection     $connection,
