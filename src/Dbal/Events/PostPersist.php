@@ -9,6 +9,6 @@ class PostPersist extends Event
 {
 	public function __construct(private Entity $subject)
 	{
-	} //
+	}
 }
 

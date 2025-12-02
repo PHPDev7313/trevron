@@ -7,12 +7,11 @@ use Doctrine\DBAL\Exception;
 use JDS\Dbal\Events\PostPersist;
 use JDS\EventDispatcher\EventDispatcher;
 
-class DataMapper extends AbstractDatabaseHelper
+class DataMapper
 {
     public function __construct(
         private readonly Connection      $connection,
-        private readonly EventDispatcher $eventDispatcher,
-        private readonly GenerateNewId   $generateNewId
+        private readonly EventDispatcher $eventDispatcher
     )
     {
     }
@@ -20,11 +19,6 @@ class DataMapper extends AbstractDatabaseHelper
     public function getConnection(): Connection
     {
         return $this->connection;
-    }
-
-    public function newId(int $length = 12, bool $symbol = false): string
-    {
-        return $this->generateNewId->getNewId($length, $symbol);
     }
 
     /**
@@ -41,38 +35,38 @@ class DataMapper extends AbstractDatabaseHelper
         return $id;
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function checkTableExists(string $database, string $table): bool
-    {
-        try {
-            // Assuming $pdo is your PDO connection
-            $sql = "SELECT 
-                        count(*) 
-                    FROM 
-                        INFORMATION_SCHEMA.TABLES 
-                    WHERE 
-                        TABLE_SCHEMA = :databaseName 
-                      AND 
-                        TABLE_NAME = :tableName;";
-
-            $stmt = $this->connection->prepare($sql);
-            $this->bind($stmt, 'databaseName', $database);
-            $this->bind($stmt, 'tableName', $table);
-            $rows = $stmt->executeQuery();
-
-            if ($rows->fetchFirstColumn()) {
-                // The table exists, you can continue your operations here.
-                return true;
-            } else {
-                // The table does not exist.
-                // You can notify the user about this and stop execution, or handle this situation in any other way that suits your work.
-                return false;
-            }
-        } catch (Exception $e) {
-            throw new \Exception($e->getMessage(), $e->getCode(), $e);
-        }
-    }
 }
 
+//    /**
+//     * @throws \Exception
+//     */
+//    public function checkTableExists(string $database, string $table): bool
+//    {
+//        try {
+//            // Assuming $pdo is your PDO connection
+//            $sql = "SELECT
+//                        count(*)
+//                    FROM
+//                        INFORMATION_SCHEMA.TABLES
+//                    WHERE
+//                        TABLE_SCHEMA = :databaseName
+//                      AND
+//                        TABLE_NAME = :tableName;";
+//
+//            $stmt = $this->connection->prepare($sql);
+//            $this->bind($stmt, 'databaseName', $database);
+//            $this->bind($stmt, 'tableName', $table);
+//            $rows = $stmt->executeQuery();
+//
+//            if ($rows->fetchFirstColumn()) {
+//                // The table exists, you can continue your operations here.
+//                return true;
+//            } else {
+//                // The table does not exist.
+//                // You can notify the user about this and stop execution, or handle this situation in any other way that suits your work.
+//                return false;
+//            }
+//        } catch (Exception $e) {
+//            throw new \Exception($e->getMessage(), $e->getCode(), $e);
+//        }
+//    }

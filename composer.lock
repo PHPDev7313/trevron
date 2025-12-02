@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dd3b1cd654625b952876b7ede6339f82",
+    "content-hash": "932801f78c71da07abaee4fb6beb638f",
     "packages": [
         {
             "name": "doctrine/dbal",
@@ -5217,7 +5217,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.2",
+        "php": ">=8.3",
         "ext-pdo": "*",
         "ext-openssl": "*",
         "ext-simplexml": "*"
