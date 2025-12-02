@@ -10,6 +10,7 @@ use JDS\Authentication\RuntimeException;
 use JDS\Console\ConsoleException;
 use JDS\Console\DatabaseNotFoundException;
 use JDS\Contracts\Console\Command\CommandInterface;
+use JDS\Dbal\AbstractDatabaseHelper;
 use JDS\Dbal\GenerateNewId;
 use JDS\Http\FileNotFoundException;
 use JDS\Http\FileWriteException;
@@ -18,9 +19,22 @@ use JsonException;
 use PDOException;
 use Throwable;
 
-class MigrateDatabase implements CommandInterface
+class MigrateDatabase extends AbstractCommand  implements CommandInterface
 {
-    private string $name = 'database:migrations:migrate';
+    public string $name = 'database:migrations:migrate';
+
+    protected string $description = 'Runs database migrations.';
+
+    protected array $usage = [
+        'php bin/console database:migrations:migrate --up',
+        'php bin/console database:migrations:migrate --up=2',
+        'php bin/console database:migrations:migrate --down',
+    ];
+
+    protected array $options = [
+        'up' => ['type' => 'int', 'required' => false],
+        'down' => ['type' => 'int', 'required' => false],
+    ];
 
     public function __construct(
         private Connection     $connection,
@@ -31,11 +45,30 @@ class MigrateDatabase implements CommandInterface
     {
     }
 
+    private function normalizeMigrationInput(string $input): string
+    {
+        //
+        // Remove leading "m"
+        //
+        $input = ltrim($input, "m");
+
+        //
+        // Remove extension or suffix if provided
+        //
+        $input = explode('_', $input)[0];
+        $input = explode('.', $input)[0];
+
+        //
+        // Pad to 5 digits
+        // If over 5 digits it is ignored
+        //
+        return str_pad($input, 5, '0', STR_PAD_LEFT);
+    }
     /**
      * @throws Throwable
      * @throws Exception
      */
-    public function execute(array $params = []): int
+    public function handle(array $params = []): int
     {
 
         try {
@@ -59,14 +92,14 @@ class MigrateDatabase implements CommandInterface
         if (array_key_exists('up', $params)) {
             if (is_numeric($params['up'])) {
                 try {
-                    $up = $params['up'];
+                    $up = $this->normalizeMigrationInput($params['up']);
                     $found = false;
                     $migrationFiles = $this->getMigrationFiles();
                     if (empty($migrationFiles)) {
                         throw new ConsoleException('There are no migrations to apply...');
                     }
                     foreach ($migrationFiles as $migration) {
-                        $mig_number = (int)substr($migration, 1, strpos($migration, '_') - 1);
+                        $mig_number = $this->normalizeMigrationInput($migration); //(int)substr($migration, 1, strpos($migration, '_') - 1);
                         if ($mig_number == $up) {
                             $this->executeMigration('up', $migration, $this->getConnection());
                             $this->insertMigration($migration);

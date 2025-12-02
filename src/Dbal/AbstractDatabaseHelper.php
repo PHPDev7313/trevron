@@ -2,7 +2,6 @@
 
 namespace JDS\Dbal;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Statement;
