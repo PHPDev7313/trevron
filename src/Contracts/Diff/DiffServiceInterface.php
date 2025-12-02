@@ -9,7 +9,7 @@ interface DiffServiceInterface
      *
      * @param array  $before The original entity state.
      * @param array  $after The new entity state.
-     * @param string $context Optional context (e.g. entity type).
+     * @param string $context Optional context label (e.g. entity type "role").
      *
      * @return array The computed diff; empty array means no changes
      */

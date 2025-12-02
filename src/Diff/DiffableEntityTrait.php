@@ -16,6 +16,12 @@ trait DiffableEntityTrait
         return $this->originalState;
     }
 
+    //
+    // NOTE: the entity MUST implement:
+    // - public function getEntityIndentifier(): string|ing;
+    // - public function getEntityType(): string;
+    // - public function toStateArray(): array;
+
     /**
      * This MUST be implemented by the entity itself.
      * Never implement it here.
@@ -26,8 +32,17 @@ trait DiffableEntityTrait
 
     /**
      * This MUST be implemented by the entity itself
+     *
      * @return string
      */
     abstract public function getEntityType(): string;
+
+    /**
+     * This MUST be implemented by the entity itself
+     *
+     * @return array
+     *
+     */
+    abstract public function toStateArray(): array;
 }
 
