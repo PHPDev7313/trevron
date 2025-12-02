@@ -7,7 +7,9 @@ use JDS\Auditor\Handlers\DatabaseLogHandler;
 use JDS\Auditor\Provider\LogLevelProvider;
 use JDS\Auditor\Validators\DatabaseLogJsonValidator;
 use JDS\Configuration\Config;
+use JDS\Console\Application;
 use JDS\Console\Command\MigrateDatabase;
+use JDS\Console\Kernel;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Dbal\ConnectionFactory;
 use JDS\Dbal\GenerateNewId;
@@ -75,6 +77,12 @@ class DatabaseServiceProvider extends AbstractServiceProvider implements Service
             'user'      => $dbCfg['user'],
             'password'  => $dbCfg['password'],
         ];
+
+        $this->container->add(Kernel::class)
+            ->addArgument([
+                $this->container,
+                Application::class
+            ]);
 
         $this->container->add('database:migrations:migrate', MigrateDatabase::class)
             ->addArguments([
