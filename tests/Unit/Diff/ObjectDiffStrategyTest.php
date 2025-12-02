@@ -1,8 +1,9 @@
 <?php
+namespace Tests\Unit\Diff;
 
 use JDS\Diff\Strategy\ObjectDiffStrategy;
 
-class TestUser {
+class ObjectDiffStrategyTest {
     public string $name = "John";
     public string $role = "user";
 }
@@ -10,8 +11,8 @@ class TestUser {
 it('detect changes in object properties', function () {
     $strategy = new ObjectDiffStrategy();
 
-    $before = new TestUser();
-    $after = new TestUser();
+    $before = new ObjectDiffStrategyTest();
+    $after = new ObjectDiffStrategyTest();
     $after->role = 'Admin';
 
     $result = $strategy->diff($before, $after);
