@@ -84,7 +84,7 @@ class DatabaseServiceProvider extends AbstractServiceProvider implements Service
                 GenerateNewId::class,
             ]);
 
-        $container->add(PurgeExpiredTokenCommand)
+//        $container->add(PurgeExpiredTokenCommand::class);
     }
 }
 
