@@ -6,7 +6,6 @@ use JDS\Configuration\Config;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Container;
-use League\Container\ServiceProvider\AbstractServiceProvider;
 
 class ConfigServiceProvider implements ServiceProviderInterface
 {

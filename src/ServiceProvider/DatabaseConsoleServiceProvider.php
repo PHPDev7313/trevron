@@ -7,6 +7,7 @@ use JDS\Console\Command\MigrateDatabase;
 use JDS\Console\ConsoleRuntimeException;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Dbal\GenerateNewId;
+use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Argument\Literal\StringArgument;
 use League\Container\Container;
 
@@ -45,10 +46,6 @@ class DatabaseConsoleServiceProvider implements ServiceProviderInterface
             "be registered. Ensure Database Service Provider is loaded first.");
         }
 
-//        if (!$this->container->has(ErrorProcessor::class)) {
-//            $this->container->addServiceProvider(new LoggingServiceProvider());
-//        }
-
         $connection = $this->container->get(Connection::class);
         $config = $this->container->get('config');
 
@@ -56,18 +53,12 @@ class DatabaseConsoleServiceProvider implements ServiceProviderInterface
         // 3. Register migration command
         //    Migration command: database:migrations:migrate
         //
-//        $migrateInit = [
-//            'path'      => $config->get('initializePath'),
-//            'database'  => $dbCfg['dbname'],
-//            'user'      => $dbCfg['user'],
-//            'password'  => $dbCfg['password'],
-//        ];
 
         $this->container->add('database:migrations:migrate', MigrateDatabase::class)
             ->addArguments([
                 $connection,
                 new StringArgument($config->get('migrationsPath')),
-                new StringArgument($config->get('migrateInit')),
+                new ArrayArgument($config->get('migrateInit')),
                 GenerateNewId::class
             ]);
     }
