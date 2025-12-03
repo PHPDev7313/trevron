@@ -339,7 +339,7 @@ class MigrateDatabase extends AbstractCommand  implements CommandInterface
         try {
 
 
-            $filePath = $initialize['path'] . '/initialized.json'; // Path to the JSON file
+            $filePath = $initialize['path']; // Path to the JSON file
 
             $this->createMigrationsTable();
 
