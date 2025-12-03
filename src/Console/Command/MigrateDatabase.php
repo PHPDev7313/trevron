@@ -2,6 +2,7 @@
 
 namespace JDS\Console\Command;
 
+use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\Schema;
@@ -10,7 +11,6 @@ use JDS\Authentication\RuntimeException;
 use JDS\Console\ConsoleException;
 use JDS\Console\DatabaseNotFoundException;
 use JDS\Contracts\Console\Command\CommandInterface;
-use JDS\Dbal\AbstractDatabaseHelper;
 use JDS\Dbal\GenerateNewId;
 use JDS\Http\FileNotFoundException;
 use JDS\Http\FileWriteException;
@@ -84,7 +84,6 @@ class MigrateDatabase extends AbstractCommand  implements CommandInterface
             exit($exitCode);
         }
 
-        $execute = 0;
         // migrations up
         // create a migrations table SQL if table not already in existence
 
@@ -430,7 +429,7 @@ class MigrateDatabase extends AbstractCommand  implements CommandInterface
         // Step 1: Build the JSON data
         $data = [
             'initialized' => true,
-            'timestamp' => date('c') // Current timestamp in ISO 8601 format
+            'timestamp' => (new DateTime())->format("Y-m-d H:i:s") // Current timestamp in ISO 8601 format
         ];
 
         // Step 2: Write to the file

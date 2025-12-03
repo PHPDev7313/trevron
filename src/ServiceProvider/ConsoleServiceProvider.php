@@ -58,14 +58,14 @@ class ConsoleServiceProvider extends AbstractServiceProvider implements ServiceP
         // 3. Register the Console Application
         //
         $container->add(Application::class)
-            ->addArgument(ContainerInterface::class);
+            ->addArgument($container);
 
         //
         // 4. Register the Console Kernel
         //
         $container->add(Kernel::class)
             ->addArguments([
-                ContainerInterface::class,
+                $container,
                 Application::class,
             ]);
     }
