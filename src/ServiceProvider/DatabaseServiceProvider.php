@@ -36,13 +36,12 @@ class DatabaseServiceProvider extends AbstractServiceProvider implements Service
     public function register(): void
     {
         $config = $this->container->get(Config::class);
-        $dbCfg = $config->get('db');
 
         //
         // 1. ConnectionFactory
         //
         $this->container->add(ConnectionFactory::class)
-            ->addArgument($dbCfg);
+            ->addArgument($config->get('db'));
 
         //
         // 2. Shared Doctrine DBAL Connection
@@ -77,26 +76,6 @@ class DatabaseServiceProvider extends AbstractServiceProvider implements Service
             'user'      => $dbCfg['user'],
             'password'  => $dbCfg['password'],
         ];
-
-        //
-        // 6. Console Kernel and Application
-        //
-        $this->container->add(Application::class)
-            ->addArgument($this->container);
-
-        $this->container->add(Kernel::class)
-            ->addArgument([
-                $this->container,
-                Application::class
-            ]);
-
-        $this->container->add('database:migrations:migrate', MigrateDatabase::class)
-            ->addArguments([
-                Connection::class,
-                new StringArgument($config->get('migrationsPath')),
-                new ArrayArgument($migrateInit),
-                GenerateNewId::class,
-            ]);
 
 //        $container->add(PurgeExpiredTokenCommand::class);
     }
