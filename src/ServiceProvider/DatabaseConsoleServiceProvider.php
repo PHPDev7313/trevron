@@ -19,7 +19,7 @@ class DatabaseConsoleServiceProvider extends AbstractServiceProvider implements 
 
     public function provides(string $id): bool
     {
-        return array_key_exists($id, $this->provides, true);
+        return in_array($id, $this->provides, true);
     }
 
     public function register(): void
