@@ -17,7 +17,6 @@ class DatabaseLogHandler extends AbstractDatabaseHelper implements LogHandlerInt
     public function __construct(
         private Connection $connection,
         private string $tableName,
-        private GenerateNewId $newId,
         private LogLevelProvider $logLevelProvider,
         private DatabaseLogJsonValidator $jsonValidator
     )
@@ -129,7 +128,7 @@ class DatabaseLogHandler extends AbstractDatabaseHelper implements LogHandlerInt
 
         $validatedContext = $this->jsonValidator->validateAndEncode($context);
 
-        $logId = $this->newId->getNewId();
+        $logId = $this->generateId();
         // prepare SQL statement
         $sql = sprintf("INSERT INTO %s (log_id, level, message, context) VALUES (:logId, :level, :message, :context); ", $this->tableName);
 

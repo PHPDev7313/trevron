@@ -33,8 +33,8 @@ class DatabaseServiceProvider implements ServiceProviderInterface
 
     public function register(): void
     {
-        $config = $this->container->get(Config::class);
 
+        $config = $this->container->get(Config::class);
         //
         // 1. ConnectionFactory
         //
@@ -59,8 +59,7 @@ class DatabaseServiceProvider implements ServiceProviderInterface
         $this->container->add('database', DatabaseLogHandler::class)
             ->addArguments([
                 Connection::class,
-                new StringArgument($config->get('db_audit_log')),
-                GenerateNewId::class,
+                new StringArgument($config->get('db_logger')),
                 LogLevelProvider::class,
                 DatabaseLogJsonValidator::class,
             ]);
