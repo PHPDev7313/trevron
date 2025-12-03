@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use JDS\Console\Command\MigrateDatabase;
 use JDS\Console\ConsoleRuntimeException;
 use JDS\Dbal\GenerateNewId;
+use JDS\Processing\ErrorProcessor;
 use League\Container\Argument\Literal\StringArgument;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use League\Container\ServiceProvider\ServiceProviderInterface;
@@ -40,6 +41,10 @@ class DatabaseConsoleServiceProvider extends AbstractServiceProvider implements 
         if (!$container->has(GenerateNewId::class)) {
             throw new ConsoleRuntimeException("Database Console Provider requires that the Generate NewId ServiceProvider" .
             "be registered. Ensure Database Service Provider is loaded first.");
+        }
+
+        if (!$container->has(ErrorProcessor::class)) {
+            $container->addServiceProvider(new LoggingServiceProvider());
         }
 
         $connection = $container->get(Connection::class);
