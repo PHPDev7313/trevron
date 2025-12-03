@@ -7,18 +7,17 @@ use JDS\Auditor\Handlers\DatabaseLogHandler;
 use JDS\Auditor\Provider\LogLevelProvider;
 use JDS\Auditor\Validators\DatabaseLogJsonValidator;
 use JDS\Configuration\Config;
-use JDS\Console\Application;
-use JDS\Console\Command\MigrateDatabase;
-use JDS\Console\Kernel;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Dbal\ConnectionFactory;
 use JDS\Dbal\GenerateNewId;
-use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Argument\Literal\StringArgument;
-use League\Container\ServiceProvider\AbstractServiceProvider;
+use League\Container\Container;
 
-class DatabaseServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
+class DatabaseServiceProvider implements ServiceProviderInterface
 {
+    public function __construct(private readonly Container $container)
+    {
+    }
 
     protected array $provides = [
         ConnectionFactory::class,

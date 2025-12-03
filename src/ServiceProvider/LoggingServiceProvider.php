@@ -4,20 +4,25 @@ namespace JDS\ServiceProvider;
 
 use JDS\Auditor\LoggerManager;
 use JDS\Configuration\Config;
+use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Handlers\ExceptionHandler;
 use JDS\Http\StatusCodeManager;
 use JDS\Logging\ActivityLogger;
 use JDS\Logging\ExceptionLogger;
 use JDS\Processing\ErrorProcessor;
 use League\Container\Argument\Literal\ArrayArgument;
-use League\Container\ServiceProvider\AbstractServiceProvider;
+use League\Container\Container;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
 
-class LoggingServiceProvider extends AbstractServiceProvider
+class LoggingServiceProvider implements ServiceProviderInterface
 {
+
+    public function __construct(private readonly Container $container)
+    {
+    }
 
     /**
      * @var array<string>
@@ -29,6 +34,7 @@ class LoggingServiceProvider extends AbstractServiceProvider
         'manager',
         ActivityLogger::class,
         ExceptionLogger::class,
+        ErrorProcessor::class,
     ];
 
     public function provides(string $id): bool

@@ -5,18 +5,21 @@ namespace JDS\ServiceProvider;
 use Doctrine\DBAL\Connection;
 use JDS\Console\Command\MigrateDatabase;
 use JDS\Console\ConsoleRuntimeException;
+use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Dbal\GenerateNewId;
-use JDS\Processing\ErrorProcessor;
 use League\Container\Argument\Literal\StringArgument;
-use League\Container\ServiceProvider\AbstractServiceProvider;
-use League\Container\ServiceProvider\ServiceProviderInterface;
+use League\Container\Container;
 
-class DatabaseConsoleServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
+class DatabaseConsoleServiceProvider implements ServiceProviderInterface
 {
     private array $provides = [
         'database:migrations:migrate',
         MigrateDatabase::class
     ];
+
+    public function __construct(private Container $container)
+    {
+    }
 
     public function provides(string $id): bool
     {
@@ -25,12 +28,11 @@ class DatabaseConsoleServiceProvider extends AbstractServiceProvider implements 
 
     public function register(): void
     {
-        $container = $this->getContainer();
 
         //
         // 1. Ensure database connection exists
         //
-        if (!$container->has(Connection::class)) {
+        if (!$this->container->has(Connection::class)) {
             throw new ConsoleRuntimeException("Database Console Provider requires that a Doctrine DBAL Conneciton" .
             "be registered. Ensure Database Service Provider is loaded first.");
         }
@@ -38,17 +40,17 @@ class DatabaseConsoleServiceProvider extends AbstractServiceProvider implements 
         //
         // 2. Ensure New ID Generation exists
         //
-        if (!$container->has(GenerateNewId::class)) {
+        if (!$this->container->has(GenerateNewId::class)) {
             throw new ConsoleRuntimeException("Database Console Provider requires that the Generate NewId ServiceProvider" .
             "be registered. Ensure Database Service Provider is loaded first.");
         }
 
-        if (!$container->has(ErrorProcessor::class)) {
-            $container->addServiceProvider(new LoggingServiceProvider());
-        }
+//        if (!$this->container->has(ErrorProcessor::class)) {
+//            $this->container->addServiceProvider(new LoggingServiceProvider());
+//        }
 
-        $connection = $container->get(Connection::class);
-        $config = $container->get('config');
+        $connection = $this->container->get(Connection::class);
+        $config = $this->container->get('config');
 
         //
         // 3. Register migration command
@@ -61,7 +63,7 @@ class DatabaseConsoleServiceProvider extends AbstractServiceProvider implements 
 //            'password'  => $dbCfg['password'],
 //        ];
 
-        $container->add('database:migrations:migrate', MigrateDatabase::class)
+        $this->container->add('database:migrations:migrate', MigrateDatabase::class)
             ->addArguments([
                 $connection,
                 new StringArgument($config->get('migrationsPath')),
