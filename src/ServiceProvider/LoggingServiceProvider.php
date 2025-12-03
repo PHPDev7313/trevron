@@ -51,7 +51,7 @@ class LoggingServiceProvider implements ServiceProviderInterface
         //
 
         $loggers = [];
-        foreach ($config->get('logging') as $key => $loggerCfg) {
+        foreach ($config->get('loggers') as $key => $loggerCfg) {
             $logger = new Logger($loggerCfg['name']);
             $logger->pushHandler(
                 new StreamHandler(
