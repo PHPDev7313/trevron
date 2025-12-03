@@ -31,16 +31,16 @@ class ConfigServiceProvider extends AbstractServiceProvider implements ServicePr
 
     public function register(): void
     {
-        // Bind the Config object
-        $this->container->add('config.data', new ArrayArgument($this->configData));
+        // Bind the Config data
+        $this->container->add('config-data', new ArrayArgument($this->configData));
 
         // Bind the Config object
         $this->container->add('config', Config::class)
-            ->addArgument('config.data');
+            ->addArgument('config-data');
 
         // Allow resolving by class-name as well
         $this->container->add(Config::class)
-            ->addArgument('config.data');
+            ->addArgument('config-data');
     }
 }
 
