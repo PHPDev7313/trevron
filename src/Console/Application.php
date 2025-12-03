@@ -3,11 +3,12 @@
 namespace JDS\Console;
 
 use JDS\Processing\ErrorProcessor;
-use Psr\Container\ContainerInterface;
+use League\Container\Container;
+
 
 class Application
 {
-	public function __construct(private readonly ContainerInterface $container)
+	public function __construct(private readonly Container $container)
 	{
 	}
 
