@@ -47,6 +47,7 @@ class FrameworkBootStrapper
             }
 
             $provider->register();
+
             //
             // Optional: support a "boot" lifecycle
             //

@@ -4,15 +4,14 @@ namespace JDS\ServiceProvider;
 
 use JDS\Console\Application;
 use JDS\Console\Kernel;
+use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use League\Container\Argument\Literal\StringArgument;
-use League\Container\ServiceProvider\AbstractServiceProvider;
-use League\Container\ServiceProvider\ServiceProviderInterface;
-use Psr\Container\ContainerInterface;
+use League\Container\Container;
 
 /**
  * Registers the Console Kernel, Application, and base config values.
  */
-class ConsoleServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
+class ConsoleServiceProvider implements ServiceProviderInterface
 {
     /**
      * Services this provider delivers
@@ -23,6 +22,10 @@ class ConsoleServiceProvider extends AbstractServiceProvider implements ServiceP
         'base-commands-namespace',
         'user-commands',
     ];
+
+    public function __construct(private Container $container)
+    {
+    }
 
     /**
      * Whether this provider offers the given service id.
@@ -37,12 +40,11 @@ class ConsoleServiceProvider extends AbstractServiceProvider implements ServiceP
      */
     public function register(): void
     {
-        $container = $this->getContainer();
 
         //
         // 1. Provide base namespace for command discovery
         //
-        $container->add(
+        $this->container->add(
             'base-commands-namespace',
             new StringArgument('JDS\\Console\\Command\\')
         );
@@ -50,22 +52,22 @@ class ConsoleServiceProvider extends AbstractServiceProvider implements ServiceP
         //
         // 2. Provide array of user-defined commands
         //
-        if (!$container->has('user-commands')) {
-            $container->add('user-commands',[]);
+        if (!$this->container->has('user-commands')) {
+            $this->container->add('user-commands',[]);
         }
 
         //
         // 3. Register the Console Application
         //
-        $container->add(Application::class)
-            ->addArgument($container);
+        $this->container->add(Application::class)
+            ->addArgument($this->container);
 
         //
         // 4. Register the Console Kernel
         //
-        $container->add(Kernel::class)
+        $this->container->add(Kernel::class)
             ->addArguments([
-                $container,
+                $this->container,
                 Application::class,
             ]);
     }

@@ -5,9 +5,10 @@ namespace JDS\ServiceProvider;
 use JDS\Configuration\Config;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use League\Container\Argument\Literal\ArrayArgument;
+use League\Container\Container;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 
-class ConfigServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
+class ConfigServiceProvider implements ServiceProviderInterface
 {
     /**
      * @var array<string>
@@ -20,7 +21,7 @@ class ConfigServiceProvider extends AbstractServiceProvider implements ServicePr
     /**
      * Accept the already prepared config data array.
      */
-    public function __construct(private array $configData)
+    public function __construct(private readonly array $configData, private readonly Container $container)
     {
     }
 
