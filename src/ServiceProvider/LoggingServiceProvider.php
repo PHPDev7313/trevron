@@ -60,7 +60,7 @@ class LoggingServiceProvider implements ServiceProviderInterface
                 )
             );
 
-            $logger[$key] = $logger;
+            $loggers[$key] = $logger;
         }
 
         $this->container->add('loggerFactory', new ArrayArgument($loggers));
