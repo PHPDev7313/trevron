@@ -78,6 +78,12 @@ class DatabaseServiceProvider extends AbstractServiceProvider implements Service
             'password'  => $dbCfg['password'],
         ];
 
+        //
+        // 6. Console Kernel and Application
+        //
+        $this->container->add(Application::class)
+            ->addArgument($this->container);
+
         $this->container->add(Kernel::class)
             ->addArgument([
                 $this->container,
