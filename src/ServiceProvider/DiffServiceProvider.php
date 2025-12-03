@@ -2,15 +2,15 @@
 
 namespace JDS\ServiceProvider;
 
+use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Diff\DiffEngine;
 use JDS\Diff\Strategy\ArrayDiffStrategy;
 use JDS\Diff\Strategy\ObjectDiffStrategy;
 use JDS\Diff\Strategy\ScalarDiffStrategy;
 use JDS\Diff\Strategy\TextDiffStrategy;
-use League\Container\ServiceProvider\AbstractServiceProvider;
-use League\Container\ServiceProvider\ServiceProviderInterface;
+use League\Container\Container;
 
-class DiffServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
+class DiffServiceProvider implements ServiceProviderInterface
 {
     /**
      * Declare what this provider offers.
@@ -20,6 +20,10 @@ class DiffServiceProvider extends AbstractServiceProvider implements ServiceProv
     protected array $provides = [
         DiffEngine::class,
     ];
+
+    public function __construct(private readonly Container $container)
+    {
+    }
 
     /**
      * REQUIRED BY AbstractServiceProvider
