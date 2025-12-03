@@ -10,8 +10,8 @@ use Throwable;
 class ExceptionLogger
 {
     public function __construct(
-        private readonly LoggerInterface $logger,
-        private readonly StatusCodeManager $statusCodeManager,
+        private LoggerInterface $logger,
+        private StatusCodeManager $statusCodeManager,
         private bool $isProduction = true)
     {
     }
