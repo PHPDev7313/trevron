@@ -6,7 +6,7 @@ use DirectoryIterator;
 use JDS\Authentication\RuntimeException;
 use JDS\Contracts\Console\Command\CommandInterface;
 use JDS\Processing\ErrorProcessor;
-use Psr\Container\ContainerInterface;
+use League\Container\Container;
 use ReflectionClass;
 use Throwable;
 
@@ -14,7 +14,7 @@ final class Kernel
 {
 
 	public function __construct(
-		private ContainerInterface $container,
+		private Container $container,
 		private Application $application
 	)
 	{
