@@ -25,7 +25,6 @@ class DatabaseServiceProvider extends AbstractServiceProvider implements Service
         Connection::class,
         GenerateNewId::class,
         'database',
-        'database:migrations:migrate',
     ];
 
     public function provides(string $id): bool
@@ -67,15 +66,6 @@ class DatabaseServiceProvider extends AbstractServiceProvider implements Service
                 DatabaseLogJsonValidator::class,
             ]);
 
-        //
-        // 5. Migration command: database:migrations:migrate
-        //
-        $migrateInit = [
-            'path'      => $config->get('initializePath'),
-            'database'  => $dbCfg['dbname'],
-            'user'      => $dbCfg['user'],
-            'password'  => $dbCfg['password'],
-        ];
 
 //        $container->add(PurgeExpiredTokenCommand::class);
     }

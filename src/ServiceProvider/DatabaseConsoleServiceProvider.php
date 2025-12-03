@@ -34,17 +34,33 @@ class DatabaseConsoleServiceProvider extends AbstractServiceProvider implements 
             "be registered. Ensure Database Service Provider is loaded first.");
         }
 
+        //
+        // 2. Ensure New ID Generation exists
+        //
+        if (!$container->has(GenerateNewId::class)) {
+            throw new ConsoleRuntimeException("Database Console Provider requires that the Generate NewId ServiceProvider" .
+            "be registered. Ensure Database Service Provider is loaded first.");
+        }
+
         $connection = $container->get(Connection::class);
         $config = $container->get('config');
 
         //
-        // 2. Register migration command
+        // 3. Register migration command
+        //    Migration command: database:migrations:migrate
         //
+//        $migrateInit = [
+//            'path'      => $config->get('initializePath'),
+//            'database'  => $dbCfg['dbname'],
+//            'user'      => $dbCfg['user'],
+//            'password'  => $dbCfg['password'],
+//        ];
+
         $container->add('database:migrations:migrate', MigrateDatabase::class)
             ->addArguments([
                 $connection,
                 new StringArgument($config->get('migrationsPath')),
-                new StringArgument($config->get('migateInit')),
+                new StringArgument($config->get('migrateInit')),
                 GenerateNewId::class
             ]);
     }
