@@ -4,10 +4,6 @@ namespace JDS\Configuration;
 
 use JDS\Console\ConsoleRuntimeException;
 use JDS\ServiceProvider\ConfigServiceProvider;
-use JDS\ServiceProvider\ConsoleServiceProvider;
-use JDS\ServiceProvider\DatabaseConsoleServiceProvider;
-use JDS\ServiceProvider\DatabaseServiceProvider;
-use JDS\ServiceProvider\LoggingServiceProvider;
 use League\Container\Container;
 
 class FrameworkBootStrapper
