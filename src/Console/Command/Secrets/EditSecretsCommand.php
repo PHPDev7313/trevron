@@ -18,7 +18,7 @@ class EditSecretsCommand implements CommandInterface
 
     public function execute(array $params = []): int
     {
-        $editor = $_ENV['EDITOR'] ?: 'nano';
+        $editor = $this->resolveEditor(); //$_ENV['EDITOR'] ?: 'notepad';
 
         //
         // decrypt -> write plaintext temp file
@@ -54,6 +54,30 @@ class EditSecretsCommand implements CommandInterface
 
         fwrite(STDOUT, "Secrets updated." . PHP_EOL);
         return 0;
+    }
+
+    private function resolveEditor(): string
+    {
+        //
+        // 1. Framework override (highest priority)
+        //
+        $frameworkEditor = $_ENV['FRAMEWORK_EDITOR'] ?? null;
+        if ($frameworkEditor) {
+            return $frameworkEditor;
+        }
+
+        // 2. System EDITOR variable (common on linux/macOS)
+        $envEditor = $_ENV['EDITOR'] ?? null;
+        if ($envEditor) {
+            return $envEditor;
+        }
+
+        // 3. OS-aware fallback
+        return match (PHP_OS_FAMILY) {
+            'Windows' => 'notepad',
+            'Darwin', 'Linux' => 'nano',
+            default => 'notepad'
+        };
     }
 }
 
