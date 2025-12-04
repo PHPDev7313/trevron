@@ -229,7 +229,7 @@ final class Kernel
             ExceptionHandler::initializeWithEnvironment($this->container->get('config')->get('environment'));
         }
 
-        if ($this->container->has(ErrorProcessor::class && $this->container->has('ExceptionLogger'))) {
+        if ($this->container->has(ErrorProcessor::class) && $this->container->has('ExceptionLogger')) {
             ErrorProcessor::initialize($this->container->get('ExceptionLogger'));
         }
     }
