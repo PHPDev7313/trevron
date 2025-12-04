@@ -183,11 +183,11 @@ final class Kernel
                 'class' => ErrorProcessor::class,
                 'shared' => true
             ],
-            [
-                'id' => 'ExceptionLogger',
-                'class' => ExceptionLogger::class,
-                'shared' => true
-            ]
+//            [
+//                'id' => 'ExceptionLogger',
+//                'class' => ExceptionLogger::class,
+//                'shared' => true
+//            ]
         ];
 
         foreach ($provider as $item) {
