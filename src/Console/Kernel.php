@@ -178,13 +178,24 @@ final class Kernel
     private function processorValidate(): void
     {
         $provider = [
-            ErrorProcessor::class,
-            ExceptionHandler::class
+            [
+                'id' => ErrorProcessor::class,
+                'class' => ErrorProcessor::class,
+                'shared' => true
+            ],
+            [
+                'id' => 'ExceptionLogger',
+                'class' => ExceptionLogger::class,
+                'shared' => true
+            ]
         ];
 
-        foreach ($provider as $class) {
-            if (!$this->container->has($class)) {
-                $this->container->add($class);
+        foreach ($provider as $item) {
+            if (!$this->container->has($item['id'])) {
+                $def = $this->container->add($item['id'], $item['class']);
+                if ($item['shared']) {
+                    $def->setShared(true);
+                }
             }
         }
         $this->processLoggers();
