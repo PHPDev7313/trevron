@@ -24,7 +24,6 @@ final class Kernel
 		private Application $application
 	)
 	{
-        $this->processorValidate();
 	}
 
     /**
@@ -32,6 +31,7 @@ final class Kernel
      */
 	public function handle(): int
 	{
+        $this->processorValidate();
 		// register commands with the container
 		$this->registerBuiltInCommands();
         $this->registerUserCommands(); // future expansion hook
