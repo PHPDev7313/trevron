@@ -5,8 +5,14 @@ namespace JDS\Console;
 use DirectoryIterator;
 use JDS\Authentication\RuntimeException;
 use JDS\Contracts\Console\Command\CommandInterface;
+use JDS\Handlers\ExceptionHandler;
+use JDS\Http\StatusCodeManager;
+use JDS\Logging\ExceptionLogger;
 use JDS\Processing\ErrorProcessor;
+use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Container;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use ReflectionClass;
 use Throwable;
 
@@ -18,6 +24,7 @@ final class Kernel
 		private Application $application
 	)
 	{
+        $this->processorValidate();
 	}
 
     /**
@@ -165,6 +172,54 @@ final class Kernel
                     "Failed to register user-defined command: {$class}. Please contact admin."
                 );
             }
+        }
+    }
+
+    private function processorValidate(): void
+    {
+        $provider = [
+            ErrorProcessor::class,
+            ExceptionHandler::class
+        ];
+
+        foreach ($provider as $class) {
+            if (!$this->container->has($class)) {
+                $this->container->add($class);
+            }
+        }
+        $this->processLoggers();
+        $this->initialize();
+    }
+
+    private function processLoggers(): void
+    {
+        if (!$this->container->has('loggers')) {
+            $loggers = [];
+            foreach ($this->container->get('config')->get('loggers') as $key => $loggerConfig) {
+                $logger = new Logger($loggerConfig['name']);
+                $logger->pushHandler(new StreamHandler($loggerConfig['path'], Logger::toMonologLevel($loggerConfig['level'])));
+                $loggers[$key] = $logger;
+            }
+
+            $this->container->add('loggerFactory', new ArrayArgument($loggers));
+
+            $this->container->add('ExceptionLogger', ExceptionLogger::class)
+                ->addArguments([
+                    $this->container->get('loggerFactory')['exception'],
+                    StatusCodeManager::class,
+                    $this->container->get('config')->isProduction()
+                ]);
+        }
+    }
+
+    private function initialize(): void
+    {
+        if ($this->container->has(ExceptionHandler::class)) {
+            ExceptionHandler::initializeWithEnvironment($this->container->get('config')->get('environment'));
+        }
+
+        if ($this->container->has(ErrorProcessor::class && $this->container->has('ExceptionLogger'))) {
+            ErrorProcessor::initialize($this->container->get('ExceptionLogger'));
         }
     }
 }
