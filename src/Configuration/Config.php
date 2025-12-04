@@ -21,6 +21,9 @@ class Config implements ConfigInterface
      */
     private string $logLevel;
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct(private array $config = [])
     {
         // validate and ensure the environment key has a valid value, or set a default
@@ -71,9 +74,9 @@ class Config implements ConfigInterface
     {
         return match ($this->environment) {
             'production', 'staging' => 'ERROR',
-            'development' => 'DEBUG',
-            'testing' => 'WARNING',
-            default => 'ERROR'
+            'development'           => 'DEBUG',
+            'testing'               => 'WARNING',
+            default                 => 'ERROR',
         };
     }
 
@@ -139,12 +142,13 @@ class Config implements ConfigInterface
 
     private function validateDatabaseConfig(array $config): void
     {
-        $requiredKeys = ['driver', 'dbname', 'host', 'user', 'password', 'port'];
+        $requiredKeys = ['driver', 'dbname', 'host', 'port'];
+
         $missingKeys = array_diff($requiredKeys, array_keys($config));
+
         if (!empty($missingKeys)) {
-            throw new ConfigurationException("Missing required database configuration keys: " . implode(', ', $missingKeys));
+            throw new ConfigurationException("Missing required database configuration keys (non-sensitive): " . implode(', ', $missingKeys));
         }
-  // redundant
     }
 }
 
