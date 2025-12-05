@@ -10,7 +10,13 @@ use JDS\Security\SecretsManager;
 class DecryptSecretsCommand extends BaseCommand implements CommandInterface
 {
     protected string $name = 'secrets:decrypt';
+
     protected string $description = 'Decrypt encrypted secrets and print them as JSON';
+
+    protected array $options = [
+        'decrypt' => "Decrypt encrypted secrets and print them as JSON",
+        'help' => 'Show help for decrypt command'
+    ];
 
     public function __construct(
         private readonly string $appSecretKey,
@@ -20,6 +26,11 @@ class DecryptSecretsCommand extends BaseCommand implements CommandInterface
 
     public function execute(array $params = []): int
     {
+        if ($this->helpRequested($params)) {
+            $this->printHelp();
+            return 0;
+        }
+
         if (!is_file($this->encPath)) {
             $this->error("Encrypted secrets file missing: {$this->encPath}");
             return 1;

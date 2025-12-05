@@ -10,7 +10,13 @@ use Throwable;
 class ValidateSecretCommand extends BaseCommand implements CommandInterface
 {
     protected string $name = 'secrets:validate';
+
     protected string $description = 'Validate plaintext secrets against the JSON schema.';
+
+    protected array $options = [
+        'validate'  => 'Validate secrets against the JSON schema to make sure it complies with standards',
+        'help'      => 'Show help for this command'
+    ];
 
     public function __construct(
         private readonly string $schemaPath,
@@ -21,6 +27,11 @@ class ValidateSecretCommand extends BaseCommand implements CommandInterface
 
     public function execute(array $params = []): int
     {
+        if ($this->helpRequested($params)) {
+            $this->printHelp();
+            return 0;
+        }
+
         if (!is_file($this->plainPath)) {
             $file = basename($this->plainPath, '.json');
             $this->error("Plain secrets file not found: {$file}. [Validate:Secrets:Command]");
