@@ -4,7 +4,7 @@ namespace JDS\Security;
 
 
 use JDS\Configuration\Config;
-use JDS\Console\Command\PurgeExpiredTokens;
+use JDS\Console\Commands\PurgeExpiredTokens;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Contracts\Security\TokenManagerInterface;
 use JDS\Contracts\Security\TokenStoreInterface;
@@ -49,3 +49,5 @@ class TokenServiceProvider extends AbstractServiceProvider implements ServicePro
         });
     }
 }
+
+
