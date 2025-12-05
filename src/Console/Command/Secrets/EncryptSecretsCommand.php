@@ -14,6 +14,11 @@ class EncryptSecretsCommand extends BaseCommand implements CommandInterface
 
     protected string $description = 'Encrypt plaintext secrets into the encrypted secrets file.';
 
+    protected array $options = [
+        'validate'  => 'Validate against schema before encrypting',
+        'help'      => 'Show help for this command'
+    ];
+
     public function __construct(
         private readonly string $appSecretKey,
         private readonly string $plainPath,
@@ -24,6 +29,11 @@ class EncryptSecretsCommand extends BaseCommand implements CommandInterface
 
     public function execute(array $params = []): int
     {
+        if ($this->helpRequested($params)) {
+            $this->printHelp();
+            return 0;
+        }
+
          if (!is_file($this->plainPath)) {
             $file = basename($this->plainPath, '.json');
             $this->error("Plain secrets file missing: {$file}. [Encrypt:Secrets:Command].");

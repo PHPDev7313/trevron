@@ -10,7 +10,13 @@ use JDS\Security\SecretsManager;
 class EditSecretsCommand extends BaseCommand implements CommandInterface
 {
     protected string $name = 'secrets:edit';
+
     protected string $description = 'Decrypt, edit, and re-encrypt secrets using $EDITOR or OS-aware default.';
+
+    protected array $options = [
+        'edit' => 'Edit secrets and save them encrypted',
+        'help' => 'Show help for this command'
+    ];
 
     public function __construct(
         private readonly string $appSecretKey,
@@ -22,6 +28,11 @@ class EditSecretsCommand extends BaseCommand implements CommandInterface
 
     public function execute(array $params = []): int
     {
+        if ($this->helpRequested($params)) {
+            $this->printHelp();
+            return 0;
+        }
+
         $editor = $this->resolveEditor(); //$_ENV['EDITOR'] ?: 'notepad';
 
         //
