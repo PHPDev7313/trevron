@@ -1,9 +1,10 @@
 <?php
 
-namespace JDS\Console\Commands;
+namespace JDS\Dbal\Example\Examples;
 
 use JDS\Contracts\Console\Command\CommandInterface;
-use JDS\Dbal\Schema\SchemaManager;
+use JDS\Dbal\Example\SchemaManager;
+
 
 class InitSchemaCommand implements CommandInterface
 {

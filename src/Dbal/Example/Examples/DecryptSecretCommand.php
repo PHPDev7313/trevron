@@ -1,6 +1,6 @@
 <?php
 
-namespace JDS\Console\Command;
+namespace JDS\Dbal\Example\Examples;
 
 use JDS\Contracts\Console\Command\CommandInterface;
 use JDS\Exceptions\CryptoRuntimeException;
