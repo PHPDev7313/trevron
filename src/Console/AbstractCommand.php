@@ -1,6 +1,6 @@
 <?php
 
-namespace JDS\Console\Command;
+namespace JDS\Console;
 
 use JDS\Contracts\Console\Command\CommandInterface;
 use JDS\Exceptions\ConsoleOptionException;
