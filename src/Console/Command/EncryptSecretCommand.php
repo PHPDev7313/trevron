@@ -7,7 +7,7 @@ use JDS\Exceptions\CryptoRuntimeException;
 use JDS\Security\SecretsCrypto;
 use JDS\Security\SecretsManager;
 
-class EncryptSecretsCommand implements CommandInterface
+class EncryptSecretCommand implements CommandInterface
 {
     public function __construct(
         private readonly string $appSecretKeyBase64,

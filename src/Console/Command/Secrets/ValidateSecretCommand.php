@@ -2,7 +2,7 @@
 
 namespace JDS\Console\Command\Secrets;
 
-use JDS\Console\Command\BaseCommand;
+use JDS\Console\BaseCommand;
 use JDS\Contracts\Console\Command\CommandInterface;
 use JDS\Security\SecretsValidator;
 use Throwable;

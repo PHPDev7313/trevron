@@ -8,6 +8,7 @@ use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 use JDS\Authentication\RuntimeException;
+use JDS\Console\AbstractCommand;
 use JDS\Console\ConsoleException;
 use JDS\Console\DatabaseNotFoundException;
 use JDS\Contracts\Console\Command\CommandInterface;
