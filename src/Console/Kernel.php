@@ -3,7 +3,6 @@
 namespace JDS\Console;
 
 use DirectoryIterator;
-use JDS\Authentication\RuntimeException;
 use JDS\Contracts\Console\Command\CommandInterface;
 use JDS\Handlers\ExceptionHandler;
 use JDS\Http\StatusCodeManager;
@@ -48,7 +47,7 @@ final class Kernel
             // get all files in the commands directory
             $directory = __DIR__ . '/Command';
             if (!is_dir($directory)) {
-                throw new RuntimeException("Command directory does not exist: {$directory}. [Console:Kernel] Please contact admin.");
+                throw new ConsoleRuntimeException("Command directory does not exist: {$directory}. [Console:Kernel] Please contact admin.");
             }
 
             // this sets up command where we can use the command in the terminal
@@ -75,14 +74,17 @@ final class Kernel
                     ErrorProcessor::process(
                         $e,
                         $exitCode,
-                        "[Code:{$exitCode}] Failed to register command: {$file->getFilenme()}. Please contact admin."
+                        "[Code:{$exitCode}] Failed to register command: {$file->getFilename()}. Please contact admin. [Console:Kernel]."
                     );
                 }
             }
         } catch (Throwable $e) {
             // handle errors for the entire registration process using appMode
             $exitCode = 1109;
-            ErrorProcessor::process($e, $exitCode, "[Code:{$exitCode}] Unknown error registering commands. Please contact admin."
+            ErrorProcessor::process(
+                $e,
+                $exitCode,
+                "[Code:{$exitCode}] Unknown error registering commands. Please contact admin. [Console:Kernel]."
             );
         }
 	}
@@ -93,7 +95,7 @@ final class Kernel
     private function registerCommandClass(string $class): void
     {
         if (!class_exists($class)) {
-            throw new ConsoleRuntimeException("Command class does not exist: {$class}.");
+            throw new ConsoleRuntimeException("Command class does not exist: {$class}. [Console:Kernel].");
         }
 
         if (!is_subclass_of($class, CommandInterface::class)) {
@@ -106,9 +108,13 @@ final class Kernel
         $name = $this->resolveCommandName($class);
 
         //
-        // Register into DI container
+        // Register into DI container as an alias to the real command service.
+        // This ensures that commands with constructor args (like secrets commands)
+        // still resolve correctly via their existing definitions.
         //
-        $this->container->add($name, $class);
+        $this->container->add($name, function () use ($class) {
+            return $this->container->get($class);
+        });
     }
 
     /**
@@ -119,19 +125,23 @@ final class Kernel
         $reflection = new ReflectionClass($class);
 
         if (!$reflection->hasProperty('name')) {
-            throw new ConsoleRuntimeException("Command {$class} is missing required 'name' property.");
+            throw new ConsoleRuntimeException("Command {$class} is missing required 'name' property. [Console:Kernel].");
         }
 
         $property = $reflection->getProperty('name');
 
         if (!$property->isDefault()) {
-            throw new ConsoleRuntimeException("Command {$class} 'name' must have default value.");
+            throw new ConsoleRuntimeException("Command {$class} 'name' must have default value. [Console:Kernel].");
         }
 
         $value = $property->getDefaultValue();
 
         if (!is_string($value)) {
-            throw new ConsoleRuntimeException("Command {$class} 'name' must be a string.");
+            throw new ConsoleRuntimeException("Command {$class} 'name' must be a string. [Console:Kernel].");
+        }
+
+        if (str_contains($value, ' ')) {
+            throw new ConsoleRuntimeException("Command {$class} 'name' cannot contain spaces ('{$value}'). Use single token names like 'secret:encrypt'. [Console:Kernel].");
         }
 
         return $value;
@@ -158,7 +168,7 @@ final class Kernel
         $userCommands = $this->container->get('user-commands');
 
         if (!is_array($userCommands)) {
-            throw new ConsoleRuntimeException("Invalid 'user-commands' config. Must be array.");
+            throw new ConsoleRuntimeException("Invalid 'user-commands' config. Must be array. [Console:Kernel].");
         }
 
         foreach($userCommands as $class) {
@@ -169,7 +179,7 @@ final class Kernel
                 ErrorProcessor::process(
                     $e,
                     $exitCode,
-                    "Failed to register user-defined command: {$class}. Please contact admin."
+                    "Failed to register user-defined command: {$class}. Please contact admin. [Console:Kernel]."
                 );
             }
         }
@@ -208,7 +218,11 @@ final class Kernel
             $loggers = [];
             foreach ($this->container->get('config')->get('loggers') as $key => $loggerConfig) {
                 $logger = new Logger($loggerConfig['name']);
-                $logger->pushHandler(new StreamHandler($loggerConfig['path'], Logger::toMonologLevel($loggerConfig['level'])));
+                $logger->pushHandler(
+                    new StreamHandler(
+                        $loggerConfig['path'],
+                        Logger::toMonologLevel($loggerConfig['level']))
+                );
                 $loggers[$key] = $logger;
             }
 
@@ -226,7 +240,9 @@ final class Kernel
     private function initialize(): void
     {
         if ($this->container->has(ExceptionHandler::class)) {
-            ExceptionHandler::initializeWithEnvironment($this->container->get('config')->get('environment'));
+            ExceptionHandler::initializeWithEnvironment(
+                $this->container->get('config')->get('environment')
+            );
         }
 
         if ($this->container->has(ErrorProcessor::class) && $this->container->has('ExceptionLogger')) {

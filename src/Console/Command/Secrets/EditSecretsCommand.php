@@ -2,12 +2,16 @@
 
 namespace JDS\Console\Command\Secrets;
 
+use JDS\Console\Command\BaseCommand;
 use JDS\Contracts\Console\Command\CommandInterface;
 use JDS\Security\SecretsCrypto;
 use JDS\Security\SecretsManager;
 
-class EditSecretsCommand implements CommandInterface
+class EditSecretsCommand extends BaseCommand implements CommandInterface
 {
+    protected string $name = 'secrets:edit';
+    protected string $description = 'Decrypt, edit, and re-encrypt secrets using $EDITOR or OS-aware default.';
+
     public function __construct(
         private readonly string $appSecretKey,
         private readonly string $plainPath,
@@ -32,11 +36,14 @@ class EditSecretsCommand implements CommandInterface
             //
             // create new empty template
             //
-            file_put_contents($this->plainPath, json_encode([
-                "db" => ["user" => "", "password" => ""],
-                "jwt" => ["access" => "", "refresh" =>"", "token" => ""],
-                "encryption" => ["key" => "", "crypt" => "", "appSecret" => ""]
-            ], JSON_PRETTY_PRINT));
+            file_put_contents(
+                $this->plainPath,
+                json_encode([
+                    "db" => ["user" => "", "password" => ""],
+                    "jwt" => ["access" => "", "refresh" =>"", "token" => ""],
+                    "encryption" => ["key" => "", "crypt" => ""]
+                ], JSON_PRETTY_PRINT)
+            );
         }
 
         //
@@ -52,7 +59,7 @@ class EditSecretsCommand implements CommandInterface
         $manager = new SecretsManager($this->encPath, $crypto);
         $manager->save($secrets);
 
-        fwrite(STDOUT, "Secrets updated." . PHP_EOL);
+        $this->writeln("Secrets updated. [Edit:Secrets:Command]");
         return 0;
     }
 
@@ -66,13 +73,17 @@ class EditSecretsCommand implements CommandInterface
             return $frameworkEditor;
         }
 
+        //
         // 2. System EDITOR variable (common on linux/macOS)
+        //
         $envEditor = $_ENV['EDITOR'] ?? null;
         if ($envEditor) {
             return $envEditor;
         }
 
+        //
         // 3. OS-aware fallback
+        //
         return match (PHP_OS_FAMILY) {
             'Windows' => 'notepad',
             'Darwin', 'Linux' => 'nano',

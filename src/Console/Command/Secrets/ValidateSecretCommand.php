@@ -2,11 +2,16 @@
 
 namespace JDS\Console\Command\Secrets;
 
+use JDS\Console\Command\BaseCommand;
 use JDS\Contracts\Console\Command\CommandInterface;
 use JDS\Security\SecretsValidator;
+use Throwable;
 
-class ValidateSecretCommand implements CommandInterface
+class ValidateSecretCommand extends BaseCommand implements CommandInterface
 {
+    protected string $name = 'secrets:validate';
+    protected string $description = 'Validate plaintext secrets against the JSON schema.';
+
     public function __construct(
         private readonly string $schemaPath,
         private readonly string $plainPath
@@ -17,12 +22,14 @@ class ValidateSecretCommand implements CommandInterface
     public function execute(array $params = []): int
     {
         if (!is_file($this->plainPath)) {
-            fwrite(STDERR, "Plain secrets file not found: {$this->plainPath}" . PHP_EOL);
+            $file = basename($this->plainPath, '.json');
+            $this->error("Plain secrets file not found: {$file}. [Validate:Secrets:Command]");
             return 1;
         }
 
         if (!is_file($this->schemaPath)) {
-            fwrite(STDERR, "Schema file not found: {$this->schemaPath}" . PHP_EOL);
+            $file = basename($this->schemaPath, '.json');
+            $this->error("Schema file not found: {$file}. [Validate:Secrets:Command].");
             return 1;
         }
 
@@ -30,23 +37,23 @@ class ValidateSecretCommand implements CommandInterface
         $schema = json_decode(file_get_contents($this->schemaPath), true);
 
         if (!is_array($secrets)) {
-            fwrite(STDERR, "Invalid secrets schema." . PHP_EOL);
+            $this->error("Invalid secrets file. [Validate:Secrets:Command].");
             return 1;
         }
 
         if (!is_array($schema)) {
-            fwrite(STDERR, "Invalid secrets schema." . PHP_EOL);
+            $this->error("Invalid secrets schema. [Validate:Secrets:Command].");
             return 1;
         }
 
         try {
             (new SecretsValidator($schema))->validate($secrets);
         } catch (Throwable $e) {
-            fwrite(STDERR, "Validation failed: {$e->getMessage()}" . PHP_EOL);
+            $this->error("Validation failed: {$e->getMessage()}. [Validate:Secrets:Command].");
             return 1;
         }
 
-        fwrite(STDOUT, "Secrets validated successfully." . PHP_EOL);
+        $this->writeln("Secrets validated successfully.");
         return 0;
     }
 }
