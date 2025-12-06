@@ -2,45 +2,50 @@
 
 namespace JDS\ServiceProvider;
 
-use JDS\Configuration\Config;
+use JDS\Contracts\Security\SecretsInterface;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
-use JDS\Crypt\Crypto;
-use JDS\ServiceProvider\EncriptionServiceProvider as LegacyEncryptProvider;
+use JDS\ServiceProvider\Encryption\Decryptor;
+use JDS\ServiceProvider\Encryption\Encryptor;
+use JDS\ServiceProvider\Encryption\KeyProvider;
+use JDS\ServiceProvider\Encryption\NonceProvider;
 use League\Container\Argument\Literal\StringArgument;
-use League\Container\ServiceProvider\AbstractServiceProvider;
+use League\Container\Container;
 
-class EncryptionServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
+class EncryptionServiceProvider implements ServiceProviderInterface
 {
     protected array $provides = [
-        'crypto-generator',
-        LegacyEncryptProvider::class,
+        SecretsInterface::class,
+        KeyProvider::class,
+        NonceProvider::class,
+        Encryptor::class,
+        Decryptor::class
     ];
+
     public function provides(string $id): bool
     {
         return in_array($id, $this->provides, true);
     }
 
-    public function register(): void
+     public function register(Container $container): void
     {
-        $config = $this->container->get(Config::class);
+        // pull from config added by the application before bootstrap runs
+        $config = $container->get('config');
+        $secrets = $container->get(SecretsInterface::class);
 
-        //
-        // 1. Crypto generator
-        //
-        $this->container->add('crypto-generator', Crypto::class)
-            ->addArgument(
-                new StringArgument($config->get('encryptionKey'))
-            );
+        // Add KeyProvider
+        $container->add(KeyProvider::class)
+            ->addArgument(new StringArgument($secrets->get('encryption.crypt')));
 
-        //
-        // 2. Existing EncriptionServiceProvider wrapper
-        //
-        // NOTE:
-        // Because your legacy provider requires the container as an argument,
-        // we keep it here for backward compatibility.
-        //
-        $this->container->add(LegacyEncryptProvider::class)
-            ->addArgument($this->container);
+        // Add NonceProvider
+        $container->add(NonceProvider::class);
+
+        // Add Encryptor
+        $container->add(Encryptor::class)
+            ->addArguments([KeyProvider::class, NonceProvider::class]);
+
+        // Add Decryptor
+        $container->add(Decryptor::class)
+            ->addArgument( KeyProvider::class);
     }
 }
 
