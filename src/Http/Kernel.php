@@ -4,16 +4,19 @@ namespace JDS\Http;
 
 
 use JDS\Contracts\Middleware\RequestHandlerInterface;
+use JDS\Error\ErrorProcessor;
+use JDS\Error\StatusCode;
 use JDS\EventDispatcher\EventDispatcher;
 use JDS\Http\Event\ResponseEvent;
+use Throwable;
 
 class Kernel
 {
 
 	public function __construct(
-		private bool $appEnv,
-		private RequestHandlerInterface $requestHandler,
-		private EventDispatcher  $eventDispatcher
+		private readonly bool               $debug, // true in dev, false in prod
+		private readonly RequestHandlerInterface    $requestHandler,
+		private readonly EventDispatcher            $eventDispatcher
 	)
 	{
 	}
@@ -22,30 +25,47 @@ class Kernel
 	{
 		try {
 			$response = $this->requestHandler->handle($request);
-		} catch (\Exception $exception) {
-			$response = $this->createExceptionResponse($exception);
+		} catch (Throwable $e) {
+            // Log + process error via ErrorProcessor
+            ErrorProcessor::process(
+                $e,
+                StatusCode::HTTP_KERNEL_GENERAL_FAILURE,
+                'An unexpected error occurred while processing the request.',
+            );
+//			$response = $this->handleException($request, $e);
+
+            // convert into Response
+            $response = $this->createExceptionResponse($e);
 		}
 
-		$this->eventDispatcher->dispatch(new ResponseEvent($request, $response));
+		$this->eventDispatcher->dispatch(
+            new ResponseEvent($request, $response)
+        );
 
 		return $response;
 	}
 
-	/**
-	 * @throws  \Exception $exception
-	 */
-	private function createExceptionResponse(\Exception $exception): Response
-	{
-		if (!$this->appEnv) {
-			throw $exception;
-		}
+    private function createExceptionResponse(Throwable $exception): Response
+    {
+        //
+        // In debug mode, bubble up for a detailed error page / Whoops
+        //
+        if ($this->debug) {
+            throw $exception;
+        }
 
-		if ($exception instanceof HttpException) {
-			return new Response($exception->getMessage(), $exception->getStatusCode());
-		}
+        if ($exception instanceof HttpException) {
+            return new Response(
+                $exception->getMessage(),
+                $exception->getStatusCode(),
+            );
+        }
 
-		return new Response('Server error', Response::HTTP_INTERNAL_SERVER_ERROR);
-	}
+        return new Response(
+            'Server error',
+            Response::HTTP_INTERNAL_SERVER_ERROR,
+        );
+    }
 
 	public function terminate(Request $request, Response $response): void
 	{
@@ -56,4 +76,35 @@ class Kernel
 
 	}
 }
+
+
+
+//	private function handleException(Request $request, Throwable $e): Response
+//	{
+//        //
+//        // In debug mode, rethrow to show stack traces
+//        //
+//		if ($this->config->debug) {
+//			throw $e;
+//		}
+//
+//		return $this->renderException($e);
+//	}
+//
+//    private function renderException(Throwable $e): Response
+//    {
+//        if ($e instanceof HttpException) {
+//            return new Response(
+//                $e->getMessage(),
+//                $e->getStatusCode(),
+//            );
+//        }
+//
+//        return new Response(
+//            'Server error',
+//            Response::HTTP_INTERNAL_SERVER_ERROR,
+//        );
+//    }
+
+
 

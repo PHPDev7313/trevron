@@ -14,17 +14,17 @@ use JDS\Http\Middleware\RouterDispatch;
 use JDS\Routing\Router;
 use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Argument\Literal\StringArgument;
-use League\Container\ServiceProvider\AbstractServiceProvider;
+use League\Container\Container;
 
-class HttpServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
+class HttpServiceProvider  implements ServiceProviderInterface
 {
     protected array $provides = [
         RouterInterface::class,
         RequestHandlerInterface::class,
-        Kernel::class,
         RouterDispatch::class,
         ExtractRouteInfo::class,
         EventDispatcher::class,
+        Kernel::class,
     ];
 
     public function provides(string $id): bool
@@ -32,30 +32,30 @@ class HttpServiceProvider extends AbstractServiceProvider implements ServiceProv
         return in_array($id, $this->provides, true);
     }
 
-    public function register(): void
+    public function register(Container $container): void
     {
-        $config = $this->container->get(Config::class);
+        $config = $container->get(Config::class);
 
         //
         // 1. RouterInterface -> Router
         //
-        $this->container->add(RouterInterface::class, Router::class);
+        $container->add(RouterInterface::class, Router::class);
 
         //
         // 2. RequestHandlerInterface -> RequestHandler
         //
-        $this->container->add(RequestHandlerInterface::class, RequestHandler::class)
-            ->addArgument($this->container);
+        $container->add(RequestHandlerInterface::class, RequestHandler::class)
+            ->addArgument($container);
 
         //
         // 3. EventDispatcher
         //
-        $this->container->add(EventDispatcher::class);
+        $container->add(EventDispatcher::class);
 
         //
         // 4. HTTP Kernel
         //
-        $this->container->add(Kernel::class)
+        $container->add(Kernel::class)
             ->addArguments([
                 ($config->isProduction() || $config->isStaging()),
                 RequestHandlerInterface::class,
@@ -65,16 +65,16 @@ class HttpServiceProvider extends AbstractServiceProvider implements ServiceProv
         //
         // 5. RouterDispatch middleware
         //
-        $this->container->add(RouterDispatch::class)
+        $container->add(RouterDispatch::class)
             ->addArguments([
                 RouterInterface::class,
-                $this->container
+                $container
             ]);
 
         //
         // 6. ExtractRouteInfo middleware
         //
-        $this->container->add(ExtractRouteInfo::class)
+        $container->add(ExtractRouteInfo::class)
             ->addArguments([
                 new ArrayArgument($config->get('routes')),
                 new StringArgument($config->get('routePath')),

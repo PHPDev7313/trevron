@@ -11,6 +11,7 @@ class LoggerManager implements AuditorInterface
 {
     private array $loggers = [];
 
+    private string $name;
     /**
      * Register a Monolog logger under a unique name.
      *
@@ -20,6 +21,7 @@ class LoggerManager implements AuditorInterface
     public function registerLogger(string $name, LoggerInterface $logger): void
     {
         $this->loggers[$name] = new CentralizedLogger($logger);
+        $this->name = $name;
     }
 
     /**
@@ -36,6 +38,11 @@ class LoggerManager implements AuditorInterface
         }
 
         return $this->loggers[$name];
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
     }
 }
 

@@ -29,7 +29,6 @@ class EncryptionServiceProvider implements ServiceProviderInterface
      public function register(Container $container): void
     {
         // pull from config added by the application before bootstrap runs
-        $config = $container->get('config');
         $secrets = $container->get(SecretsInterface::class);
 
         // Add KeyProvider

@@ -10,9 +10,9 @@ use JDS\FileSystem\FilePathValidator;
 use JDS\FileSystem\JsonFileWriter;
 use JDS\Json\JsonBuilder;
 use JDS\Json\JsonEncoder;
-use League\Container\ServiceProvider\AbstractServiceProvider;
+use League\Container\Container;
 
-class JsonServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
+class JsonServiceProvider implements ServiceProviderInterface
 {
     protected array $provides = [
         FilePathValidator::class,
@@ -28,17 +28,17 @@ class JsonServiceProvider extends AbstractServiceProvider implements ServiceProv
         return in_array($id, $this->provides, true);
     }
 
-    public function register(): void
+    public function register(Container $container): void
     {
         // file system helpers
-        $this->container->add(FilePathValidator::class);
-        $this->container->add(FileNameGenerator::class);
-        $this->container->add(JsonFileWriter::class);
-        $this->container->add(FileDeleter::class);
+        $container->add(FilePathValidator::class);
+        $container->add(FileNameGenerator::class);
+        $container->add(JsonFileWriter::class);
+        $container->add(FileDeleter::class);
 
         // Core JSON services
-        $this->container->add(jsonEncoderInterface::class, JsonEncoder::class);
-        $this->container->add(JsonBuilder::class)
+        $container->add(jsonEncoderInterface::class, JsonEncoder::class);
+        $container->add(JsonBuilder::class)
             ->addArguments([
                JsonEncoderInterface::class,
                JsonFileWriter::class,

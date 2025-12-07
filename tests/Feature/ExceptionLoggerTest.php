@@ -2,7 +2,7 @@
 require __DIR__ . '/../../vendor/autoload.php';
 
 use JDS\Handlers\ExceptionFormatter;
-use JDS\Http\StatusCodeManager;
+use JDS\Http\OldStatusCodeManager;
 use JDS\Logging\ExceptionLogger;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 it('logs messages correctly in production mode', function () {
     // Use the real result of StatusCodeManager::getMessage()
     $code = 500;
-    $message = \JDS\Http\StatusCodeManager::getMessage($code); // Get the real message
+    $message = \JDS\Http\OldStatusCodeManager::getMessage($code); // Get the real message
 
     // Create a mock for Monolog\Logger and enforce LoggerInterface compatibility
     $mockLogger = Mockery::mock(Logger::class, LoggerInterface::class);
@@ -24,7 +24,7 @@ it('logs messages correctly in production mode', function () {
         );
 
     // Create ExceptionLogger using real StatusCodeManager class directly in the log method
-    $exceptionLogger = new ExceptionLogger($mockLogger, new \JDS\Http\StatusCodeManager(), true);
+    $exceptionLogger = new ExceptionLogger($mockLogger, new \JDS\Http\OldStatusCodeManager(), true);
 
     // Call the method we're testing
     $formattedMessage = $exceptionLogger->log($code, 'Processing unexpected data.', 'error');
@@ -38,7 +38,7 @@ it('logs messages correctly in production mode', function () {
 it('logs messages with exception trace in development mode', function () {
     // Set up a valid status code and use the real StatusCodeManager to fetch the message
     $code = 500;
-    $message = \JDS\Http\StatusCodeManager::getMessage($code); // Retrieve the actual message
+    $message = \JDS\Http\OldStatusCodeManager::getMessage($code); // Retrieve the actual message
 
     // Create an exception for testing (simulate what happens during runtime)
     $exception = new \RuntimeException('Test Exception message');
@@ -54,7 +54,7 @@ it('logs messages with exception trace in development mode', function () {
         );
 
     // Create ExceptionLogger with mock logger and real StatusCodeManager
-    $exceptionLogger = new ExceptionLogger($mockLogger, new \JDS\Http\StatusCodeManager(), false); // 'false' for development mode
+    $exceptionLogger = new ExceptionLogger($mockLogger, new \JDS\Http\OldStatusCodeManager(), false); // 'false' for development mode
 
     // Call the `log` method to log with an exception
     $formattedMessage = $exceptionLogger->log($code, 'Processing unexpected data.', 'error', $exception);

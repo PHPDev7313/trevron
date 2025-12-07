@@ -3,16 +3,16 @@
 namespace JDS\Logging;
 
 use JDS\Handlers\ExceptionFormatter;
-use JDS\Http\StatusCodeManager;
+use JDS\Http\OldStatusCodeManager;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
 class ExceptionLogger
 {
     public function __construct(
-        private LoggerInterface $logger,
-        private StatusCodeManager $statusCodeManager,
-        private bool $isProduction = true)
+        private LoggerInterface      $logger,
+        private OldStatusCodeManager $statusCodeManager,
+        private bool                 $isProduction = true)
     {
     }
 

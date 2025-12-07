@@ -8,9 +8,9 @@ use JDS\Http\Generators\BreadcrumbGenerator;
 use JDS\Http\Generators\MenuGenerator;
 use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Argument\Literal\StringArgument;
-use League\Container\ServiceProvider\AbstractServiceProvider;
+use League\Container\Container;
 
-class TemplateServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
+class TemplateServiceProvider implements ServiceProviderInterface
 {
     /**
      * @var array<string>
@@ -25,14 +25,14 @@ class TemplateServiceProvider extends AbstractServiceProvider implements Service
         return in_array($id, $this->provides, true);
     }
 
-    public function register(): void
+    public function register(Container $container): void
     {
-        $config = $this->container->get(Config::class);
+        $config = $container->get(Config::class);
 
         //
         // 1. MenuGenerator
         //
-        $this->container->add(MenuGenerator::class)
+        $container->add(MenuGenerator::class)
             ->addArguments([
                 new StringArgument($config->get('basePath') . $config->get('menuPath')),
                 new StringArgument($config->get('menuFile')),
@@ -41,7 +41,7 @@ class TemplateServiceProvider extends AbstractServiceProvider implements Service
         //
         // 2. BreadcrumbGenerator
         //
-        $this->container->add(BreadcrumbGenerator::class)
+        $container->add(BreadcrumbGenerator::class)
             ->addArguments([
                 new ArrayArgument($config->get('routes')),
                 new StringArgument($config->get('routePath')),

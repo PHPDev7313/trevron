@@ -27,16 +27,12 @@ class Config implements ConfigInterface
     public function __construct(private array $config = [])
     {
         // validate and ensure the environment key has a valid value, or set a default
-        $this->config['environment'] = $this->validateEnvironment($this->config['environment'] ?? null);
+        $env = $config["environment"] ?? null;
 
-        // set the environment property
-        $this->environment = $this->config['environment'];
+        $this->environment = $this->validateEnvironment($env);
 
         // set the appropriate log level based on the environment
         $this->logLevel = $this->determineLogLevel();
-
-        // validate database configuration
-        $this->validateDatabaseConfig($this->config['db'] ?? []);
     }
 
     /**
@@ -44,7 +40,28 @@ class Config implements ConfigInterface
      */
     public function get(string $key, mixed $default = null): mixed
     {
-        return $this->config[$key] ?? $default;
+        //
+        // Fast path for direct root-level key
+        //
+        if (array_key_exists($key, $this->config)) {
+            return $this->config[$key];
+        }
+
+        //
+        // Dot-notation support
+        //
+        $segments = explode('.', $key);
+        $value = $this->config;
+
+        foreach ($segments as $segment) {
+            if (!is_array($value) || !array_key_exists($segment, $value)) {
+                return $default;
+            }
+
+            $value = $value[$segment];
+
+        }
+        return $value;
     }
 
     /**
@@ -52,7 +69,19 @@ class Config implements ConfigInterface
      */
     public function has(string $key): bool
     {
-        return array_key_exists($key, $this->config);
+        //return $this->get($key, '__not_found__') !== '__not found___'; //array_key_exists($key, $this->config);
+
+        $segments = explode('.', $key);
+        $value = $this->config;
+
+        foreach ($segments as $segment) {
+            if (!is_array($value) || !array_key_exists($segment, $value)) {
+                return false;
+            }
+
+            $value = $value[$segment];
+        }
+        return true;
     }
 
     /**
@@ -138,17 +167,6 @@ class Config implements ConfigInterface
     public function isStaging(): bool
     {
         return $this->environment === 'staging';
-    }
-
-    private function validateDatabaseConfig(array $config): void
-    {
-        $requiredKeys = ['driver', 'dbname', 'host', 'port'];
-
-        $missingKeys = array_diff($requiredKeys, array_keys($config));
-
-        if (!empty($missingKeys)) {
-            throw new ConfigurationException("Missing required database configuration keys (non-sensitive): " . implode(', ', $missingKeys));
-        }
     }
 }
 

@@ -5,106 +5,129 @@ namespace JDS\ServiceProvider;
 use JDS\Auditor\LoggerManager;
 use JDS\Configuration\Config;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
+use JDS\Exceptions\Configuration\ConfigRuntimeException;
+use JDS\Exceptions\Loggers\LoggerRuntimeException;
 use JDS\Handlers\ExceptionHandler;
-use JDS\Http\StatusCodeManager;
+use JDS\Http\OldStatusCodeManager;
 use JDS\Logging\ActivityLogger;
 use JDS\Logging\ExceptionLogger;
 use JDS\Processing\ErrorProcessor;
-use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Container;
-use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\StreamHandler;
-use Monolog\Level;
 use Monolog\Logger;
 
 class LoggingServiceProvider implements ServiceProviderInterface
 {
-
-    public function __construct(private readonly Container $container)
+    public function register(Container $container): void
     {
-    }
-
-    /**
-     * @var array<string>
-     */
-    private $provides = [
-        'loggerFactory',
-        'basicLogger',
-        'ExceptionLogger',
-        'manager',
-        ActivityLogger::class,
-        ExceptionLogger::class,
-        ErrorProcessor::class,
-    ];
-
-    public function provides(string $id): bool
-    {
-        return in_array($id, $this->provides, true);
-    }
-
-    public function register(): void
-    {
-        $config = $this->container->get(Config::class);
-
         //
-        // 1. Build Monolog Loggers from config
+        // Iron-clad: Config MUST exist
         //
-
-        $loggers = [];
-        foreach ($config->get('loggers') as $key => $loggerCfg) {
-            $logger = new Logger($loggerCfg['name']);
-            $logger->pushHandler(
-                new StreamHandler(
-                    $loggerCfg['path'],
-                    Logger::toMonologLevel($loggerCfg['level'])
-                )
+        if (!$container->has(Config::class)) {
+            throw new ConfigRuntimeException(
+                "Configuration class must be registered before LoggingServiceProvider runs. [Logging:Service:Provider]."
             );
-
-            $loggers[$key] = $logger;
         }
 
-        $this->container->add('loggerFactory', new ArrayArgument($loggers));
+        /** @var Config $config */
+        $config = $container->get(Config::class);
+
+        $loggerConfig = $config->get("loggers");
+
+        if (!is_array($loggerConfig) || empty($loggerConfig)) {
+            throw new LoggerRuntimeException(
+                "Missing or invalid 'loggers' config. [Logging:Service:Provider]."
+            );
+        }
+
+        if (!isset($loggerConfig['basic'], $loggerConfig['exception'])) {
+            throw new ConfigRuntimeException(
+                "Logging configuration must define 'basic' and 'exception' logger entries. [Logging:Service:Provider]."
+            );
+        }
+
+        if (!$container->has(OldStatusCodeManager::class)) {
+            $container->addShared(OldStatusCodeManager::class);
+        }
+
+        $basicCfg = $loggerConfig["basic"];
+        $exceptionCfg = $loggerConfig["exception"];
+
+        $this->assertLoggerConfig('basic', $basicCfg);
+        $this->assertLoggerConfig('exception', $exceptionCfg);
 
         //
-        // 2. ActivityLogger (basic logger)
+        // Build Monolog loggers (no storing raw arrays in the container)
         //
-        $this->container->add('basicLogger', ActivityLogger::class)
-            ->addArgument($loggers['basic'] ?? null);
+        $basicLogger = $this->buildMonologLogger($basicCfg);
+        $exceptionLogger = $this->buildMonologLogger($exceptionCfg);
 
         //
-        // 3. ExceptionLogger
+        // Activitylogger (wraps basic logger)
         //
-        $this->container->add('ExceptionLogger', ExceptionLogger::class)
+        $container->addShared(ActivityLogger::class)
+            ->addArgument($basicLogger);
+
+        //
+        // ExceptionLogger (wraps exception logger)
+        //
+        $container->addShared(ExceptionLogger::class)
             ->addArguments([
-                $loggers['exception'] ?? null,
-                StatusCodeManager::class,
+                $exceptionLogger,
+                OldStatusCodeManager::class,
                 $config->isProduction(),
             ]);
 
         //
-        // 4. Initialize global exception + error processors
-        //
-        ExceptionHandler::initializeWithEnvironment($config->get('environment'));
-        ErrorProcessor::initialize($this->container->get('ExceptionLogger'));
-
-        //
-        // 5. LoggerManager (audit Logger + registry)
+        // LoggerManager - registry of loggers (services, not data)
         //
         $manager = new LoggerManager();
+        $manager->registerLogger('basic', $basicLogger);
+        $manager->registerLogger('exception', $exceptionLogger);
 
-        $auditFile = $config->get('basicPath') . '/' . $config->get('logPath') . '/' . $config->get('auditLog');
-        // Create audit Logger
-        $auditLogger = new Logger('audit');
-        $auditHandler = new StreamHandler(
-            $auditFile, Level::Info
+        $container->addShared(LoggerManager::class, $manager);
+
+        //
+        // Global error / exception writing (static, not container state)
+        //
+        if ($container->has(ExceptionHandler::class)) {
+            ExceptionHandler::initializeWithEnvironment(
+                $config->getEnvironment()
+            );
+        }
+
+        ErrorProcessor::initialize(
+            $container->get(ExceptionLogger::class)
         );
-        $auditHandler->setFormatter(new JsonFormatter());
-        $auditLogger->pushHandler($auditHandler);
+    }
 
-        $manager->registerLogger('audit', $auditLogger);
+    /**
+     * @param array<string, mixed> $cfg
+     */
+    private function assertLoggerConfig(string $key, array $cfg): void
+    {
+        foreach (['name', 'path', 'level'] as $required) {
+            if (!array_key_exists($required, $cfg) || !is_string($cfg[$required]) || trim($cfg[$required]) === '') {
+                throw new ConfigRuntimeException(
+                    "Logger '{$key}' is missing or has invalid '{$required}' configuration. [Logging:Service:Provider]."
+                );
+            }
+        }
+    }
 
-        // Register manager in container
-        $this->container->add('manager', $manager);
+    /**
+     * @param array<string, string> $cfg
+     */
+    private function buildMonologLogger(array $cfg): Logger
+    {
+        $logger = new Logger($cfg['name']);
+        $handler = new StreamHandler(
+            $cfg['path'],
+            Logger::toMonologLevel($cfg['level'])
+        );
+        $logger->pushHandler($handler);
+
+        return $logger;
     }
 }
 

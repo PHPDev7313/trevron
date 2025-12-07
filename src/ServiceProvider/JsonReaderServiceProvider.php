@@ -15,21 +15,17 @@ use League\Container\Container;
 class JsonReaderServiceProvider implements ServiceProviderInterface
 {
 
-    public function __construct(private Container $container)
+    public function register(Container $container): void
     {
-    }
-
-    public function register(): void
-    {
-        $this->container->add(JsonDecoderInterface::class, JsonDecoder::class);
-        $this->container->add(JsonFileReader::class);
-        $this->container->add(JsonSorter::class);
-        $this->container->add(FileLister::class);
+        $container->add(JsonDecoderInterface::class, JsonDecoder::class);
+        $container->add(JsonFileReader::class);
+        $container->add(JsonSorter::class);
+        $container->add(FileLister::class);
 
         // Reuse validator
-        $this->container->add(FilePathValidator::class);
+        $container->add(FilePathValidator::class);
 
-        $this->container->add(JsonLoader::class)
+        $container->add(JsonLoader::class)
             ->addArguments([
                 FileLister::class,
                 JsonSorter::class,

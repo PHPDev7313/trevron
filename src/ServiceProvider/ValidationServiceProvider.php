@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace JDS\ServiceProvider;
 
+use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Contracts\Validation\ValidatorInterface;
 use JDS\Validation\ArrayRule;
 use JDS\Validation\DateRule;
@@ -17,10 +18,10 @@ use JDS\Validation\NumericRule;
 use JDS\Validation\RequiredRule;
 use JDS\Validation\RuleRegistery;
 use JDS\Validation\Validator;
-use League\Container\ServiceProvider\AbstractServiceProvider;
-use League\Container\ServiceProvider\ServiceProviderInterface;
+use League\Container\Container;
 
-class ValidationServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
+
+class ValidationServiceProvider implements ServiceProviderInterface
 {
     protected $provides = [
         RuleRegistery::class,
@@ -33,10 +34,8 @@ class ValidationServiceProvider extends AbstractServiceProvider implements Servi
         return in_array($id, $this->provides, true);
     }
 
-    public function register(): void
+    public function register(Container $container): void
     {
-        $container = $this->getContainer();
-
         // Build registry with all default rules
         $registery = new RuleRegistery();
         $registery->add('required', new RequiredRule());
@@ -55,3 +54,4 @@ class ValidationServiceProvider extends AbstractServiceProvider implements Servi
         $container->add(ValidatorInterface::class, Validator::class);
     }
 }
+
