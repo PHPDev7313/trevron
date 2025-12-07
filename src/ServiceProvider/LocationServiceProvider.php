@@ -4,48 +4,34 @@ namespace JDS\ServiceProvider;
 
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use League\Container\Argument\Literal\ArrayArgument;
-use League\Container\ServiceProvider\AbstractServiceProvider;
+use League\Container\Container;
 
-class LocationServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
+class LocationServiceProvider implements ServiceProviderInterface
 {
-    /**
-     * @var array<string>
-     */
-    protected array $provides = [
-        ClientLocationProvider::class,
-        'states',
-        'countries',
-        'cities',
-    ];
 
-    public function provides(string $id): bool
-    {
-        return in_array($id, $this->provides, true);
-    }
-
-    public function register(): void
+    public function register(Container $container): void
     {
         //
-        // 1. Base provider for fetching locaiton data
+        // 1. Base provider for fetching location data
         //
-        $this->container->add(ClientLocationProvider::class);
+        $container->add(Locations::class);
 
-
-        $provider = $this->container->get(ClientLocationProvider::class);
+        $provider = $container->get(Locations::class);
 
         //
         // 2. States
         //
-        $this->container->add('states', new ArrayArgument($provider->getStates()));
+        $container->add('states', new ArrayArgument($provider->getStates()));
 
         //
         // 3. Countries
         //
-        $this->container->add('countries', new ArrayArgument($provider->getCountries()));
+        $container->add('countries', new ArrayArgument($provider->getCountries()));
 
         //
         // 4. Cities
         //
-        $this->container->add('cities', new ArrayArgument($provider->getCities()));
+        $container->add('cities', new ArrayArgument($provider->getCities()));
     }
 }
+

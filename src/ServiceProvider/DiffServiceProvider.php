@@ -21,10 +21,6 @@ class DiffServiceProvider implements ServiceProviderInterface
         DiffEngine::class,
     ];
 
-    public function __construct(private readonly Container $container)
-    {
-    }
-
     /**
      * REQUIRED BY AbstractServiceProvider
      *
@@ -36,9 +32,9 @@ class DiffServiceProvider implements ServiceProviderInterface
         return in_array($id, $this->provides, true);
     }
 
-    public function register(): void
+    public function register(Container $container): void
     {
-        $this->container->add(DiffEngine::class, function () {
+        $container->add(DiffEngine::class, function () {
             $engine = new DiffEngine();
 
             // Register default strategies

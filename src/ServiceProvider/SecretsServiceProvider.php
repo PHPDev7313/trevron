@@ -34,7 +34,7 @@ class SecretsServiceProvider implements ServiceProviderInterface
         return in_array($id, $this->provides, true);
     }
 
-    public function register(): void
+    public function register(Container $container): void
     {
         $this->container->addShared(SecretsInterface::class, function () {
             //
@@ -42,7 +42,6 @@ class SecretsServiceProvider implements ServiceProviderInterface
             //
             if (!extension_loaded('sodium')) {
                 throw new CryptoRuntimeException("The sodium extension is required for secrets encryption/decryption.");
-
             }
 
             //

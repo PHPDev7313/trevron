@@ -3,13 +3,18 @@
 namespace JDS\ServiceProvider;
 
 use Doctrine\DBAL\Connection;
-use JDS\Console\ConsoleRuntimeException;
+use JDS\Configuration\Config;
+use JDS\Contracts\Security\SecretsInterface;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Dbal\ConnectionFactory;
+use JDS\Exceptions\Database\DatabaseRuntimeException;
+use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Container;
 
 class DatabaseConnectionServiceProvider implements ServiceProviderInterface
 {
+    private array $requiredKeys = ['driver', 'host', 'port', 'dbname'];
+
     /**
      * The services this provider can supply
      */
@@ -18,58 +23,70 @@ class DatabaseConnectionServiceProvider implements ServiceProviderInterface
         Connection::class
     ];
 
-    public function __construct(private Container $container)
+    public function register(Container $container): void
     {
-    }
+        //
+        // 1. Fetch base db config from container (driver, host, dbname, port)
+        //
+        if (!$container->has(Config::class)) {
+            throw new DatabaseRuntimeException(
+                "Config must be loaded before registering database connection. [Database:Connection:Service:Provider]."
+            );
+        }
 
-    public function register(): void
-    {
-        //
-        // fetch config from container
-        //
-        $config = $this->container->get('config');
+        /** @var Config $config */
+        $config = $container->get(Config::class);
+
+
         $dbConfig = $config->get('db');
 
-        if (!isset($dbConfig['driver'])) {
-            throw new ConsoleRuntimeException("Missing 'driver' key in config");
-        }
-
-        if (!isset($dbConfig['host'])) {
-            throw new ConsoleRuntimeException("Missing 'host' key in config");
-        }
-
-        if (!isset($dbConfig['user'])) {
-            throw new ConsoleRuntimeException("Missing 'user' key in config");
-        }
-
-        if (!isset($dbConfig['password'])) {
-            throw new ConsoleRuntimeException("Missing 'pass' key in config");
-        }
-
-        if (!isset($dbConfig['dbname'])) {
-            throw new ConsoleRuntimeException("Missing 'dbname' key in config");
-        }
-
-        if (!isset($dbConfig['port'])) {
-            throw new ConsoleRuntimeException("Missing 'port' key in config");
-        }
-
         if (!is_array($dbConfig)) {
-            throw new ConsoleRuntimeException("Database configuration is missing or invalid. Expected array at 'db'.");
+            throw new DatabaseRuntimeException(
+                "Database configuration is missing or invalid. Expected an array. [Database:Connection:ServiceProvider]"
+            );
         }
 
         //
-        // register factory
+        // 2. Validate non-sensitive DB keys (driver, host, port, dbname)
         //
-        $this->container->add(ConnectionFactory::class)
-            ->addArgument($dbConfig);
+        $this->validateDatabaseConfig($dbConfig);
 
         //
-        // register chared Doctrine connection
+        // 3. Overlay credentials from encrypted secrets
         //
-        $this->container->addShared(Connection::class, function () {
-            return $this->container->get(ConnectionFactory::class)->create();
-        });
+        if (!$container->has(SecretsInterface::class)) {
+            throw new DatabaseRuntimeException(
+                "Missing Secrets configuration binding. Secrets must be available before DB provider loads. [Database:Connection:Service:Provider]."
+            );
+        }
+
+        /** @var SecretsInterface $secrets */
+        $secrets = $container->get(SecretsInterface::class);
+
+        $dbConfig['user'] = $secrets->get('db.user', $dbConfig['user'] ?? null);
+        $dbConfig['password'] = $secrets->get('db.password', $dbConfig['password'] ?? null);
+
+        if (!$dbConfig['user'] && !$dbConfig['password']) {
+            throw new DatabaseRuntimeException(
+                "Database credentials (user/password) missing: could not load from secrets. [Database:Connection:Service:Provider]."
+            );
+        }
+
+        //
+        // 4. Register the ConnectionFactory
+        //
+        $container->add(ConnectionFactory::class)
+            ->addArgument(new ArrayArgument($dbConfig));
+
+
+        //
+        // 5. Register shared Doctrine connection (lazy)
+        //
+        if (!$container->has(Connection::class)) {
+            $container->addShared(Connection::class, function () use ($container) {
+                return $container->get(ConnectionFactory::class)->create();
+            });
+        }
    }
 
     /**
@@ -78,6 +95,19 @@ class DatabaseConnectionServiceProvider implements ServiceProviderInterface
     public function provides(string $id): bool
     {
         return in_array($id, $this->provides, true);
+    }
+
+    private function validateDatabaseConfig(array $config): void
+    {
+        $missingKeys = array_diff($this->requiredKeys, array_keys($config));
+
+        if (!empty($missingKeys)) {
+            throw new DatabaseRuntimeException(
+                "Missing required database configuration keys (non-sensitive): " .
+                implode(', ', $missingKeys) .
+                ". [Database:Connection:Service:Provider]."
+            );
+        }
     }
 }
 

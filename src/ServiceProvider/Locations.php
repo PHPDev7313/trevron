@@ -2,11 +2,9 @@
 
 namespace JDS\ServiceProvider;
 
-abstract class AbstractLocationServiceProvider
+abstract class Locations
 {
-
-    public function __construct(
-        private array $states = [
+    private array $states = [
             'AL' => 'Alabama',
             'AK' => 'Alaska',
             'AZ' => 'Arizona',
@@ -57,8 +55,8 @@ abstract class AbstractLocationServiceProvider
             'WA' => 'Washington',
             'WV' => 'West Virginia',
             'WI' => 'Wisconsin',
-            'WY' => 'Wyoming'],
-        private array $countries = [
+            'WY' => 'Wyoming'];
+    private array $countries = [
             "AF" => "Afghanistan",
             "AL" => "Albania",
             "DZ" => "Algeria",
@@ -323,8 +321,8 @@ abstract class AbstractLocationServiceProvider
             "ZM" => "Zambia",
             "ZW" => "Zimbabwe",
             "AX" => "Åland Islands"
-        ],
-        private array $cities = ["Alabama" => ["Birmingham", "Montgomery", "Mobile", "Huntsville", "Tuscaloosa"],
+        ];
+    private array $cities = ["Alabama" => ["Birmingham", "Montgomery", "Mobile", "Huntsville", "Tuscaloosa"],
             "Alaska" => ["Anchorage", "Fairbanks", "Juneau", "Sitka", "Ketchikan"],
             "Arizona" => ["Phoenix", "Tucson", "Mesa", "Chandler", "Scottsdale"],
             "Arkansas" => ["Little Rock", "Fort Smith", "Fayetteville", "Springdale", "Jonesboro"],
@@ -374,11 +372,7 @@ abstract class AbstractLocationServiceProvider
             "West Virginia" => ["Charleston", "Huntington", "Parkersburg", "Morgantown", "Wheeling"],
             "Wisconsin" => ["Milwaukee", "Madison", "Green Bay", "Kenosha", "Racine"],
             "Wyoming" => ["Cheyenne", "Casper", "Laramie", "Gillette", "Rock Springs"],
-        ]
-
-    )
-    {
-    }
+        ];
 
     public function getStates(): array
     {
@@ -393,6 +387,21 @@ abstract class AbstractLocationServiceProvider
     public function getUSCities(): array
     {
         return $this->cities;
+    }
+
+    public function setStates(array $states): void
+    {
+        $this->states = $states;
+    }
+
+    public function setCountries(array $countries): void
+    {
+        $this->countries = $countries;
+    }
+
+    public function setCities(array $cities): void
+    {
+        $this->cities = $cities;
     }
 }
 

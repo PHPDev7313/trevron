@@ -5,7 +5,7 @@ namespace JDS\Console;
 use DirectoryIterator;
 use JDS\Contracts\Console\Command\CommandInterface;
 use JDS\Handlers\ExceptionHandler;
-use JDS\Http\StatusCodeManager;
+use JDS\Http\OldStatusCodeManager;
 use JDS\Logging\ExceptionLogger;
 use JDS\Processing\ErrorProcessor;
 use League\Container\Argument\Literal\ArrayArgument;
@@ -30,7 +30,7 @@ final class Kernel
      */
 	public function handle(): int
 	{
-        $this->processorValidate();
+//        $this->processorValidate();
 		// register commands with the container
 		$this->registerBuiltInCommands();
         $this->registerUserCommands(); // future expansion hook
@@ -231,7 +231,7 @@ final class Kernel
             $this->container->add('ExceptionLogger', ExceptionLogger::class)
                 ->addArguments([
                     $this->container->get('loggerFactory')['exception'],
-                    StatusCodeManager::class,
+                    OldStatusCodeManager::class,
                     $this->container->get('config')->isProduction()
                 ]);
         }
