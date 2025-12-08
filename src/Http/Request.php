@@ -11,6 +11,7 @@ class Request
     private SessionInterface $session;
     private mixed $routeHandler;
     private array $routeHandlerArgs;
+    private float $startTime = 0.0;
 
     /** @var array<string, mixed> */
     private array $attributes = [];
@@ -33,6 +34,28 @@ class Request
     public function getPathInfo(): string
     {
         return strtok($this->server['REQUEST_URI'], '?');
+    }
+
+    public function getUri(): string
+    {
+        return $this->server['REQUEST_URI'] ?? '/';
+    }
+
+    public function getQueryString(): ?string
+    {
+        return $this->server['QUERY_STRING'] ?? null;
+    }
+
+    public function getFullUri(): string
+    {
+        $scheme = (!empty($this->server['HTTPS']) && $this->server['HTTPS'] !== 'off')
+            ? 'https'
+            : 'http';
+
+        $host = $this->server['HTTP_HOST'] ?? 'localhost';
+        $uri = $this->server['REQUEST_URI'] ?? '/';
+
+        return "{$scheme}://{$host}{$uri}";
     }
 
     public function getMethod(): string
@@ -124,5 +147,16 @@ class Request
     {
         return $this->attributes;
     }
+
+    public function setStartTime(float $time): void
+    {
+        $this->startTime = $time;
+    }
+
+    public function getStartTime(): float
+    {
+        return $this->startTime;
+    }
+
 }
 

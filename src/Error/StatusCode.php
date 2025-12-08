@@ -129,11 +129,23 @@ enum StatusCode: int
     case FILESYSTEM_DIRECTORY_NOT_WRITABLE        = 4300;
     case FILESYSTEM_FILE_WRITE_FAILURE            = 4301;
     case FILESYSTEM_FILE_ACCESS_FAILURE           = 4302;
+    case FILESYSTEM_DIRECTORY_CREATION_FAILED     = 4303;
+    case FILESYSTEM_INVALID_STRUCTURE             = 4304;
+    case FILESYSTEM_STATE_FILE_WRITE_FAILED       = 4305;
+
+
 
     // -------------------------------------------------
     // JSON (4400–4499)
     // -------------------------------------------------
-    case JSON_INVALID_FORMAT                      = 4400;
+    case JSON_ENCODING_FAILED              = 4400; // json_encode() failure
+    case JSON_DECODING_FAILED              = 4401; // json_decode() failure
+    case JSON_INVALID_STRUCTURE            = 4402; // syntactically valid but semantically wrong (schema mismatch)
+    case JSON_FILE_NOT_FOUND               = 4403; // attempted to read missing JSON file
+    case JSON_FILE_READ_ERROR              = 4404; // file exists but cannot be read (permissions, locks, etc.)
+    case JSON_FILE_WRITE_ERROR             = 4405; // cannot write JSON file (permissions, unwritable dir)
+    case JSON_SCHEMA_VALIDATION_FAILED     = 4406; // schema does not match expected keys/types
+
 
     // -------------------------------------------------
     // IMAGE (4500–4599)

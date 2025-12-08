@@ -17,6 +17,14 @@ class ErrorProcessor
         self::$logger = $logger;
     }
 
+    /**
+     * FOR TESTING ONLY - resets processor to uninitialized state.
+     */
+    public static function reset(): void
+    {
+        self::$logger = null;
+    }
+
     public static function process(
         Throwable $exception,
         StatusCode $statusCode,

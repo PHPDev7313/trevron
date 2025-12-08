@@ -29,6 +29,7 @@ enum StatusCategory: int
     case Json           = 4400;
     case Image          = 4500;
 
+
     /**
      * Reverse lookup from numeric code to category
      */

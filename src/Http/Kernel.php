@@ -8,13 +8,13 @@ use JDS\Error\ErrorProcessor;
 use JDS\Error\StatusCode;
 use JDS\EventDispatcher\EventDispatcher;
 use JDS\Http\Event\ResponseEvent;
+use JDS\Http\Event\TerminateEvent;
 use Throwable;
 
-class Kernel
+final class Kernel
 {
-
 	public function __construct(
-		private readonly bool               $debug, // true in dev, false in prod
+		private readonly bool                       $debug, // true in dev, false in prod
 		private readonly RequestHandlerInterface    $requestHandler,
 		private readonly EventDispatcher            $eventDispatcher
 	)
@@ -23,6 +23,12 @@ class Kernel
 
 	public function handle(Request $request): Response
 	{
+        //
+        // mark request start time for profiling & lifecycle monitoring
+        //
+        $request->setStartTime(microtime(true));
+
+
 		try {
 			$response = $this->requestHandler->handle($request);
 		} catch (Throwable $e) {
@@ -32,12 +38,14 @@ class Kernel
                 StatusCode::HTTP_KERNEL_GENERAL_FAILURE,
                 'An unexpected error occurred while processing the request.',
             );
-//			$response = $this->handleException($request, $e);
 
             // convert into Response
             $response = $this->createExceptionResponse($e);
 		}
 
+        //
+        // event fired BEFORE the response is finalized
+        //
 		$this->eventDispatcher->dispatch(
             new ResponseEvent($request, $response)
         );
@@ -69,16 +77,37 @@ class Kernel
 
 	public function terminate(Request $request, Response $response): void
 	{
-		$request->getSession()->clearFlash();
-//		if ($request->getSession()->isAuthenticated()) {
-//			$request->getSession()?->remove(SessionAuthentication::AUTH_KEY);
-//		}
+        $end = microtime(true);
+        $duration = $end - $request->getStartTime();
 
+        //
+        // MAIN TERMINATION EVENT
+        //
+        $this->eventDispatcher->dispatch(
+            new TerminateEvent(
+                $request,
+                $response,
+                $request->getStartTime(),
+                $end,
+                $duration
+            )
+        );
+
+        //
+        // Kernel-level cleanup (still allowed)
+        //
+		$request->getSession()->clearFlash();
 	}
 }
 
 
 
+//		if ($request->getSession()->isAuthenticated()) {
+//			$request->getSession()?->remove(SessionAuthentication::AUTH_KEY);
+//		}
+//
+//
+//
 //	private function handleException(Request $request, Throwable $e): Response
 //	{
 //        //
