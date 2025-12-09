@@ -99,6 +99,8 @@ enum StatusCode: int
     // HTTP KERNEL (3900–4099)
     // -------------------------------------------------
     case HTTP_KERNEL_GENERAL_FAILURE = 3900;
+    case HTTP_ROUTE_DISPATCH_FAILURE = 3901;
+    case HTTP_PIPELINE_FAILURE        = 3902;
 
     // -------------------------------------------------
     // DATABASE (4100–4199)
@@ -281,6 +283,10 @@ enum StatusCode: int
             // HTTP Kernel
             self::HTTP_KERNEL_GENERAL_FAILURE =>
             "HTTP Kernel Error: General kernel failure",
+            self::HTTP_ROUTE_DISPATCH_FAILURE =>
+            "HTTP Kernel Error: Route resolved but dispatching the controller failed.",
+            self::HTTP_PIPELINE_FAILURE =>
+            "HTTP Kernel Error: Middleware pipeline encountered an unhandled exception.",
 
             // Database
             self::DATABASE_MIGRATION_APPLY_FAILED =>
@@ -325,8 +331,20 @@ enum StatusCode: int
             "FileSystem Error: File access failure",
 
             // JSON
-            self::JSON_INVALID_FORMAT =>
-            "JSON Error: Invalid JSON format",
+            self::JSON_INVALID_STRUCTURE =>
+            "JSON Error: JSON structure is syntactically valid but semantically invalid.",
+            self::JSON_ENCODING_FAILED  =>
+            "JSON Error: Failed to encode data to JSON.",
+            self::JSON_DECODING_FAILED =>
+            "JSON Error: Failed to decode JSON string.",
+            self::JSON_FILE_NOT_FOUND =>
+            "JSON Error: JSON file not found.",
+            self::JSON_FILE_READ_ERROR =>
+            "JSON Error: JSON file exists but cannot be read (permissions, locks, or filesystem issues).",
+            self::JSON_FILE_WRITE_ERROR =>
+            "JSON Error: Unable to write JSON file (directory missing, unwritable, or permission denied).",
+            self::JSON_SCHEMA_VALIDATION_FAILED =>
+            "JSON Error: JSON content does not match the expected schema.",
 
             // Image
             self::IMAGE_PROCESSING_FAILED =>
