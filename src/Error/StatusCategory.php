@@ -28,6 +28,7 @@ enum StatusCategory: int
     case FileSystem     = 4300;
     case Json           = 4400;
     case Image          = 4500;
+    case Routes         = 4600;
 
     /**
      * Reverse lookup from numeric code to category

@@ -6,6 +6,11 @@ use Throwable;
 
 class ExceptionHandler
 {
+    /**
+     * Debug flag - must be set by the framework/kernel.
+     * true  => show full exception + formatted trace
+     * false => show safe, user-friendly output only
+     */
     private static bool $debug = false;
 
     public static function initializeWithEnvironment(string $environment): void
@@ -19,24 +24,30 @@ class ExceptionHandler
 
     /**
      * Render an exception as an error message for the user.
+     * for CLI or HTTP output
      *
-     * @param Throwable $exception The exception to render.
-     * @param string $userMessage A user-friendly error message.
+     * @param Throwable $exception Original exception object - The exception to render.
+     * @param string $safeMessage The message produced by ErrorProcessor/ExceptionLogger
+     *
      * @return void
      */
-    public static function render(Throwable $exception, string $message): void
+    public static function render(Throwable $exception, string $safeMessage): void
     {
-        //
-        // PRODUCTION MODE: Show generic message only
-        //
-        if (self::$debug) {
-            echo $message . PHP_EOL;
+        //--------------------------------------------------------------
+        // PRODUCTION MODE: (debug = false) Show generic message only
+        //--------------------------------------------------------------
+        if (!self::$debug) {
+            //
+            // Only show the safe message (usually "[4100] Database Error ...")
+            echo $safeMessage . PHP_EOL;
             return;
         }
 
-        //
-        // DEVELOPMENT MODE: Use your ExceptionFormatter
-        echo $message . PHP_EOL . PHP_EOL;
+        // -------------------------------------------------------------------
+        // DEBUG MODE (developer environment)
+        // Show EVERYTHING, using your Pretty Exception Formatter
+        // -------------------------------------------------------------------
+        echo $safeMessage . PHP_EOL . PHP_EOL;
 
         echo "=== Exception Details ===" . PHP_EOL;
         echo "Type: " . $exception::class . PHP_EOL;
@@ -44,36 +55,9 @@ class ExceptionHandler
         echo "File: " . $exception->getFile() . ':' . $exception->getLine() . PHP_EOL;
 
         echo PHP_EOL . "=== Stack Trace ===" . PHP_EOL;
-        echo ExceptionFormatter::formatTrace($exception->getTrace());
+        echo ExceptionFormatter::format($exception);
         echo PHP_EOL;
     }
-
-
-
-//        $isProduction = self::isProduction();
-//
-//        if ($isProduction) {
-//            // In production, display only the user-friendly message
-//            echo self::formatUserMessage($userMessage) . PHP_EOL;
-//        } else {
-//            // In development, display detailed information
-//            echo nl2br(self::formatDetailedError($exception, $userMessage)) . PHP_EOL;
-//        }
-//    }
-//
-//    /**
-//     * Render a critical error message and terminate the application.
-//     *
-//     * @param Throwable $exception The exception to handle.
-//     * @param string $userMessage A user-friendly message to display.
-//     * @param int $exitCode Exit code (default 1).
-//     * @return void
-//     */
-//    public static function renderCritical(Throwable $exception, string $userMessage = 'Critical error occurred.', int $exitCode = 1): void
-//    {
-//        self::render($exception, $userMessage);
-//        exit($exitCode);
-//    }
 
     /**
      * Determine whether the application is in production mode.
@@ -82,7 +66,6 @@ class ExceptionHandler
      */
     private static function isProduction(): bool
     {
-        // Default to production mode for safety
         return self::$debug;
     }
 
@@ -120,5 +103,52 @@ class ExceptionHandler
         );
     }
 
+    public static function enableDebug(): void
+    {
+        self::$debug = true;
+    }
+
+    public static function disableDebug(): void
+    {
+        self::$debug = false;
+    }
+
+    public static function isDebug(): bool
+    {
+        return self::$debug;
+    }
+
 }
+
+
+
+
+
+//        $isProduction = self::isProduction();
+//
+//        if ($isProduction) {
+//            // In production, display only the user-friendly message
+//            echo self::formatUserMessage($userMessage) . PHP_EOL;
+//        } else {
+//            // In development, display detailed information
+//            echo nl2br(self::formatDetailedError($exception, $userMessage)) . PHP_EOL;
+//        }
+//    }
+//
+//    /**
+//     * Render a critical error message and terminate the application.
+//     *
+//     * @param Throwable $exception The exception to handle.
+//     * @param string $userMessage A user-friendly message to display.
+//     * @param int $exitCode Exit code (default 1).
+//     * @return void
+//     */
+//    public static function renderCritical(Throwable $exception, string $userMessage = 'Critical error occurred.', int $exitCode = 1): void
+//    {
+//        self::render($exception, $userMessage);
+//        exit($exitCode);
+//    }
+
+
+
 

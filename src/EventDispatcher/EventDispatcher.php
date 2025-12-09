@@ -2,10 +2,10 @@
 
 namespace JDS\EventDispatcher;
 
-use JDS\Contracts\Events\EventDispatcherInterface as JdsDispatcher;
+use JDS\Contracts\Events\EventDispatcherInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 
-class EventDispatcher implements JdsDispatcher
+class EventDispatcher implements EventDispatcherInterface
 {
 	private iterable $listeners = [];
 
