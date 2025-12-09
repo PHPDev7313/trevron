@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Stubs;
+namespace Tests\Stubs\Http;
 
 final class NotMiddleware
 {

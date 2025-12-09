@@ -2,6 +2,9 @@
 
 namespace JDS\Routing;
 
+use JDS\Error\StatusCode;
+use JDS\Error\StatusException;
+
 class ProcessRoutes
 {
     public static function process(array $routes): array
@@ -11,22 +14,97 @@ class ProcessRoutes
         $metadataList = [];
 
         foreach ($routes as $route) {
-            $currentMetadata = [];
 
-            // check if the route has metadata in the expected position (index2[3])
-            if (isset($route[2][3])) {
-                // extract metadata and link back to the route URI (index 1)
-                $currentMetadata = array_merge(['uri' => $route[1]], $route[2][3]);
-                $metadataList[] = $currentMetadata;
-                // remove metadata from the original route
-                unset($route[2][3]);
+            //
+            // Validate base route structure
+            //
+            if (!isset($route[0], $route[1], $route[2])) {
+                throw new StatusException(
+                    StatusCode::ROUTE_METADATA_INVALID,
+                    "Invalid route definition: missing method, path, or controller."
+                );
             }
-            $separateRoutes[] = $route;
+
+            $method = $route[0];
+            $uri = $route[1];
+            $controllerInfo = $route[2];
+
+            //
+            // We expect controller info: [controllerClass, methodName, middleware?, metadata?]
+            //
+            $controllerClass = $controllerInfo[0] ?? null;
+            $controllerMethod = $controllerInfo[1] ?? null;
+            $middleware = $controllerInfo[2] ?? [];
+            $rawMetadata = $controllerInfo[3] ?? null;
+
+            //
+            // Turn metadata array into validated RouteMetadata object
+            //
+            $metadataObject = null;
+
+            if (is_array($rawMetadata)) {
+                $metadataObject = RouteMetadata::fromArray($rawMetadata);
+
+                //
+                // Build metadata entry for the global metadata list
+                //
+                $metadataList[] = [
+                    'uri' => $uri,
+                    'label' => $metadataObject->label,
+                    'path' => $metadataObject->path,
+                    'requires_token' => $metadataObject->requiresToken,
+                ];
+            }
+
+            //
+            // Reconstruct cleaned controller info
+            //
+            $cleanControllerInfo = [
+                $controllerClass,
+                $controllerMethod,
+                $middleware,
+            ];
+
+            //
+            // If metadata existed, append the validated object
+            //
+            if ($metadataObject !== null) {
+                $cleanControllerInfo[] = $metadataObject;
+            }
+
+            //
+            // Add final route entry
+            //
+            $processedRoutes[] = [
+                $method,
+                $uri,
+                $cleanControllerInfo,
+            ];
         }
         return [
-            'routes' => $separateRoutes,
+            'routes' => $processedRoutes,
             'metadata' => $metadataList,
         ];
-
     }
 }
+
+
+//            $currentMetadata = [];
+//
+//            // check if the route has metadata in the expected position (index2[3])
+//            if (isset($route[2][3])) {
+//                // extract metadata and link back to the route URI (index 1)
+//                $currentMetadata = array_merge(['uri' => $route[1]], $route[2][3]);
+//                $metadataList[] = $currentMetadata;
+//                // remove metadata from the original route
+//                unset($route[2][3]);
+//            }
+//            $separateRoutes[] = $route;
+//        }
+//        return [
+//            'routes' => $separateRoutes,
+//            'metadata' => $metadataList,
+//        ];
+
+
+

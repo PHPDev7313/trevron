@@ -3,7 +3,7 @@
 namespace JDS\Routing;
 
 use JDS\Contracts\Routing\RouterInterface;
-use JDS\Controller\AbstractController;
+use JDS\Controller\OldAbstractController;
 use JDS\Http\Request;
 use Psr\Container\ContainerInterface;
 
@@ -16,16 +16,32 @@ class Router implements RouterInterface
 		$routeHandlerArgs = $request->getRouteHandlerArgs();
 
 		if (is_array($routeHandler)) {
-			[$controllerId, $method] = $routeHandler;
 
-			$controller = $container->get($controllerId);
-			if (is_subclass_of($controller, AbstractController::class)) {
-				$controller->setRequest($request);
-			}
-			$routeHandler = [$controller, $method];
-		}
+            //
+            // Extract only controller + method, ignore middleware & metadata
+            //
+            [$controllerId, $method] = array_slice($routeHandler, 0, 2);
 
-		return [$routeHandler, $routeHandlerArgs];
+            $controller = $container->get($controllerId);
+
+            //
+            // inject the Request automatically into all AbstractController descendants
+            //
+            if ($controller instanceof OldAbstractController) {
+                $controller->setRequest($request);
+            }
+
+            $routeHandler = [$controller, $method];
+        }
+
+        return [$routeHandler, $routeHandlerArgs];
 	}
 }
 
+//			if (is_subclass_of($controller, AbstractController::class)) {
+//				$controller->setRequest($request);
+//			}
+//			$routeHandler = [$controller, $method];
+//		}
+//
+//		return [$routeHandler, $routeHandlerArgs];

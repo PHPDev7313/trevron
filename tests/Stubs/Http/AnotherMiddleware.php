@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Stubs;
+namespace Tests\Stubs\Http;
 
 use JDS\Contracts\Middleware\MiddlewareInterface;
 use JDS\Contracts\Middleware\RequestHandlerInterface;
