@@ -4,13 +4,12 @@ namespace JDS\Http;
 
 
 use JDS\Contracts\Middleware\MiddlewareResolverInterface;
-use JDS\Contracts\Middleware\RequestHandlerInterface;
-use JDS\Error\ErrorProcessor;
 use JDS\Error\StatusCode;
 use JDS\EventDispatcher\EventDispatcher;
 use JDS\Exceptions\Error\StatusException;
 use JDS\Http\Event\ResponseEvent;
 use JDS\Http\Event\TerminateEvent;
+use JDS\Http\Middleware\MiddlewareQueue;
 use Throwable;
 
 final class Kernel
