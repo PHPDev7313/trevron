@@ -1,11 +1,13 @@
 <?php
 
-namespace JDS\Http;
+namespace JDS\Http\Middleware;
 
 use JDS\Contracts\Middleware\MiddlewareInterface;
 use JDS\Contracts\Middleware\RequestHandlerInterface;
 use JDS\Error\StatusCode;
 use JDS\Exceptions\Error\StatusException;
+use JDS\Http\Request;
+use JDS\Http\Response;
 use Psr\Container\ContainerInterface;
 use Throwable;
 
