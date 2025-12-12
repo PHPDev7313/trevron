@@ -11,7 +11,7 @@ use JDS\Http\Kernel;
 use JDS\Http\Middleware\ExtractRouteInfo;
 use JDS\Http\Middleware\RequestHandler;
 use JDS\Http\Middleware\RouterDispatch;
-use JDS\Routing\Router;
+use JDS\Routing\Route;
 use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Argument\Literal\StringArgument;
 use League\Container\Container;
@@ -39,7 +39,7 @@ class HttpServiceProvider  implements ServiceProviderInterface
         //
         // 1. RouterInterface -> Router
         //
-        $container->add(RouterInterface::class, Router::class);
+        $container->add(RouterInterface::class, Route::class);
 
         //
         // 2. RequestHandlerInterface -> RequestHandler

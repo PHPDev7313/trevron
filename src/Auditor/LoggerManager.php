@@ -2,8 +2,8 @@
 
 namespace JDS\Auditor;
 
-use JDS\Auditor\Exception\LoggerNotFoundException;
 use JDS\Contracts\Auditor\AuditorInterface;
+use JDS\Exceptions\Auditor\LoggerNotFoundException;
 use Psr\Log\LoggerInterface;
 
 

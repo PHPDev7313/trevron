@@ -66,8 +66,7 @@ $code->formatted();    // "[4100] Database Error: Migration apply failed"
 A base exception type that wraps a `StatusCode`:
 
 ```php
-use JDS\Error\StatusCode;
-use JDS\Error\StatusException;
+use JDS\Error\StatusCode;use JDS\Exceptions\Error\StatusException;
 
 throw new StatusException(StatusCode::DATABASE_GENERAL_ERROR);
 ```

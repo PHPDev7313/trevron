@@ -68,11 +68,16 @@ class Response
 		return $this->content;
 	}
 
-	public function setStatus(int $status): void
-	{
-		$this->status = $status;
-	}
 
+    public function getStatusCode(): int
+    {
+        return $this->status;
+    }
+
+    public function setStatusCode(int $status): void
+    {
+        $this->status = $status;
+    }
 }
 
 

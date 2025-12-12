@@ -2,7 +2,7 @@
 
 namespace JDS\Crypt;
 
-use JDS\Authentication\RuntimeException;
+use JDS\Exceptions\Authentication\RuntimeException;
 use Random\RandomException;
 
 class Crypto

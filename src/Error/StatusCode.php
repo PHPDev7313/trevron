@@ -97,6 +97,7 @@ enum StatusCode: int
     case HTTP_ROUTE_DISPATCH_FAILURE = 3801;
     case HTTP_PIPELINE_FAILURE = 3802;
 
+
     // -------------------------------------------------
     // HTTP KERNEL (3900–4099)
     // -------------------------------------------------

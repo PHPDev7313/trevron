@@ -16,10 +16,10 @@ class JwtAuthenticate implements middlewareInterface
 	{
 	}
 
-    public function process(Request $request, RequestHandlerInterface $requestHandler): Response
+    public function process(Request $request, RequestHandlerInterface $next): Response
 	{
 		// get the authorization header
-		$authHeader = $request->getServerVariable('HTTP_AUTHORIZATION');
+		$authHeader = $request->getServerParams('HTTP_AUTHORIZATION');
 
 		// return failed auth if missing
 		if (is_null($authHeader) || empty($authHeader) || !is_string($authHeader)) {
@@ -53,7 +53,7 @@ class JwtAuthenticate implements middlewareInterface
 			$session = $request->getSession();
 			$session->set('user', $payload['user']);
 
-			return $requestHandler->handle($request);
+			return $next->handle($request);
 			// catch whatever exceptions you want to handle individually
 		} catch (ExpiredException) {
 			return new Response(

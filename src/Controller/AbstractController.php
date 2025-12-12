@@ -2,11 +2,13 @@
 
 namespace JDS\Controller;
 
+use JDS\Contracts\Rendering\RendererInterface;
 use JDS\Http\Request;
 use JDS\Http\Response;
+use JDS\Http\TemplateResponse;
 use Psr\Container\ContainerInterface;
 
-class AbstractController
+abstract class AbstractController
 {
 
     protected ContainerInterface $container;
@@ -75,7 +77,7 @@ class AbstractController
      */
     protected function query(string $key, mixed $default = null): mixed
     {
-        return $this->request->getQueryParam($key, $default);
+        return $this->request->getQueryParams($key, $default);
     }
 
     /**
@@ -83,7 +85,7 @@ class AbstractController
      */
     protected function post(string $key, mixed $default = null): mixed
     {
-        return $this->request->getPostParam($key, $default);
+        return $this->request->getPostParams($key, $default);
     }
 
     /**
@@ -94,5 +96,13 @@ class AbstractController
         return $this->request->getSession();
     }
 
-
+    protected function view(
+        string $template,
+        array $context = [],
+        int $statusCode = 200
+    ): TemplateResponse
+    {
+        return new TemplateResponse($template, $context, $statusCode);
+    }
 }
+

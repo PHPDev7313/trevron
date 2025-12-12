@@ -17,7 +17,7 @@ class AuthMiddleware implements MiddlewareInterface
     {
     }
 
-    public function process(Request $request, RequestHandlerInterface $requestHandler): Response
+    public function process(Request $request, RequestHandlerInterface $next): Response
     {
         // 1. Must be logged in
         $user_id = $this->session->get($this->session::AUTH_KEY);
@@ -28,12 +28,12 @@ class AuthMiddleware implements MiddlewareInterface
         // 2. Admin always allowed
         $isAdmin = (bool)$this->session->get($this->session::AUTH_ADMIN);
         if ($isAdmin) {
-            return $requestHandler->handle($request);
+            return $next->handle($request);
         }
 
         // 3. If no requirements, just proceed
         if ($this->required === null) {
-            return $requestHandler->handle($request);
+            return $next->handle($request);
         }
 
         // 4. Check permissions
@@ -47,7 +47,7 @@ class AuthMiddleware implements MiddlewareInterface
             }
         }
 
-        return $requestHandler->handle($request);
+        return $next->handle($request);
     }
 
     private function deny(string $message): Response

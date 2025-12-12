@@ -21,16 +21,16 @@ class Guest implements MiddlewareInterface
 	 * @throws ContainerExceptionInterface
 	 * @throws NotFoundExceptionInterface
 	 */
-	public function process(Request $request, RequestHandlerInterface $requestHandler): Response
+	public function process(Request $request, RequestHandlerInterface $next): Response
 	{
 		$this->session->start();
 
 		if ($this->session->isAuthenticated()) {
 
-			return new RedirectResponse($requestHandler->getContainer()->get('config')->get('routePath') . '/');
+			return new RedirectResponse($next->getContainer()->get('config')->get('routePath') . '/');
 		}
 
-		return $requestHandler->handle($request);
+		return $next->handle($request);
 	}
 }
 

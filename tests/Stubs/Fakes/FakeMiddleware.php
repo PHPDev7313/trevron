@@ -11,10 +11,10 @@ class FakeMiddleware implements MiddlewareInterface
 {
     public static array $order = [];
 
-    public function process(Request $request, RequestHandlerInterface $requestHandler): Response
+    public function process(Request $request, RequestHandlerInterface $next): Response
     {
         self::$order[] = 'before';
-        $response = $requestHandler->handle($request);
+        $response = $next->handle($request);
         self::$order[] = 'after';
         return $response;
     }

@@ -4,9 +4,7 @@ namespace JDS\Http;
 
 use JDS\Contracts\Middleware\MiddlewareInterface;
 use JDS\Contracts\Middleware\RequestHandlerInterface;
-use JDS\Error\ErrorProcessor;
-use JDS\Error\StatusCode;
-use Throwable;
+
 
 class MiddlewareQueue implements RequestHandlerInterface
 {
@@ -26,21 +24,9 @@ class MiddlewareQueue implements RequestHandlerInterface
 
     public function handle(Request $request): Response
     {
-        try {
-            return $this->handleAtIndex($request, 0);
-        } catch (Throwable $e) {
-            //
-            // Any unhandled exception in the entire pipeline
-            //
-            ErrorProcessor::process(
-                $e,
-                StatusCode::HTTP_PIPELINE_FAILURE,
-                "Unhandled exception in HTTP middleware pipeline."
-            );
-
-            return new Response("Internal Server Error", 500);
-        }
+        return $this->handleAtIndex($request, 0);
     }
+
 
     public function handleAtIndex(Request $request, int $index): Response
     {

@@ -2,7 +2,7 @@
 
 namespace JDS\Auditor\Validators;
 
-use JDS\Auditor\Exception\JsonValidationException;
+use JDS\Exceptions\Auditor\JsonValidationException;
 use JDS\Processing\ErrorProcessor;
 
 class DatabaseLogJsonValidator

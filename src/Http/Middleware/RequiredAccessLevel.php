@@ -12,7 +12,7 @@ class RequiredAccessLevel implements MiddlewareInterface
 {
     public function __construct(private SessionInterface $session) {}
 
-    public function process(Request $request, RequestHandlerInterface $requestHandler): Response
+    public function process(Request $request, RequestHandlerInterface $next): Response
     {
         $identity = $this->session->get('auth_identity');
 

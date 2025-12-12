@@ -2,6 +2,7 @@
 
 namespace JDS\Error;
 
+use JDS\Exceptions\Error\StatusException;
 use JDS\Handlers\ExceptionHandler;
 use Throwable;
 

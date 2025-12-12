@@ -5,6 +5,7 @@ namespace JDS\Http\Middleware;
 use JDS\Contracts\Middleware\MiddlewareInterface;
 use JDS\Contracts\Middleware\RequestHandlerInterface;
 use JDS\Contracts\Session\SessionInterface;
+use JDS\Exceptions\Http\Middleware\SessionStartException;
 use JDS\Handlers\ExceptionFormatter;
 use JDS\Http\Request;
 use JDS\Http\Response;
@@ -19,7 +20,7 @@ class StartSession implements MiddlewareInterface
 	{
 	}
 
-	public function process(Request $request, RequestHandlerInterface $requestHandler): Response
+	public function process(Request $request, RequestHandlerInterface $next): Response
 	{
 		if (!str_starts_with($request->getPathInfo() ?? '', $this->apiPrefix)) {
             try {
@@ -44,7 +45,7 @@ class StartSession implements MiddlewareInterface
             }
 		}
 
-		return $requestHandler->handle($request);
+		return $next->handle($request);
 	}
 }
 

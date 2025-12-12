@@ -7,6 +7,7 @@ use Psr\EventDispatcher\StoppableEventInterface;
 
 class EventDispatcher implements EventDispatcherInterface
 {
+    /** @var array<string, array<int, callable>>  */
 	private iterable $listeners = [];
 
 	public function dispatch(object $event): object
@@ -26,6 +27,9 @@ class EventDispatcher implements EventDispatcherInterface
 	// eventName e.g. Framework\EventDispatcher\ResponseEvent
 	public function addListener(string $eventName, callable $listener): self
 	{
+        if (!isset($this->listeners[$eventName])) {
+            $this->listeners[$eventName] = [];
+        }
 		$this->listeners[$eventName][] = $listener;
 
 		return $this;
@@ -43,11 +47,8 @@ class EventDispatcher implements EventDispatcherInterface
 	{
 		$eventName = get_class($event);
 
-		if (array_key_exists($eventName, $this->listeners)) {
-			return $this->listeners[$eventName];
-		}
+        return $this->listeners[$eventName] ?? [];
 
-		return [];
 	}
 }
 

@@ -3,7 +3,7 @@
 namespace JDS\FileSystem;
 
 use JDS\Error\StatusCode;
-use JDS\Error\StatusException;
+use JDS\Exceptions\Error\StatusException;
 
 class DirectoryInitializationState
 {

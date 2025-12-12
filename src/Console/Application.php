@@ -2,6 +2,7 @@
 
 namespace JDS\Console;
 
+use JDS\Exceptions\Console\ConsoleException;
 use JDS\Processing\ErrorProcessor;
 use League\Container\Container;
 
