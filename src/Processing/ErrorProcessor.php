@@ -2,10 +2,9 @@
 
 namespace JDS\Processing;
 
+use JDS\Exceptions\Handlers\HandlerRuntimeException;
 use JDS\Handlers\ExceptionHandler;
-use JDS\Handlers\HandlerRuntimeException;
 use JDS\Logging\ExceptionLogger;
-use Psr\Log\LoggerInterface;
 use Throwable;
 
 class ErrorProcessor

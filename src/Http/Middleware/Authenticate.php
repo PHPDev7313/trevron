@@ -18,16 +18,16 @@ class Authenticate implements MiddlewareInterface
 	{
 	}
 
-	public function process(Request $request, RequestHandlerInterface $requestHandler): Response
+	public function process(Request $request, RequestHandlerInterface $next): Response
 	{
         $this->session->start();
 		if (!$this->session->isAuthenticated()) {
 			$this->session->setFlash('error', 'Please sign in first!');
 
-			return new RedirectResponse($requestHandler->getContainer()->get('config')->get('routePath') . '/login');
+			return new RedirectResponse($next->getContainer()->get('config')->get('routePath') . '/login');
 		}
         // Retrieve the route metadata (roles, permissions, etc.)
-        $routeMeta = $requestHandler->getRouteMeta();
+        $routeMeta = $next->getRouteMeta();
         $requiredRoles = $routeMeta['roles'] ?? [];
         $requiredPermissions = $routeMeta['permissions'] ?? []; // Uses permission bitwise values
         // Retrieve user's session data
@@ -43,7 +43,7 @@ class Authenticate implements MiddlewareInterface
             throw new ForbiddenException('403 Forbidden: Insufficient permissions to access this route.');
         }
         // Proceed to the next middleware if role and permission checks pass
-        return $requestHandler->handle($request);
+        return $next->handle($request);
     }
 
     /**

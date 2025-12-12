@@ -3,37 +3,40 @@
 namespace JDS\Http;
 
 use JDS\Contracts\Middleware\RequestHandlerInterface;
-use JDS\Error\ErrorProcessor;
 use JDS\Error\StatusCode;
-use JDS\Error\StatusException;
+use JDS\Exceptions\Error\StatusException;
 use Throwable;
 
 final class RouteDispatcher implements RequestHandlerInterface
 {
+    public function __construct(
+        private ControllerDispatcher  $controllerDispatcher,
+    )
+    {
+    }
 
     public function handle(Request $request): Response
     {
         try {
-            $handler = $request->getRouteHandler();
-            $args = $request->getRouteHandlerArgs() ?? [];
-
-            $response = call_user_func_array($handler, $args);
-
-            if (!($response instanceof Response))  {
-                throw new StatusException(
-                    StatusCode::HTTP_ROUTE_DISPATCH_FAILURE,
-                    "Route handler did not return a Response object."
-                );
-            }
-            return $response;
+            //
+            // NEW: Dispatch through ControllerDispatcher
+            //
+            // ALL real controller logic is performed here
+            //
+            return $this->controllerDispatcher->dispatch($request);
+        } catch (StatusException $e) {
+            // Re-throw framework exception untouched
+            throw $e;
         } catch (Throwable $e) {
-            ErrorProcessor::process(
-                $e,
-                StatusCode::HTTP_ROUTE_DISPATCH_FAILURE,
-                "Route dispatch failed."
-            );
 
-            return new Response("Internal Server Error", 500);
+            //
+            // Convert unexpected internal failure into a structured StatusException
+            //
+            throw new StatusException(
+                StatusCode::HTTP_ROUTE_DISPATCH_FAILURE,
+                "Route dispatch failed: {$e->getMessage()}. [Route:Dispatcher].",
+                $e
+            );
         }
     }
 }

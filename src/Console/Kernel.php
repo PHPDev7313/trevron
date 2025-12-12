@@ -4,6 +4,8 @@ namespace JDS\Console;
 
 use DirectoryIterator;
 use JDS\Contracts\Console\Command\CommandInterface;
+use JDS\Exceptions\Console\ConsoleRuntimeException;
+use JDS\Exceptions\Console\ConsoleUnexpectedValueException;
 use JDS\Handlers\ExceptionHandler;
 use JDS\Http\OldStatusCodeManager;
 use JDS\Logging\ExceptionLogger;

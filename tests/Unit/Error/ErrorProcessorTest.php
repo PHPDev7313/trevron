@@ -3,7 +3,7 @@
 use JDS\Error\ErrorProcessor;
 use JDS\Error\ExceptionLogger;
 use JDS\Error\StatusCode;
-use JDS\Error\StatusException;
+use JDS\Exceptions\Error\StatusException;
 
 it('throws when not initialized', function () {
     ErrorProcessor::reset(); // instead of initialize(null)

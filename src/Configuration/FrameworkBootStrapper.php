@@ -2,7 +2,7 @@
 
 namespace JDS\Configuration;
 
-use JDS\Console\ConsoleRuntimeException;
+use JDS\Exceptions\Console\ConsoleRuntimeException;
 use JDS\ServiceProvider\ConfigServiceProvider;
 use League\Container\Container;
 

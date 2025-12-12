@@ -2,6 +2,8 @@
 
 namespace JDS\ServiceProvider\Encryption;
 
+use JDS\Exceptions\ServiceProvider\Encryption\CipherRuntimeException;
+
 final class Encryptor
 {
     public function __construct(

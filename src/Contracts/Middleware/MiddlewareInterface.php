@@ -7,6 +7,6 @@ use JDS\Http\Response;
 
 interface MiddlewareInterface
 {
-	public function process(Request $request, RequestHandlerInterface $requestHandler): Response;
+	public function process(Request $request, RequestHandlerInterface $next): Response;
 }
 

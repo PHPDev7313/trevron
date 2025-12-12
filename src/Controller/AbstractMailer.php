@@ -4,9 +4,8 @@ namespace JDS\Controller;
 
 use JDS\Auditor\CentralizedLogger;
 use JDS\Configuration\Config;
-use JDS\Handlers\HandlerRuntimeException;
+use JDS\Exceptions\Controller\ControllerRuntimeException;
 use JDS\Processing\ErrorProcessor;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 

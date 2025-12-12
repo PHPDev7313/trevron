@@ -17,5 +17,13 @@ abstract class Event implements StoppableEventInterface
 	{
 		$this->propagationStopped = true;
 	}
+
+    /**
+     * Optional: helper for tests or reuse.
+     */
+    public function resetPropagation(): void
+    {
+        $this->propagationStopped = false;
+    }
 }
 

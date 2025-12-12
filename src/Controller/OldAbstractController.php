@@ -3,6 +3,16 @@
 namespace JDS\Controller;
 
 use JDS\Auditor\CentralizedLogger;
+use JDS\Exceptions\Controller\ControllerRuntimeException;
+use JDS\Exceptions\Controller\FileUploadLimitException;
+use JDS\Exceptions\Controller\FolderNotWritableException;
+use JDS\Exceptions\Controller\ImageFilenameException;
+use JDS\Exceptions\Controller\ImageProcessingException;
+use JDS\Exceptions\Controller\ImageRuntimeException;
+use JDS\Exceptions\Controller\ImageUploadException;
+use JDS\Exceptions\Controller\InvalidFileSubmissionException;
+use JDS\Exceptions\Controller\TwigRuntimeException;
+use JDS\Exceptions\Controller\UnsupportedImageTypeException;
 use JDS\Http\FileNotFoundException;
 use JDS\Http\HttpRuntimeException;
 use JDS\Http\InvalidArgumentException;

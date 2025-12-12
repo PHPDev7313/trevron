@@ -3,45 +3,55 @@
 namespace JDS\Routing;
 
 use JDS\Contracts\Routing\RouterInterface;
-use JDS\Controller\OldAbstractController;
+use JDS\Controller\AbstractController;
+use JDS\Exceptions\Controller\ControllerMethodNotFoundException;
+use JDS\Exceptions\Controller\ControllerNotFoundException;
 use JDS\Http\Request;
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 
 class Router implements RouterInterface
 {
 
-	public function dispatch(Request $request, ContainerInterface $container): array
-	{
-		$routeHandler = $request->getRouteHandler();
-		$routeHandlerArgs = $request->getRouteHandlerArgs();
+    public function dispatch(Request $request, ContainerInterface $container)
+    {
+        $route = $request->getRoute();
 
-		if (is_array($routeHandler)) {
-
-            //
-            // Extract only controller + method, ignore middleware & metadata
-            //
-            [$controllerId, $method] = array_slice($routeHandler, 0, 2);
-
-            $controller = $container->get($controllerId);
-
-            //
-            // inject the Request automatically into all AbstractController descendants
-            //
-            if ($controller instanceof OldAbstractController) {
-                $controller->setRequest($request);
-            }
-
-            $routeHandler = [$controller, $method];
+        if (!$route instanceof Route) {
+            throw new RuntimeException(
+                "No Route attatched to Request. Ensure ExtractRouteInfo runs before Router::dispatch()."
+            );
         }
 
-        return [$routeHandler, $routeHandlerArgs];
-	}
-}
+        [$controllerClass, $method] = $route->getHandler();
 
-//			if (is_subclass_of($controller, AbstractController::class)) {
-//				$controller->setRequest($request);
-//			}
-//			$routeHandler = [$controller, $method];
-//		}
-//
-//		return [$routeHandler, $routeHandlerArgs];
+        if (!$container->has($controllerClass)) {
+            throw new ControllerNotFoundException(
+                "Controller '{$controllerClass}' not found in container."
+            );
+        }
+
+        $controller = $container->get($controllerClass);
+
+        if (!method_exists($controller, $method)) {
+            throw new ControllerMethodNotFoundException(
+                "Method '{$method}' does not exist on controller '{$controllerClass}'."
+            );
+        }
+
+        //
+        // Legacy support
+        //
+        if ($controller instanceof AbstractController) {
+            $controller->setRequest($request);
+        }
+
+        //
+        // Legacy return shape:
+        //
+        return [
+            [$controller, $method],
+            $request->getRouteParam(),
+        ];
+    }
+}

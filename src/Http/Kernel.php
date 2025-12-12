@@ -3,10 +3,12 @@
 namespace JDS\Http;
 
 
+use JDS\Contracts\Middleware\MiddlewareResolverInterface;
 use JDS\Contracts\Middleware\RequestHandlerInterface;
 use JDS\Error\ErrorProcessor;
 use JDS\Error\StatusCode;
 use JDS\EventDispatcher\EventDispatcher;
+use JDS\Exceptions\Error\StatusException;
 use JDS\Http\Event\ResponseEvent;
 use JDS\Http\Event\TerminateEvent;
 use Throwable;
@@ -15,12 +17,16 @@ final class Kernel
 {
 	public function __construct(
 		private readonly bool                       $debug, // true in dev, false in prod
-		private readonly RequestHandlerInterface    $middlewareResolver, // resoves middleware list per request
+        private readonly MiddlewareResolverInterface $resolver,
+		private readonly ControllerDispatcher $controllerDispatcher,
 		private readonly EventDispatcher            $eventDispatcher
 	)
 	{
 	}
 
+    /**
+     * Handle the request through the middleware pipeline + controller dispatcher.
+     */
 	public function handle(Request $request): Response
 	{
         //
@@ -31,41 +37,52 @@ final class Kernel
 
 		try {
             //
-            // Resolve middleware stack from the middleware resover
+            // 1. Resolve middleware stack from the middleware resover
             //
-            $middlewareList = $this->resolveMiddlewareList($request);
+            $middlewareList = $this->resolver->getMiddlewareForRequest($request);
 
             //
-            // Build the pipeline: Middleware -> RouteDispatcher
+            // 2. Build the pipeline: Middleware -> RouteDispatcher
             //
             $pipeline = new MiddlewareQueue(
                 $middlewareList,
-                new RouteDispatcher()
+                new RouteDispatcher(
+                    $this->controllerDispatcher
+                )
             );
 
             //
-            // Execute the full pipeline
-			$response = $pipeline->handle($request);
+            // 3. Execute the full pipeline
+            //
+            $response = $pipeline->handle($request);
+
+        } catch (StatusException $e) {
+            //
+            // Known framework exception -> convert to safe response
+            //
+            return $this->createExceptionResponse($e);
+
 		} catch (Throwable $e) {
+
             //
             // Pass exception to the centralized ErrorProcessor
             // Log + process error via ErrorProcessor
             //
-            ErrorProcessor::process(
-                $e,
+            $wrapped = new StatusException(
                 StatusCode::HTTP_KERNEL_GENERAL_FAILURE,
-                'An unexpected error occurred while processing the request.',
+                "Unhandled kernel exception: {$e->getMessage()}",
+                $e
             );
 
             //
             // Build an appropriate Response object
             // convert into Response
             //
-            $response = $this->createExceptionResponse($e);
+            return $this->createExceptionResponse($wrapped);
 		}
 
         //
-        // Fire early response event-used for response transformation or logging
+        // 4. Fire early response event-used for response transformation or logging
         // event fired BEFORE the response is finalized
         //
 		$this->eventDispatcher->dispatch(
@@ -78,7 +95,7 @@ final class Kernel
     /**
      * Responsible for creating the Response object when an exception occors.
      */
-    private function createExceptionResponse(Throwable $exception): Response
+    private function createExceptionResponse(StatusException $exception): Response
     {
         //
         // In debug mode, bubble up for a detailed error page / Whoops
@@ -88,44 +105,12 @@ final class Kernel
         }
 
         //
-        // If this is an HttpException, let it control status and message
-        //
-        if ($exception instanceof HttpException) {
-            return new Response(
-                $exception->getMessage(),
-                $exception->getStatusCode(),
-            );
-        }
-
-        //
         // Fallback error response (safe for production)
         //
         return new Response(
-            'Server error',
-            Response::HTTP_INTERNAL_SERVER_ERROR,
+            $exception->getMessage(),
+            $exception->getCode()
         );
-    }
-
-    /**
-     * Allows the Kernel to resolve middleware dynamically
-     * Can be expanded later for route-based middleware.
-     */
-    private function resolveMiddlewareList(Request $request): array
-    {
-        //
-        // The `$middlewareResolver` MUST implement RequestHandlerInterface,
-        // and provide a method like getMiddlewareForRequest() or similar.
-        //
-        // For now, we assume it's the old RequestHandler repurposed into a resolver.
-        //
-        if (method_exists($this->middlewareResolver, 'getMiddlewareForRequest')) {
-            return $this->middlewareResolver->getMiddlewareForRequest($request);
-        }
-
-        //
-        // Fallback: treat the resolver itself as the single handler
-        //
-        return [$this->middlewareResolver];
     }
 
     /**
@@ -160,40 +145,6 @@ final class Kernel
 	}
 }
 
-
-
-//		if ($request->getSession()->isAuthenticated()) {
-//			$request->getSession()?->remove(SessionAuthentication::AUTH_KEY);
-//		}
-//
-//
-//
-//	private function handleException(Request $request, Throwable $e): Response
-//	{
-//        //
-//        // In debug mode, rethrow to show stack traces
-//        //
-//		if ($this->config->debug) {
-//			throw $e;
-//		}
-//
-//		return $this->renderException($e);
-//	}
-//
-//    private function renderException(Throwable $e): Response
-//    {
-//        if ($e instanceof HttpException) {
-//            return new Response(
-//                $e->getMessage(),
-//                $e->getStatusCode(),
-//            );
-//        }
-//
-//        return new Response(
-//            'Server error',
-//            Response::HTTP_INTERNAL_SERVER_ERROR,
-//        );
-//    }
 
 
 

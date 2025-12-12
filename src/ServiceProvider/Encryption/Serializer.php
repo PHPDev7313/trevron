@@ -2,6 +2,8 @@
 
 namespace JDS\ServiceProvider\Encryption;
 
+use JDS\Exceptions\ServiceProvider\Encryption\CipherRuntimeException;
+
 final class Serializer
 {
     public static function encode(CipherPackage $p): string

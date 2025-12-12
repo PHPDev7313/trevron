@@ -38,7 +38,7 @@ it('throws exception when retrieving an unregistered logger', function () {
     // assert that retrieving an unregistered logger throws an exception
     $manager->getLogger('nonexistent');
 
-})->throws(\JDS\Auditor\Exception\LoggerNotFoundException::class, "Logger 'nonexistent' is not registered.");
+})->throws(\JDS\Exceptions\Auditor\LoggerNotFoundException::class, "Logger 'nonexistent' is not registered.");
 
 it('overwrites logger if registered with the same name twice', function () {
     $manager = new LoggerManager();

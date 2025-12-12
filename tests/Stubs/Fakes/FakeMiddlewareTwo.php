@@ -13,10 +13,10 @@ class FakeMiddlewareTwo implements MiddlewareInterface
     public static array $order = [];
 
 
-    public function process(Request $request, RequestHandlerInterface $requestHandler): Response
+    public function process(Request $request, RequestHandlerInterface $next): Response
     {
         self::$order[] = 'two-before';
-        $response = $requestHandler->handle($request);
+        $response = $next->handle($request);
         self::$order[] = 'two-after';
 
         return $response;

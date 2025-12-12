@@ -3,7 +3,7 @@
 namespace JDS\Routing;
 
 use JDS\Error\StatusCode;
-use JDS\Error\StatusException;
+use JDS\Exceptions\Error\StatusException;
 
 class RouteMetadata
 {

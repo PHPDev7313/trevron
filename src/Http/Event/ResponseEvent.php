@@ -25,6 +25,11 @@ class ResponseEvent extends Event
 		return $this->response;
 	}
 
+    public function setResponse(Response $response): void
+    {
+        $this->response = $response;
+    }
+
 }
 
 

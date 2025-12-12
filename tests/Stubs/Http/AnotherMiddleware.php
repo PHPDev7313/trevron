@@ -10,9 +10,9 @@ use JDS\Http\Response;
 class AnotherMiddleware implements MiddlewareInterface
 {
 
-    public function process(Request $request, RequestHandlerInterface $requestHandler): Response
+    public function process(Request $request, RequestHandlerInterface $next): Response
     {
-        return $requestHandler->handle($request);
+        return $next->handle($request);
     }
 }
 

@@ -2,10 +2,10 @@
 
 namespace JDS\Auditor\Provider;
 
-use JDS\Auditor\Exception\InvalidArgumentException;
-use JDS\Auditor\Exception\JsonValidationException;
-use JDS\Auditor\Exception\ValidLogLevelsException;
 use JDS\Auditor\Level;
+use JDS\Exceptions\Auditor\InvalidArgumentException;
+use JDS\Exceptions\Auditor\JsonValidationException;
+use JDS\Exceptions\Auditor\ValidLogLevelsException;
 use JDS\Processing\ErrorProcessor;
 
 class LogLevelProvider

@@ -1,7 +1,7 @@
 <?php
 
 use JDS\Error\StatusCode;
-use JDS\Error\StatusException;
+use JDS\Exceptions\Error\StatusException;
 use JDS\FileSystem\DirectoryInitializationState;
 use JDS\FileSystem\DirectoryStructureInitializer;
 

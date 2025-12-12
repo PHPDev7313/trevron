@@ -3,6 +3,7 @@
 namespace JDS\ServiceProvider\Mail;
 
 use JDS\Configuration\Config;
+use JDS\Exceptions\ServiceProvider\Mail\MailException;
 use JDS\Processing\ErrorProcessor;
 use League\Container\Container;
 use PHPMailer\PHPMailer\PHPMailer;

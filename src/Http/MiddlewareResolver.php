@@ -5,7 +5,7 @@ namespace JDS\Http;
 use JDS\Contracts\Middleware\MiddlewareInterface;
 use JDS\Contracts\Middleware\RequestHandlerInterface;
 use JDS\Error\StatusCode;
-use JDS\Error\StatusException;
+use JDS\Exceptions\Error\StatusException;
 use Psr\Container\ContainerInterface;
 use Throwable;
 

@@ -17,7 +17,7 @@ use JDS\Validation\MinRule;
 use JDS\Validation\NumericRule;
 use JDS\Validation\RequiredRule;
 use JDS\Validation\RuleRegistery;
-use JDS\Validation\Validator;
+use JDS\Validation\ValidatorEngine;
 use League\Container\Container;
 
 
@@ -26,7 +26,7 @@ class ValidationServiceProvider implements ServiceProviderInterface
     protected $provides = [
         RuleRegistery::class,
         ValidatorInterface::class,
-        Validator::class,
+        ValidatorEngine::class,
     ];
 
     public function provides(string $id): bool
@@ -51,7 +51,7 @@ class ValidationServiceProvider implements ServiceProviderInterface
 
         $container->add(RuleRegistery::class, $registery);
 
-        $container->add(ValidatorInterface::class, Validator::class);
+        $container->add(ValidatorInterface::class, ValidatorEngine::class);
     }
 }
 

@@ -17,16 +17,16 @@ class OldAuthenticate implements MiddlewareInterface
 	{
 	}
 
-	public function process(Request $request, RequestHandlerInterface $requestHandler): Response
+	public function process(Request $request, RequestHandlerInterface $next): Response
 	{
         $this->session->start();
 
 		if (!$this->session->isAuthenticated()) {
 			$this->session->setFlash('error', 'Please sign in first!');
 
-			return new RedirectResponse($requestHandler->getContainer()->get('routePath') . '/login');
+			return new RedirectResponse($next->getContainer()->get('routePath') . '/login');
 		}
 
-		return $requestHandler->handle($request);
+		return $next->handle($request);
 	}
 }

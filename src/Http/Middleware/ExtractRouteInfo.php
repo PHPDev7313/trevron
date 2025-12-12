@@ -4,13 +4,13 @@ namespace JDS\Http\Middleware;
 
 
 use Exception;
-
 use FastRoute\Dispatcher;
+use FastRoute\Route;
 use FastRoute\RouteCollector;
 use JDS\Contracts\Middleware\MiddlewareInterface;
 use JDS\Contracts\Middleware\RequestHandlerInterface;
 use JDS\Error\StatusCode;
-use JDS\Error\StatusException;
+use JDS\Exceptions\Error\StatusException;
 use JDS\Http\HttpException;
 use JDS\Http\HttpRequestMethodException;
 use JDS\Http\Request;
@@ -28,21 +28,28 @@ final class ExtractRouteInfo implements MiddlewareInterface
     {
     }
 
-    public function process(Request $request, RequestHandlerInterface $requestHandler): Response
+    public function process(Request $request, RequestHandlerInterface $next): Response
     {
         try {
+            //
+            // Build FastRoute dispatcher
+            //
             $dispatcher = simpleDispatcher(function (RouteCollector $collector) {
                 foreach ($this->routes['routes'] as $route) {
 
                     //
                     // Normalize path
                     //
-                    $route[1] = $this->normalizeRoutePath($this->routePath, $route[1]);
+                    $fullPath = $this->normalizeRoutePath($this->routePath, $route->getPath());
 
                     //
                     // Register with FastRoute
                     //
-                    $collector->addRoute(...$route);
+                    $collector->addRoute(
+                        $route->getMethod(),
+                        $fullPath,
+                        $route // store Route object as handler
+                    );
                 }
             });
 
@@ -60,7 +67,7 @@ final class ExtractRouteInfo implements MiddlewareInterface
 
         return match ($routeInfo[0]) {
 
-            Dispatcher::FOUND => $this->handleFoundRoute($routeInfo, $request, $requestHandler),
+            Dispatcher::FOUND => $this->handleFoundRoute($routeInfo, $request, $next),
 
             Dispatcher::METHOD_NOT_ALLOWED =>
                 throw new HttpRequestMethodException(
@@ -73,40 +80,25 @@ final class ExtractRouteInfo implements MiddlewareInterface
         };
     }
 
-    private function handleFoundRoute(array $routeInfo, Request $request, RequestHandlerInterface $handler): Response
+    private function handleFoundRoute(array $routeInfo, Request $request, RequestHandlerInterface $next): Response
     {
-        [$handlerCallable, $vars] = [$routeInfo[1], $routeInfo[2]];
-
-        $request->setRouteHandler($handlerCallable);
-        $request->setRouteHandlerArgs($vars);
-
-        //
-        // NEW: Extract route-specific middleware from route definition
-        //
-        $routeMiddleware = [];
-
-        if (is_array($handlerCallable) && isset($handlerCallable[2]) && is_array($handlerCallable[2])) {
-            $routeMiddleware = $handlerCallable[2]; // Example: [Authenticate::class]
-        }
+        /** @var Route $route */
+        $route = $routeInfo[1];
+        $vars = $routeInfo[2]; // dynamic parameters
 
         //
-        // Attach middleware TO THE REQUEST, not the old RequestHandler!
+        // Attatch route to Request
         //
-        $request = $request->withAttribute('route.middleware', $routeMiddleware);
+        $request->setRoute($route);
+        $request->setRouteParams($vars);
 
-        //
-        // Add route metadata (index 3 of handler definition)
-        //
-        if (isset($handlerCallable[3]) && is_array($handlerCallable[3])) {
-            $request = $request->withAttribute('route.meta', $handlerCallable[3]);
-        }
 
-        return $handler->handle($request);
+        return $next->handle($request);
     }
 
-    private function normalizeRoutePath(string $routePrefix, string $route): string
+    private function normalizeRoutePath(string $prefix, string $route): string
     {
-        $prefix = trim($routePrefix, '/');
+        $prefix = trim($prefix, '/');
         $route = trim($route, '/');
 
         if ($prefix === '') {
@@ -118,6 +110,31 @@ final class ExtractRouteInfo implements MiddlewareInterface
 }
 
 
+//        [$handlerCallable, $vars] = [$routeInfo[1], $routeInfo[2]];
+//
+//        $request->setRouteHandler($handlerCallable);
+//        $request->setRouteHandlerArgs($vars);
+//
+//        //
+//        // NEW: Extract route-specific middleware from route definition
+//        //
+//        $routeMiddleware = [];
+//
+//        if (is_array($handlerCallable) && isset($handlerCallable[2]) && is_array($handlerCallable[2])) {
+//            $routeMiddleware = $handlerCallable[2]; // Example: [Authenticate::class]
+//        }
+//
+//        //
+//        // Attach middleware TO THE REQUEST, not the old RequestHandler!
+//        //
+//        $request = $request->withAttribute('route.middleware', $routeMiddleware);
+//
+//        //
+//        // Add route metadata (index 3 of handler definition)
+//        //
+//        if (isset($handlerCallable[3]) && is_array($handlerCallable[3])) {
+//            $request = $request->withAttribute('route.meta', $handlerCallable[3]);
+//        }
 
 
 
@@ -133,7 +150,7 @@ final class ExtractRouteInfo implements MiddlewareInterface
 //     * @throws HttpRequestMethodException
 //     * @throws Exception
 //     */
-//    public function process(Request $request, RequestHandlerInterface $requestHandler): Response
+//    public function process(Request $request, RequestHandlerInterface $next): Response
 //    {
 //        // Capture route data during setup
 //        $routeData = [];
@@ -171,7 +188,7 @@ final class ExtractRouteInfo implements MiddlewareInterface
 ////                dump($request);
 //                // Inject route middleware on handler
 //                if (is_array($routeInfo[1]) && isset($routeInfo[1][2]) && is_array($routeInfo[1][2]) && count($routeInfo[1][2]) > 0) {
-//                    $requestHandler->injectMiddleware($routeInfo[1][2]);
+//                    $next->injectMiddleware($routeInfo[1][2]);
 //                }
 //                break;
 //
@@ -186,8 +203,8 @@ final class ExtractRouteInfo implements MiddlewareInterface
 //                $e->setStatusCode(404);
 //                throw $e;
 //        }
-////        dd($requestHandler->handle($request));
-//        return $requestHandler->handle($request);
+////        dd($next->handle($request));
+//        return $next->handle($request);
 //    }
 //
 //    /**

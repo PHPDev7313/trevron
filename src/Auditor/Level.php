@@ -2,7 +2,7 @@
 
 namespace JDS\Auditor;
 
-use JDS\Auditor\Exception\InvalidArgumentException;
+use JDS\Exceptions\Auditor\InvalidArgumentException;
 use JDS\Processing\ErrorProcessor;
 
 class Level

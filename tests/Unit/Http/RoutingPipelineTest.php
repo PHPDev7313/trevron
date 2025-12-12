@@ -5,7 +5,7 @@ use JDS\Http\MiddlewareResolver;
 use JDS\Http\Request;
 use JDS\Http\Response;
 use JDS\Http\RouteDispatcher;
-use JDS\Routing\Router;
+use JDS\Routing\Route;
 use Tests\Stubs\Fakes\FakeContainer;
 use Tests\Stubs\Fakes\FakeController;
 use Tests\Stubs\Fakes\FakeMiddleware;
@@ -52,7 +52,7 @@ beforeEach(function () {
         globalMiddleware: [FakeMiddleware::class]
     );
 
-    $this->router     = new Router();
+    $this->router     = new Route();
     $this->dispatcher = new RouteDispatcher();
 });
 

@@ -11,11 +11,11 @@ use JDS\Http\TokenMismatchException;
 class VerifyCsrfToken implements MiddlewareInterface
 {
 
-	public function process(Request $request, RequestHandlerInterface $requestHandler): Response
+	public function process(Request $request, RequestHandlerInterface $next): Response
 	{
 		// proceed if not state change request
 		if (!in_array($request->getMethod(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
-			return $requestHandler->handle($request);
+			return $next->handle($request);
 		}
 
 		// retrieve the tokens
@@ -30,7 +30,7 @@ class VerifyCsrfToken implements MiddlewareInterface
 			throw $exception;
 		}
 		// proceed
-		return $requestHandler->handle($request);
+		return $next->handle($request);
 	}
 }
 
