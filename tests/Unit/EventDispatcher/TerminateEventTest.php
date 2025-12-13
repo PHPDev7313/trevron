@@ -5,7 +5,7 @@ use JDS\Http\Event\TerminateEvent;
 use JDS\Http\Request;
 use JDS\Http\Response;
 
-function makeRequest(): Request {
+function makeRequest2(): Request {
     return new Request(
         method:'GET',
         uri: '/test',
@@ -27,7 +27,7 @@ it('1. runs terminate listeners is order and returns the same event instance', f
     });
 
     $event = new TerminateEvent(
-        makeRequest(),
+        makeRequest2(),
         new Response(),
         startTime: 1.234,
         endTime: 2.345,
@@ -43,7 +43,7 @@ it('1. runs terminate listeners is order and returns the same event instance', f
 it('2. exposes correct request, response, and timing values to listeners', function () {
     $dispatcher = new EventDispatcher();
 
-    $req = makeRequest();
+    $req = makeRequest2();
     $res = new Response();
 
     $start = 100.0;
@@ -77,7 +77,7 @@ it('3. stops propagation when stopPropagation() is called', function () {
     });
 
     $event = new TerminateEvent(
-        makeRequest(),
+        makeRequest2(),
         new Response(),
         startTime: 1.0,
         endTime: 2.0,
@@ -93,7 +93,7 @@ it('4. silently passes when no listeners are registered', function () {
     $dispatcher = new EventDispatcher();
 
     $event = new TerminateEvent(
-        makeRequest(),
+        makeRequest2(),
         new Response(),
         startTime: 1.0,
         endTime: 2.0,
