@@ -1,8 +1,6 @@
 <?php
 
-namespace JDS\Http;
-
-use JDS\Http\HttpException;
+namespace JDS\Exceptions\Http;
 
 class TokenMismatchException extends HttpException
 {

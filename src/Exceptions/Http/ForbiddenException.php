@@ -1,6 +1,6 @@
 <?php
 
-namespace JDS\Http;
+namespace JDS\Exceptions\Http;
 
 use Exception;
 

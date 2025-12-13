@@ -1,6 +1,6 @@
 <?php
 
-namespace JDS\Http;
+namespace JDS\Exceptions\Http;
 
 class NotFoundException extends HttpException
 {
