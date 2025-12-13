@@ -32,22 +32,22 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
     );
 
     public static $prefixLengthsPsr4 = array (
-        'p' => 
+        'p' =>
         array (
             'phpDocumentor\\Reflection\\' => 25,
         ),
-        'W' => 
+        'W' =>
         array (
             'Whoops\\' => 7,
             'Webmozart\\Assert\\' => 17,
         ),
-        'T' => 
+        'T' =>
         array (
             'Twig\\' => 5,
             'Tests\\' => 6,
             'Termwind\\' => 9,
         ),
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
@@ -62,7 +62,7 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
             'Symfony\\Component\\EventDispatcher\\' => 34,
             'Symfony\\Component\\Console\\' => 26,
         ),
-        'P' => 
+        'P' =>
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
@@ -83,31 +83,31 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
             'PHPStan\\PhpDocParser\\' => 21,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
-        'N' => 
+        'N' =>
         array (
             'NunoMaduro\\Collision\\' => 21,
         ),
-        'M' => 
+        'M' =>
         array (
             'Monolog\\' => 8,
             'Mockery\\' => 8,
         ),
-        'L' => 
+        'L' =>
         array (
             'League\\Container\\' => 17,
         ),
-        'J' => 
+        'J' =>
         array (
             'Jean85\\' => 7,
             'JDS\\' => 4,
         ),
-        'F' => 
+        'F' =>
         array (
             'Firebase\\JWT\\' => 13,
             'Fidry\\CpuCoreCounter\\' => 21,
             'FastRoute\\' => 10,
         ),
-        'D' => 
+        'D' =>
         array (
             'Doctrine\\Deprecations\\' => 22,
             'Doctrine\\DBAL\\' => 14,
@@ -116,197 +116,197 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
     );
 
     public static $prefixDirsPsr4 = array (
-        'phpDocumentor\\Reflection\\' => 
+        'phpDocumentor\\Reflection\\' =>
         array (
-            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
         ),
-        'Whoops\\' => 
+        'Whoops\\' =>
         array (
             0 => __DIR__ . '/..' . '/filp/whoops/src/Whoops',
         ),
-        'Webmozart\\Assert\\' => 
+        'Webmozart\\Assert\\' =>
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
         ),
-        'Twig\\' => 
+        'Twig\\' =>
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
         ),
-        'Tests\\' => 
+        'Tests\\' =>
         array (
             0 => __DIR__ . '/../..' . '/tests',
         ),
-        'Termwind\\' => 
+        'Termwind\\' =>
         array (
             0 => __DIR__ . '/..' . '/nunomaduro/termwind/src',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
+        'Symfony\\Polyfill\\Mbstring\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Symfony\\Polyfill\\Intl\\Normalizer\\' => 
+        'Symfony\\Polyfill\\Intl\\Normalizer\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer',
         ),
-        'Symfony\\Polyfill\\Intl\\Grapheme\\' => 
+        'Symfony\\Polyfill\\Intl\\Grapheme\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme',
         ),
-        'Symfony\\Polyfill\\Ctype\\' => 
+        'Symfony\\Polyfill\\Ctype\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Symfony\\Contracts\\Service\\' => 
+        'Symfony\\Contracts\\Service\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/service-contracts',
         ),
-        'Symfony\\Contracts\\EventDispatcher\\' => 
+        'Symfony\\Contracts\\EventDispatcher\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/event-dispatcher-contracts',
         ),
-        'Symfony\\Component\\VarDumper\\' => 
+        'Symfony\\Component\\VarDumper\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/var-dumper',
         ),
-        'Symfony\\Component\\String\\' => 
+        'Symfony\\Component\\String\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/string',
         ),
-        'Symfony\\Component\\Process\\' => 
+        'Symfony\\Component\\Process\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/process',
         ),
-        'Symfony\\Component\\Finder\\' => 
+        'Symfony\\Component\\Finder\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/finder',
         ),
-        'Symfony\\Component\\EventDispatcher\\' => 
+        'Symfony\\Component\\EventDispatcher\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/event-dispatcher',
         ),
-        'Symfony\\Component\\Console\\' => 
+        'Symfony\\Component\\Console\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/console',
         ),
-        'Psr\\SimpleCache\\' => 
+        'Psr\\SimpleCache\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
         ),
-        'Psr\\Log\\' => 
+        'Psr\\Log\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
         ),
-        'Psr\\Http\\Message\\' => 
+        'Psr\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Psr\\EventDispatcher\\' => 
+        'Psr\\EventDispatcher\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/event-dispatcher/src',
         ),
-        'Psr\\Container\\' => 
+        'Psr\\Container\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'Psr\\Cache\\' => 
+        'Psr\\Cache\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
-        'Predis\\' => 
+        'Predis\\' =>
         array (
             0 => __DIR__ . '/..' . '/predis/predis/src',
         ),
-        'PhpParser\\' => 
+        'PhpParser\\' =>
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
-        'Pest\\Profanity\\' => 
+        'Pest\\Profanity\\' =>
         array (
             0 => __DIR__ . '/..' . '/pestphp/pest-plugin-profanity/src',
         ),
-        'Pest\\Plugin\\' => 
+        'Pest\\Plugin\\' =>
         array (
             0 => __DIR__ . '/..' . '/pestphp/pest-plugin/src',
         ),
-        'Pest\\Mutate\\' => 
+        'Pest\\Mutate\\' =>
         array (
             0 => __DIR__ . '/..' . '/pestphp/pest-plugin-mutate/src',
         ),
-        'Pest\\Arch\\' => 
+        'Pest\\Arch\\' =>
         array (
             0 => __DIR__ . '/..' . '/pestphp/pest-plugin-arch/src',
         ),
-        'Pest\\' => 
+        'Pest\\' =>
         array (
             0 => __DIR__ . '/..' . '/pestphp/pest/src',
         ),
-        'ParagonIE\\Sodium\\' => 
+        'ParagonIE\\Sodium\\' =>
         array (
             0 => __DIR__ . '/..' . '/paragonie/sodium_compat/namespaced',
         ),
-        'ParaTest\\' => 
+        'ParaTest\\' =>
         array (
             0 => __DIR__ . '/..' . '/brianium/paratest/src',
         ),
-        'PHPUnit\\Architecture\\' => 
+        'PHPUnit\\Architecture\\' =>
         array (
             0 => __DIR__ . '/..' . '/ta-tikoma/phpunit-architecture-test/src',
         ),
-        'PHPStan\\PhpDocParser\\' => 
+        'PHPStan\\PhpDocParser\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
         ),
-        'PHPMailer\\PHPMailer\\' => 
+        'PHPMailer\\PHPMailer\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
-        'NunoMaduro\\Collision\\' => 
+        'NunoMaduro\\Collision\\' =>
         array (
             0 => __DIR__ . '/..' . '/nunomaduro/collision/src',
         ),
-        'Monolog\\' => 
+        'Monolog\\' =>
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
-        'Mockery\\' => 
+        'Mockery\\' =>
         array (
             0 => __DIR__ . '/..' . '/mockery/mockery/library/Mockery',
         ),
-        'League\\Container\\' => 
+        'League\\Container\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/container/src',
         ),
-        'Jean85\\' => 
+        'Jean85\\' =>
         array (
             0 => __DIR__ . '/..' . '/jean85/pretty-package-versions/src',
         ),
-        'JDS\\' => 
+        'JDS\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
-        'Firebase\\JWT\\' => 
+        'Firebase\\JWT\\' =>
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
-        'Fidry\\CpuCoreCounter\\' => 
+        'Fidry\\CpuCoreCounter\\' =>
         array (
             0 => __DIR__ . '/..' . '/fidry/cpu-core-counter/src',
         ),
-        'FastRoute\\' => 
+        'FastRoute\\' =>
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
         ),
-        'Doctrine\\Deprecations\\' => 
+        'Doctrine\\Deprecations\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/deprecations/src',
         ),
-        'Doctrine\\DBAL\\' => 
+        'Doctrine\\DBAL\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/dbal/src',
         ),
-        'DeepCopy\\' => 
+        'DeepCopy\\' =>
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
@@ -896,12 +896,6 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'Hamcrest\\Util' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Util.php',
         'Hamcrest\\Xml\\HasXPath' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Xml/HasXPath.php',
         'JDS\\Auditor\\CentralizedLogger' => __DIR__ . '/../..' . '/src/Auditor/CentralizedLogger.php',
-        'JDS\\Auditor\\Exception\\InvalidArgumentException' => __DIR__ . '/../..' . '/src/Auditor/Exception/InvalidArgumentException.php',
-        'JDS\\Auditor\\Exception\\JsonValidationException' => __DIR__ . '/../..' . '/src/Auditor/Exception/JsonValidationException.php',
-        'JDS\\Auditor\\Exception\\LogEntryFailedException' => __DIR__ . '/../..' . '/src/Auditor/Exception/LogEntryFailedException.php',
-        'JDS\\Auditor\\Exception\\LoggerNotFoundException' => __DIR__ . '/../..' . '/src/Auditor/Exception/LoggerNotFoundException.php',
-        'JDS\\Auditor\\Exception\\TableDoesNotExistException' => __DIR__ . '/../..' . '/src/Auditor/Exception/TableDoesNotExistException.php',
-        'JDS\\Auditor\\Exception\\ValidLogLevelsException' => __DIR__ . '/../..' . '/src/Auditor/Exception/ValidLogLevelsException.php',
         'JDS\\Auditor\\Handlers\\DatabaseLogHandler' => __DIR__ . '/../..' . '/src/Auditor/Handlers/DatabaseLogHandler.php',
         'JDS\\Auditor\\Level' => __DIR__ . '/../..' . '/src/Auditor/Level.php',
         'JDS\\Auditor\\Listener\\EntityActivityLogger' => __DIR__ . '/../..' . '/src/Auditor/Listener/EntityActivityLogger.php',
@@ -915,13 +909,11 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\Auth\\PermissionResolver' => __DIR__ . '/../..' . '/src/Auth/PermissionResolver.php',
         'JDS\\Authentication\\AbstractSession' => __DIR__ . '/../..' . '/src/Authentication/AbstractSession.php',
         'JDS\\Authentication\\AuthMiddleware' => __DIR__ . '/../..' . '/src/Authentication/AuthMiddleware.php',
-        'JDS\\Authentication\\RuntimeException' => __DIR__ . '/../..' . '/src/Authentication/RuntimeException.php',
         'JDS\\Authentication\\SessionAuthentication' => __DIR__ . '/../..' . '/src/Authentication/SessionAuthentication.php',
         'JDS\\Authentication\\UserIdentity' => __DIR__ . '/../..' . '/src/Authentication/UserIdentity.php',
         'JDS\\Bootstrap\\AppBootstrapper' => __DIR__ . '/../..' . '/src/Bootstrap/AppBootstrapper.php',
         'JDS\\Bootstrap\\ServiceLoader' => __DIR__ . '/../..' . '/src/Bootstrap/ServiceLoader.php',
         'JDS\\Configuration\\Config' => __DIR__ . '/../..' . '/src/Configuration/Config.php',
-        'JDS\\Configuration\\ConfigurationException' => __DIR__ . '/../..' . '/src/Configuration/ConfigurationException.php',
         'JDS\\Configuration\\FrameworkBootStrapper' => __DIR__ . '/../..' . '/src/Configuration/FrameworkBootStrapper.php',
         'JDS\\Console\\AbstractCommand' => __DIR__ . '/../..' . '/src/Console/AbstractCommand.php',
         'JDS\\Console\\Application' => __DIR__ . '/../..' . '/src/Console/Application.php',
@@ -933,10 +925,6 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\Console\\Command\\Secrets\\ValidateSecretCommand' => __DIR__ . '/../..' . '/src/Console/Command/Secrets/ValidateSecretCommand.php',
         'JDS\\Console\\Commands\\PurgeExpiredTokens' => __DIR__ . '/../..' . '/src/Console/Commands/PurgeExpiredTokens.php',
         'JDS\\Console\\Commands\\PurgeExpiredTokensCommand' => __DIR__ . '/../..' . '/src/Console/Commands/PurgeExpiredTokensCommand.php',
-        'JDS\\Console\\ConsoleException' => __DIR__ . '/../..' . '/src/Console/ConsoleException.php',
-        'JDS\\Console\\ConsoleRuntimeException' => __DIR__ . '/../..' . '/src/Console/ConsoleRuntimeException.php',
-        'JDS\\Console\\ConsoleUnexpectedValueException' => __DIR__ . '/../..' . '/src/Console/ConsoleUnexpectedValueException.php',
-        'JDS\\Console\\DatabaseNotFoundException' => __DIR__ . '/../..' . '/src/Console/DatabaseNotFoundException.php',
         'JDS\\Console\\Kernel' => __DIR__ . '/../..' . '/src/Console/Kernel.php',
         'JDS\\Container\\Container' => __DIR__ . '/../..' . '/src/Container/Container.php',
         'JDS\\Container\\ContainerException' => __DIR__ . '/../..' . '/src/Container/ContainerException.php',
@@ -980,6 +968,7 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\Contracts\\FileSystem\\JsonFileWriterInterface' => __DIR__ . '/../..' . '/src/Contracts/FileSystem/JsonFileWriterInterface.php',
         'JDS\\Contracts\\Http\\Generators\\BreadcrumbGeneratorInterface' => __DIR__ . '/../..' . '/src/Contracts/Http/Generators/BreadcrumbGeneratorInterface.php',
         'JDS\\Contracts\\Http\\Generators\\MenuGeneratorInterface' => __DIR__ . '/../..' . '/src/Contracts/Http/Generators/MenuGeneratorInterface.php',
+        'JDS\\Contracts\\Http\\ParamTransformerInterface' => __DIR__ . '/../..' . '/src/Contracts/Http/ParamTransformerInterface.php',
         'JDS\\Contracts\\Json\\JsonBuilderInterface' => __DIR__ . '/../..' . '/src/Contracts/Json/JsonBuilderInterface.php',
         'JDS\\Contracts\\Json\\JsonDecoderInterface' => __DIR__ . '/../..' . '/src/Contracts/Json/JsonDecoderInterface.php',
         'JDS\\Contracts\\Json\\JsonEncoderInterface' => __DIR__ . '/../..' . '/src/Contracts/Json/JsonEncoderInterface.php',
@@ -988,9 +977,12 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\Contracts\\Json\\JsonSorterInterface' => __DIR__ . '/../..' . '/src/Contracts/Json/JsonSorterInterface.php',
         'JDS\\Contracts\\Logging\\EntityActivityLogWriterInterface' => __DIR__ . '/../..' . '/src/Contracts/Logging/EntityActivityLogWriterInterface.php',
         'JDS\\Contracts\\Middleware\\MiddlewareInterface' => __DIR__ . '/../..' . '/src/Contracts/Middleware/MiddlewareInterface.php',
+        'JDS\\Contracts\\Middleware\\MiddlewareResolverInterface' => __DIR__ . '/../..' . '/src/Contracts/Middleware/MiddlewareResolverInterface.php',
         'JDS\\Contracts\\Middleware\\RequestHandlerInterface' => __DIR__ . '/../..' . '/src/Contracts/Middleware/RequestHandlerInterface.php',
         'JDS\\Contracts\\Middleware\\Services\\ChecksumInterface' => __DIR__ . '/../..' . '/src/Contracts/Middleware/Services/ChecksumInterface.php',
         'JDS\\Contracts\\Middleware\\Services\\MagicLinkInterface' => __DIR__ . '/../..' . '/src/Contracts/Middleware/Services/MagicLinkInterface.php',
+        'JDS\\Contracts\\Rendering\\RendererInterface' => __DIR__ . '/../..' . '/src/Contracts/Rendering/RendererInterface.php',
+        'JDS\\Contracts\\Routing\\RouteMiddlewareAwareInterface' => __DIR__ . '/../..' . '/src/Contracts/Routing/RouteMiddlewareAwareInterface.php',
         'JDS\\Contracts\\Routing\\RouterInterface' => __DIR__ . '/../..' . '/src/Contracts/Routing/RouterInterface.php',
         'JDS\\Contracts\\Security\\SecretsInterface' => __DIR__ . '/../..' . '/src/Contracts/Security/SecretsInterface.php',
         'JDS\\Contracts\\Security\\ServiceProvider\\EmailVerificationInterface' => __DIR__ . '/../..' . '/src/Contracts/Security/ServiceProvider/EmailVerificationInterface.php',
@@ -999,21 +991,13 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\Contracts\\Security\\TokenManagerInterface' => __DIR__ . '/../..' . '/src/Contracts/Security/TokenManagerInterface.php',
         'JDS\\Contracts\\Security\\TokenStoreInterface' => __DIR__ . '/../..' . '/src/Contracts/Security/TokenStoreInterface.php',
         'JDS\\Contracts\\Session\\SessionInterface' => __DIR__ . '/../..' . '/src/Contracts/Session/SessionInterface.php',
+        'JDS\\Contracts\\Templates\\RendererInterface' => __DIR__ . '/../..' . '/src/Contracts/Templates/RendererInterface.php',
         'JDS\\Contracts\\Templates\\TwigFactoryInterface' => __DIR__ . '/../..' . '/src/Contracts/Templates/TwigFactoryInterface.php',
+        'JDS\\Contracts\\Validation\\Attribute\\ValidationAttributeInterface' => __DIR__ . '/../..' . '/src/Contracts/Validation/Attribute/ValidationAttributeInterface.php',
         'JDS\\Contracts\\Validation\\ValidationRuleInterface' => __DIR__ . '/../..' . '/src/Contracts/Validation/ValidationRuleInterface.php',
         'JDS\\Contracts\\Validation\\ValidatorInterface' => __DIR__ . '/../..' . '/src/Contracts/Validation/ValidatorInterface.php',
         'JDS\\Controller\\AbstractController' => __DIR__ . '/../..' . '/src/Controller/AbstractController.php',
         'JDS\\Controller\\AbstractMailer' => __DIR__ . '/../..' . '/src/Controller/AbstractMailer.php',
-        'JDS\\Controller\\ControllerRuntimeException' => __DIR__ . '/../..' . '/src/Controller/ControllerRuntimeException.php',
-        'JDS\\Controller\\FileUploadLimitException' => __DIR__ . '/../..' . '/src/Controller/FileUploadLimitException.php',
-        'JDS\\Controller\\FolderNotWritableException' => __DIR__ . '/../..' . '/src/Controller/FolderNotWritableException.php',
-        'JDS\\Controller\\ImageFilenameException' => __DIR__ . '/../..' . '/src/Controller/ImageFilenameException.php',
-        'JDS\\Controller\\ImageProcessingException' => __DIR__ . '/../..' . '/src/Controller/ImageProcessingException.php',
-        'JDS\\Controller\\ImageRuntimeException' => __DIR__ . '/../..' . '/src/Controller/ImageRuntimeException.php',
-        'JDS\\Controller\\ImageUploadException' => __DIR__ . '/../..' . '/src/Controller/ImageUploadException.php',
-        'JDS\\Controller\\InvalidFileSubmissionException' => __DIR__ . '/../..' . '/src/Controller/InvalidFileSubmissionException.php',
-        'JDS\\Controller\\TwigRuntimeException' => __DIR__ . '/../..' . '/src/Controller/TwigRuntimeException.php',
-        'JDS\\Controller\\UnsupportedImageTypeException' => __DIR__ . '/../..' . '/src/Controller/UnsupportedImageTypeException.php',
         'JDS\\Crypt\\Crypto' => __DIR__ . '/../..' . '/src/Crypt/Crypto.php',
         'JDS\\Dbal\\AbstractDatabaseHelper' => __DIR__ . '/../..' . '/src/Dbal/AbstractDatabaseHelper.php',
         'JDS\\Dbal\\BaseMapper' => __DIR__ . '/../..' . '/src/Dbal/BaseMapper.php',
@@ -1043,72 +1027,102 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\Error\\ExceptionLogger' => __DIR__ . '/../..' . '/src/Error/ExceptionLogger.php',
         'JDS\\Error\\StatusCategory' => __DIR__ . '/../..' . '/src/Error/StatusCategory.php',
         'JDS\\Error\\StatusCode' => __DIR__ . '/../..' . '/src/Error/StatusCode.php',
-        'JDS\\Error\\StatusException' => __DIR__ . '/../..' . '/src/Error/StatusException.php',
         'JDS\\EventDispatcher\\Event' => __DIR__ . '/../..' . '/src/EventDispatcher/Event.php',
         'JDS\\EventDispatcher\\EventDispatcher' => __DIR__ . '/../..' . '/src/EventDispatcher/EventDispatcher.php',
+        'JDS\\Exceptions\\Auditor\\InvalidArgumentException' => __DIR__ . '/../..' . '/src/Exceptions/Auditor/InvalidArgumentException.php',
+        'JDS\\Exceptions\\Auditor\\JsonValidationException' => __DIR__ . '/../..' . '/src/Exceptions/Auditor/JsonValidationException.php',
+        'JDS\\Exceptions\\Auditor\\LogEntryFailedException' => __DIR__ . '/../..' . '/src/Exceptions/Auditor/LogEntryFailedException.php',
+        'JDS\\Exceptions\\Auditor\\LoggerNotFoundException' => __DIR__ . '/../..' . '/src/Exceptions/Auditor/LoggerNotFoundException.php',
+        'JDS\\Exceptions\\Auditor\\TableDoesNotExistException' => __DIR__ . '/../..' . '/src/Exceptions/Auditor/TableDoesNotExistException.php',
+        'JDS\\Exceptions\\Auditor\\ValidLogLevelsException' => __DIR__ . '/../..' . '/src/Exceptions/Auditor/ValidLogLevelsException.php',
+        'JDS\\Exceptions\\Authentication\\RuntimeException' => __DIR__ . '/../..' . '/src/Exceptions/Authentication/RuntimeException.php',
         'JDS\\Exceptions\\AuthorizationException' => __DIR__ . '/../..' . '/src/Exceptions/AuthorizationException.php',
         'JDS\\Exceptions\\Configuration\\ConfigRuntimeException' => __DIR__ . '/../..' . '/src/Exceptions/Configuration/ConfigRuntimeException.php',
+        'JDS\\Exceptions\\Configuration\\ConfigurationException' => __DIR__ . '/../..' . '/src/Exceptions/Configuration/ConfigurationException.php',
         'JDS\\Exceptions\\ConsoleOptionException' => __DIR__ . '/../..' . '/src/Exceptions/ConsoleOptionException.php',
+        'JDS\\Exceptions\\Console\\ConsoleException' => __DIR__ . '/../..' . '/src/Exceptions/Console/ConsoleException.php',
         'JDS\\Exceptions\\Console\\ConsoleInvalidArgumentException' => __DIR__ . '/../..' . '/src/Exceptions/Console/ConsoleInvalidArgumentException.php',
+        'JDS\\Exceptions\\Console\\ConsoleRuntimeException' => __DIR__ . '/../..' . '/src/Exceptions/Console/ConsoleRuntimeException.php',
+        'JDS\\Exceptions\\Console\\ConsoleUnexpectedValueException' => __DIR__ . '/../..' . '/src/Exceptions/Console/ConsoleUnexpectedValueException.php',
+        'JDS\\Exceptions\\Console\\DatabaseNotFoundException' => __DIR__ . '/../..' . '/src/Exceptions/Console/DatabaseNotFoundException.php',
+        'JDS\\Exceptions\\Controller\\ControllerInvocationException' => __DIR__ . '/../..' . '/src/Exceptions/Controller/ControllerInvocationException.php',
+        'JDS\\Exceptions\\Controller\\ControllerMethodNotFoundException' => __DIR__ . '/../..' . '/src/Exceptions/Controller/ControllerMethodNotFoundException.php',
+        'JDS\\Exceptions\\Controller\\ControllerNotFoundException' => __DIR__ . '/../..' . '/src/Exceptions/Controller/ControllerNotFoundException.php',
+        'JDS\\Exceptions\\Controller\\ControllerRuntimeException' => __DIR__ . '/../..' . '/src/Exceptions/Controller/ControllerRuntimeException.php',
+        'JDS\\Exceptions\\Controller\\FileUploadLimitException' => __DIR__ . '/../..' . '/src/Exceptions/Controller/FileUploadLimitException.php',
+        'JDS\\Exceptions\\Controller\\FolderNotWritableException' => __DIR__ . '/../..' . '/src/Exceptions/Controller/FolderNotWritableException.php',
+        'JDS\\Exceptions\\Controller\\ImageFilenameException' => __DIR__ . '/../..' . '/src/Exceptions/Controller/ImageFilenameException.php',
+        'JDS\\Exceptions\\Controller\\ImageProcessingException' => __DIR__ . '/../..' . '/src/Exceptions/Controller/ImageProcessingException.php',
+        'JDS\\Exceptions\\Controller\\ImageRuntimeException' => __DIR__ . '/../..' . '/src/Exceptions/Controller/ImageRuntimeException.php',
+        'JDS\\Exceptions\\Controller\\ImageUploadException' => __DIR__ . '/../..' . '/src/Exceptions/Controller/ImageUploadException.php',
+        'JDS\\Exceptions\\Controller\\InvalidFileSubmissionException' => __DIR__ . '/../..' . '/src/Exceptions/Controller/InvalidFileSubmissionException.php',
+        'JDS\\Exceptions\\Controller\\TwigRuntimeException' => __DIR__ . '/../..' . '/src/Exceptions/Controller/TwigRuntimeException.php',
+        'JDS\\Exceptions\\Controller\\UnsupportedImageTypeException' => __DIR__ . '/../..' . '/src/Exceptions/Controller/UnsupportedImageTypeException.php',
         'JDS\\Exceptions\\CryptoRuntimeException' => __DIR__ . '/../..' . '/src/Exceptions/CryptoRuntimeException.php',
         'JDS\\Exceptions\\Database\\DatabaseRuntimeException' => __DIR__ . '/../..' . '/src/Exceptions/Database/DatabaseRuntimeException.php',
         'JDS\\Exceptions\\DiffRunTimeException' => __DIR__ . '/../..' . '/src/Exceptions/DiffRunTimeException.php',
         'JDS\\Exceptions\\EntityLogException' => __DIR__ . '/../..' . '/src/Exceptions/EntityLogException.php',
+        'JDS\\Exceptions\\Error\\StatusException' => __DIR__ . '/../..' . '/src/Exceptions/Error/StatusException.php',
+        'JDS\\Exceptions\\FileSystem\\FileDeleterException' => __DIR__ . '/../..' . '/src/Exceptions/FileSystem/FileDeleterException.php',
+        'JDS\\Exceptions\\FileSystem\\FileReadException' => __DIR__ . '/../..' . '/src/Exceptions/FileSystem/FileReadException.php',
+        'JDS\\Exceptions\\Forms\\InvalidDateTimeException' => __DIR__ . '/../..' . '/src/Exceptions/Forms/InvalidDateTimeException.php',
+        'JDS\\Exceptions\\Forms\\RequireFieldsMissingException' => __DIR__ . '/../..' . '/src/Exceptions/Forms/RequireFieldsMissingException.php',
+        'JDS\\Exceptions\\Handlers\\HandlerRuntimeException' => __DIR__ . '/../..' . '/src/Exceptions/Handlers/HandlerRuntimeException.php',
+        'JDS\\Exceptions\\Http\\InvalidArgumentException' => __DIR__ . '/../..' . '/src/Exceptions/Http/InvalidArgumentException.php',
+        'JDS\\Exceptions\\Http\\Middleware\\SessionStartException' => __DIR__ . '/../..' . '/src/Exceptions/Http/Middleware/SessionStartException.php',
         'JDS\\Exceptions\\InvalidTokenException' => __DIR__ . '/../..' . '/src/Exceptions/InvalidTokenException.php',
         'JDS\\Exceptions\\Loggers\\LoggerRuntimeException' => __DIR__ . '/../..' . '/src/Exceptions/Loggers/LoggerRuntimeException.php',
+        'JDS\\Exceptions\\ServiceProvider\\Encryption\\CipherRuntimeException' => __DIR__ . '/../..' . '/src/Exceptions/ServiceProvider/Encryption/CipherRuntimeException.php',
+        'JDS\\Exceptions\\ServiceProvider\\Mail\\MailException' => __DIR__ . '/../..' . '/src/Exceptions/ServiceProvider/Mail/MailException.php',
         'JDS\\Exceptions\\ServiceProvider\\ServiceProviderRuntimeException' => __DIR__ . '/../..' . '/src/Exceptions/ServiceProvider/ServiceProviderRuntimeException.php',
+        'JDS\\Exceptions\\Validation\\ValidationException' => __DIR__ . '/../..' . '/src/Exceptions/Validation/ValidationException.php',
+        'JDS\\FileSystem\\DirectoryInitializationState' => __DIR__ . '/../..' . '/src/FileSystem/DirectoryInitializationState.php',
         'JDS\\FileSystem\\DirectoryScanner' => __DIR__ . '/../..' . '/src/FileSystem/DirectoryScanner.php',
+        'JDS\\FileSystem\\DirectoryStructureInitializer' => __DIR__ . '/../..' . '/src/FileSystem/DirectoryStructureInitializer.php',
         'JDS\\FileSystem\\FileDataService' => __DIR__ . '/../..' . '/src/FileSystem/FileDataService.php',
         'JDS\\FileSystem\\FileDeleter' => __DIR__ . '/../..' . '/src/FileSystem/FileDeleter.php',
-        'JDS\\FileSystem\\FileDeleterException' => __DIR__ . '/../..' . '/src/FileSystem/FileDeleterException.php',
         'JDS\\FileSystem\\FileLister' => __DIR__ . '/../..' . '/src/FileSystem/FileLister.php',
         'JDS\\FileSystem\\FileNameGenerator' => __DIR__ . '/../..' . '/src/FileSystem/FileNameGenerator.php',
         'JDS\\FileSystem\\FilePathValidator' => __DIR__ . '/../..' . '/src/FileSystem/FilePathValidator.php',
-        'JDS\\FileSystem\\FileReadException' => __DIR__ . '/../..' . '/src/FileSystem/FileReadException.php',
         'JDS\\FileSystem\\FileReader' => __DIR__ . '/../..' . '/src/FileSystem/FileReader.php',
         'JDS\\FileSystem\\JsonFileWriter' => __DIR__ . '/../..' . '/src/FileSystem/JsonFileWriter.php',
         'JDS\\Forms\\BaseForm' => __DIR__ . '/../..' . '/src/Forms/BaseForm.php',
-        'JDS\\Forms\\InvalidDateTimeException' => __DIR__ . '/../..' . '/src/Forms/InvalidDateTimeException.php',
-        'JDS\\Forms\\RequireFieldsMissingException' => __DIR__ . '/../..' . '/src/Forms/RequireFieldsMissingException.php',
         'JDS\\Forms\\deleteAbstractForm' => __DIR__ . '/../..' . '/src/Forms/deleteAbstractForm.php',
         'JDS\\Handlers\\ExceptionFormatter' => __DIR__ . '/../..' . '/src/Handlers/ExceptionFormatter.php',
         'JDS\\Handlers\\ExceptionHandler' => __DIR__ . '/../..' . '/src/Handlers/ExceptionHandler.php',
-        'JDS\\Handlers\\HandlerRuntimeException' => __DIR__ . '/../..' . '/src/Handlers/HandlerRuntimeException.php',
-        'JDS\\Http\\AlreadyExistsException' => __DIR__ . '/../..' . '/src/Http/AlreadyExistsException.php',
-        'JDS\\Http\\CannotBeNullException' => __DIR__ . '/../..' . '/src/Http/CannotBeNullException.php',
+        'JDS\\Http\\Attribute\\MapFrom' => __DIR__ . '/../..' . '/src/Http/Attribute/MapFrom.php',
+        'JDS\\Http\\ControllerDispatcher' => __DIR__ . '/../..' . '/src/Http/ControllerDispatcher.php',
+        'JDS\\Http\\EventSubscriber\\HttpKernelSubscriber' => __DIR__ . '/../..' . '/src/Http/EventSubscriber/HttpKernelSubscriber.php',
         'JDS\\Http\\Event\\ResponseEvent' => __DIR__ . '/../..' . '/src/Http/Event/ResponseEvent.php',
-        'JDS\\Http\\FileNotFoundException' => __DIR__ . '/../..' . '/src/Http/FileNotFoundException.php',
-        'JDS\\Http\\FileWriteException' => __DIR__ . '/../..' . '/src/Http/FileWriteException.php',
-        'JDS\\Http\\ForbiddenException' => __DIR__ . '/../..' . '/src/Http/ForbiddenException.php',
+        'JDS\\Http\\Event\\TerminateEvent' => __DIR__ . '/../..' . '/src/Http/Event/TerminateEvent.php',
         'JDS\\Http\\Generators\\BreadcrumbGenerator' => __DIR__ . '/../..' . '/src/Http/Generators/BreadcrumbGenerator.php',
         'JDS\\Http\\Generators\\MenuGenerator' => __DIR__ . '/../..' . '/src/Http/Generators/MenuGenerator.php',
-        'JDS\\Http\\HttpException' => __DIR__ . '/../..' . '/src/Http/HttpException.php',
-        'JDS\\Http\\HttpRequestMethodException' => __DIR__ . '/../..' . '/src/Http/HttpRequestMethodException.php',
-        'JDS\\Http\\HttpRuntimeException' => __DIR__ . '/../..' . '/src/Http/HttpRuntimeException.php',
-        'JDS\\Http\\InvalidArgumentException' => __DIR__ . '/../..' . '/src/Http/InvalidArgumentException.php',
         'JDS\\Http\\Kernel' => __DIR__ . '/../..' . '/src/Http/Kernel.php',
+        'JDS\\Http\\Listener\\TerminateActivityListener' => __DIR__ . '/../..' . '/src/Http/Listener/TerminateActivityListener.php',
+        'JDS\\Http\\Listener\\TerminateLoggingListener' => __DIR__ . '/../..' . '/src/Http/Listener/TerminateLoggingListener.php',
+        'JDS\\Http\\Listener\\TerminateProfilingListener' => __DIR__ . '/../..' . '/src/Http/Listener/TerminateProfilingListener.php',
         'JDS\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/src/Http/Middleware/Authenticate.php',
         'JDS\\Http\\Middleware\\Dummy' => __DIR__ . '/../..' . '/src/Http/Middleware/Dummy.php',
+        'JDS\\Http\\Middleware\\DynamicMiddlewareResolver' => __DIR__ . '/../..' . '/src/Http/Middleware/DynamicMiddlewareResolver.php',
         'JDS\\Http\\Middleware\\ExtractRouteInfo' => __DIR__ . '/../..' . '/src/Http/Middleware/ExtractRouteInfo.php',
         'JDS\\Http\\Middleware\\Guest' => __DIR__ . '/../..' . '/src/Http/Middleware/Guest.php',
         'JDS\\Http\\Middleware\\Jwt\\JwtAuthenticate' => __DIR__ . '/../..' . '/src/Http/Middleware/Jwt/JwtAuthenticate.php',
-        'JDS\\Http\\Middleware\\OldAuthenticate' => __DIR__ . '/../..' . '/src/Http/Middleware/OldAuthenticate.php',
+        'JDS\\Http\\Middleware\\MiddlewareQueue' => __DIR__ . '/../..' . '/src/Http/Middleware/MiddlewareQueue.php',
+        'JDS\\Http\\Middleware\\MiddlewareResolver' => __DIR__ . '/../..' . '/src/Http/Middleware/MiddlewareResolver.php',
         'JDS\\Http\\Middleware\\RequestHandler' => __DIR__ . '/../..' . '/src/Http/Middleware/RequestHandler.php',
         'JDS\\Http\\Middleware\\RequiredAccessLevel' => __DIR__ . '/../..' . '/src/Http/Middleware/RequiredAccessLevel.php',
         'JDS\\Http\\Middleware\\RouterDispatch' => __DIR__ . '/../..' . '/src/Http/Middleware/RouterDispatch.php',
         'JDS\\Http\\Middleware\\Services\\ChecksumService' => __DIR__ . '/../..' . '/src/Http/Middleware/Services/ChecksumService.php',
         'JDS\\Http\\Middleware\\Services\\JwtService' => __DIR__ . '/../..' . '/src/Http/Middleware/Services/JwtService.php',
-        'JDS\\Http\\Middleware\\SessionStartException' => __DIR__ . '/../..' . '/src/Http/Middleware/SessionStartException.php',
         'JDS\\Http\\Middleware\\StartSession' => __DIR__ . '/../..' . '/src/Http/Middleware/StartSession.php',
         'JDS\\Http\\Middleware\\Success' => __DIR__ . '/../..' . '/src/Http/Middleware/Success.php',
         'JDS\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/src/Http/Middleware/VerifyCsrfToken.php',
-        'JDS\\Http\\NotFoundException' => __DIR__ . '/../..' . '/src/Http/NotFoundException.php',
-        'JDS\\Http\\OldStatusCodeManager' => __DIR__ . '/../..' . '/src/Http/OldStatusCodeManager.php',
         'JDS\\Http\\RedirectResponse' => __DIR__ . '/../..' . '/src/Http/RedirectResponse.php',
         'JDS\\Http\\Request' => __DIR__ . '/../..' . '/src/Http/Request.php',
         'JDS\\Http\\Response' => __DIR__ . '/../..' . '/src/Http/Response.php',
+        'JDS\\Http\\RouteDispatcher' => __DIR__ . '/../..' . '/src/Http/RouteDispatcher.php',
         'JDS\\Http\\StatusCodeManager' => __DIR__ . '/../..' . '/src/Http/StatusCodeManager.php',
-        'JDS\\Http\\TokenMismatchException' => __DIR__ . '/../..' . '/src/Http/TokenMismatchException.php',
+        'JDS\\Http\\TemplateResponse' => __DIR__ . '/../..' . '/src/Http/TemplateResponse.php',
         'JDS\\Infrastructure\\DatabaseTokenStore' => __DIR__ . '/../..' . '/src/Infrastructure/DatabaseTokenStore.php',
         'JDS\\Json\\JsonBuilder' => __DIR__ . '/../..' . '/src/Json/JsonBuilder.php',
         'JDS\\Json\\JsonDecoder' => __DIR__ . '/../..' . '/src/Json/JsonDecoder.php',
@@ -1122,7 +1136,10 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\Logging\\Entity\\EntityLogEntry' => __DIR__ . '/../..' . '/src/Logging/Entity/EntityLogEntry.php',
         'JDS\\Logging\\ExceptionLogger' => __DIR__ . '/../..' . '/src/Logging/ExceptionLogger.php',
         'JDS\\Processing\\ErrorProcessor' => __DIR__ . '/../..' . '/src/Processing/ErrorProcessor.php',
+        'JDS\\Rendering\\TwigRenderer' => __DIR__ . '/../..' . '/src/Rendering/TwigRenderer.php',
         'JDS\\Routing\\ProcessRoutes' => __DIR__ . '/../..' . '/src/Routing/ProcessRoutes.php',
+        'JDS\\Routing\\Route' => __DIR__ . '/../..' . '/src/Routing/Route.php',
+        'JDS\\Routing\\RouteMetadata' => __DIR__ . '/../..' . '/src/Routing/RouteMetadata.php',
         'JDS\\Routing\\Router' => __DIR__ . '/../..' . '/src/Routing/Router.php',
         'JDS\\Security\\Secrets' => __DIR__ . '/../..' . '/src/Security/Secrets.php',
         'JDS\\Security\\SecretsCrypto' => __DIR__ . '/../..' . '/src/Security/SecretsCrypto.php',
@@ -1136,20 +1153,20 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\ServiceProvider\\DiffServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/DiffServiceProvider.php',
         'JDS\\ServiceProvider\\EncryptionServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/EncryptionServiceProvider.php',
         'JDS\\ServiceProvider\\Encryption\\CipherPackage' => __DIR__ . '/../..' . '/src/ServiceProvider/Encryption/CipherPackage.php',
-        'JDS\\ServiceProvider\\Encryption\\CipherRuntimeException' => __DIR__ . '/../..' . '/src/ServiceProvider/Encryption/CipherRuntimeException.php',
         'JDS\\ServiceProvider\\Encryption\\Decryptor' => __DIR__ . '/../..' . '/src/ServiceProvider/Encryption/Decryptor.php',
         'JDS\\ServiceProvider\\Encryption\\Encryptor' => __DIR__ . '/../..' . '/src/ServiceProvider/Encryption/Encryptor.php',
         'JDS\\ServiceProvider\\Encryption\\KeyProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/Encryption/KeyProvider.php',
         'JDS\\ServiceProvider\\Encryption\\NonceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/Encryption/NonceProvider.php',
         'JDS\\ServiceProvider\\Encryption\\Serializer' => __DIR__ . '/../..' . '/src/ServiceProvider/Encryption/Serializer.php',
+        'JDS\\ServiceProvider\\EventServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/EventServiceProvider.php',
         'JDS\\ServiceProvider\\FileSystemServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/FileSystemServiceProvider.php',
+        'JDS\\ServiceProvider\\FileSystemStructureProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/FileSystemStructureProvider.php',
         'JDS\\ServiceProvider\\HttpServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/HttpServiceProvider.php',
         'JDS\\ServiceProvider\\JsonReaderServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/JsonReaderServiceProvider.php',
         'JDS\\ServiceProvider\\JsonServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/JsonServiceProvider.php',
         'JDS\\ServiceProvider\\LocationServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/LocationServiceProvider.php',
         'JDS\\ServiceProvider\\Locations' => __DIR__ . '/../..' . '/src/ServiceProvider/Locations.php',
         'JDS\\ServiceProvider\\LoggingServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/LoggingServiceProvider.php',
-        'JDS\\ServiceProvider\\Mail\\MailException' => __DIR__ . '/../..' . '/src/ServiceProvider/Mail/MailException.php',
         'JDS\\ServiceProvider\\Mail\\MailService' => __DIR__ . '/../..' . '/src/ServiceProvider/Mail/MailService.php',
         'JDS\\ServiceProvider\\Mail\\MailServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/Mail/MailServiceProvider.php',
         'JDS\\ServiceProvider\\Payments\\PaymentResponse' => __DIR__ . '/../..' . '/src/ServiceProvider/Payments/PaymentResponse.php',
@@ -1157,16 +1174,22 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\ServiceProvider\\SchemaServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/SchemaServiceProvider.php',
         'JDS\\ServiceProvider\\SecretsServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/SecretsServiceProvider.php',
         'JDS\\ServiceProvider\\TemplateServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/TemplateServiceProvider.php',
+        'JDS\\ServiceProvider\\TwigRendererServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/TwigRendererServiceProvider.php',
         'JDS\\ServiceProvider\\ValidationServiceProvider' => __DIR__ . '/../..' . '/src/ServiceProvider/ValidationServiceProvider.php',
         'JDS\\Session\\Session' => __DIR__ . '/../..' . '/src/Session/Session.php',
         'JDS\\Traits\\EnumTrait' => __DIR__ . '/../..' . '/src/Traits/EnumTrait.php',
+        'JDS\\Transformers\\TransformerManager' => __DIR__ . '/../..' . '/src/Transformers/TransformerManager.php',
         'JDS\\Validation\\ArrayRule' => __DIR__ . '/../..' . '/src/Validation/ArrayRule.php',
+        'JDS\\Validation\\Attribute\\Length' => __DIR__ . '/../..' . '/src/Validation/Attribute/Length.php',
+        'JDS\\Validation\\Attribute\\NotBlank' => __DIR__ . '/../..' . '/src/Validation/Attribute/NotBlank.php',
+        'JDS\\Validation\\Attribute\\Regex' => __DIR__ . '/../..' . '/src/Validation/Attribute/Regex.php',
         'JDS\\Validation\\DateRule' => __DIR__ . '/../..' . '/src/Validation/DateRule.php',
         'JDS\\Validation\\EmailRule' => __DIR__ . '/../..' . '/src/Validation/EmailRule.php',
         'JDS\\Validation\\EnumRule' => __DIR__ . '/../..' . '/src/Validation/EnumRule.php',
         'JDS\\Validation\\JsonRule' => __DIR__ . '/../..' . '/src/Validation/JsonRule.php',
         'JDS\\Validation\\LicenseRule' => __DIR__ . '/../..' . '/src/Validation/LicenseRule.php',
         'JDS\\Validation\\MaxRule' => __DIR__ . '/../..' . '/src/Validation/MaxRule.php',
+        'JDS\\Validation\\MethodParameterValidator' => __DIR__ . '/../..' . '/src/Validation/MethodParameterValidator.php',
         'JDS\\Validation\\MinRule' => __DIR__ . '/../..' . '/src/Validation/MinRule.php',
         'JDS\\Validation\\NumericRule' => __DIR__ . '/../..' . '/src/Validation/NumericRule.php',
         'JDS\\Validation\\RequiredRule' => __DIR__ . '/../..' . '/src/Validation/RequiredRule.php',
@@ -1174,6 +1197,7 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\Validation\\Rules' => __DIR__ . '/../..' . '/src/Validation/Rules.php',
         'JDS\\Validation\\ValidationResult' => __DIR__ . '/../..' . '/src/Validation/ValidationResult.php',
         'JDS\\Validation\\Validator' => __DIR__ . '/../..' . '/src/Validation/Validator.php',
+        'JDS\\Validation\\ValidatorEngine' => __DIR__ . '/../..' . '/src/Validation/ValidatorEngine.php',
         'Jean85\\Exception\\ProvidedPackageException' => __DIR__ . '/..' . '/jean85/pretty-package-versions/src/Exception/ProvidedPackageException.php',
         'Jean85\\Exception\\ReplacedPackageException' => __DIR__ . '/..' . '/jean85/pretty-package-versions/src/Exception/ReplacedPackageException.php',
         'Jean85\\Exception\\VersionMissingExceptionInterface' => __DIR__ . '/..' . '/jean85/pretty-package-versions/src/Exception/VersionMissingExceptionInterface.php',
@@ -4653,8 +4677,34 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'Termwind\\ValueObjects\\Node' => __DIR__ . '/..' . '/nunomaduro/termwind/src/ValueObjects/Node.php',
         'Termwind\\ValueObjects\\Style' => __DIR__ . '/..' . '/nunomaduro/termwind/src/ValueObjects/Style.php',
         'Termwind\\ValueObjects\\Styles' => __DIR__ . '/..' . '/nunomaduro/termwind/src/ValueObjects/Styles.php',
+        'Tests\\Stubs\\Controller\\TestController' => __DIR__ . '/../..' . '/tests/Stubs/Controller/TestController.php',
+        'Tests\\Stubs\\EventDispatcher\\FakeEvent' => __DIR__ . '/../..' . '/tests/Stubs/EventDispatcher/FakeEvent.php',
+        'Tests\\Stubs\\EventDispatcher\\FakeStoppableEvent' => __DIR__ . '/../..' . '/tests/Stubs/EventDispatcher/FakeStoppableEvent.php',
+        'Tests\\Stubs\\Events\\HighPrioritySubscriber' => __DIR__ . '/../..' . '/tests/Stubs/Events/HighPrioritySubscriber.php',
+        'Tests\\Stubs\\Events\\LateSubscriber' => __DIR__ . '/../..' . '/tests/Stubs/Events/LateSubscriber.php',
+        'Tests\\Stubs\\Events\\LowPrioritySubscriber' => __DIR__ . '/../..' . '/tests/Stubs/Events/LowPrioritySubscriber.php',
+        'Tests\\Stubs\\Events\\StoppingSubscriber' => __DIR__ . '/../..' . '/tests/Stubs/Events/StoppingSubscriber.php',
+        'Tests\\Stubs\\Events\\TestEvent' => __DIR__ . '/../..' . '/tests/Stubs/Events/TestEvent.php',
+        'Tests\\Stubs\\Fakes\\FakeContainer' => __DIR__ . '/../..' . '/tests/Stubs/Fakes/FakeContainer.php',
+        'Tests\\Stubs\\Fakes\\FakeController' => __DIR__ . '/../..' . '/tests/Stubs/Fakes/FakeController.php',
+        'Tests\\Stubs\\Fakes\\FakeMiddleware' => __DIR__ . '/../..' . '/tests/Stubs/Fakes/FakeMiddleware.php',
+        'Tests\\Stubs\\Fakes\\FakeMiddlewareTwo' => __DIR__ . '/../..' . '/tests/Stubs/Fakes/FakeMiddlewareTwo.php',
+        'Tests\\Stubs\\Http\\AnotherMiddleware' => __DIR__ . '/../..' . '/tests/Stubs/Http/AnotherMiddleware.php',
+        'Tests\\Stubs\\Http\\DummyMiddleware' => __DIR__ . '/../..' . '/tests/Stubs/Http/DummyMiddleware.php',
+        'Tests\\Stubs\\Http\\FakeRequest' => __DIR__ . '/../..' . '/tests/Stubs/Http/FakeRequest.php',
+        'Tests\\Stubs\\Http\\Kernel\\FakeControllerDispatcher' => __DIR__ . '/../..' . '/tests/Stubs/Http/Kernel/FakeControllerDispatcher.php',
+        'Tests\\Stubs\\Http\\Kernel\\FakeEventDispatcher' => __DIR__ . '/../..' . '/tests/Stubs/Http/Kernel/FakeEventDispatcher.php',
+        'Tests\\Stubs\\Http\\Kernel\\FakeMiddleware' => __DIR__ . '/../..' . '/tests/Stubs/Http/Kernel/FakeMiddleware.php',
+        'Tests\\Stubs\\Http\\Kernel\\FakeMiddleware2' => __DIR__ . '/../..' . '/tests/Stubs/Http/Kernel/FakeMiddleware2.php',
+        'Tests\\Stubs\\Http\\Kernel\\FakeMiddlewareResolver' => __DIR__ . '/../..' . '/tests/Stubs/Http/Kernel/FakeMiddlewareResolver.php',
+        'Tests\\Stubs\\Http\\Kernel\\FakeRequest' => __DIR__ . '/../..' . '/tests/Stubs/Http/Kernel/FakeRequest.php',
+        'Tests\\Stubs\\Http\\NotMiddleware' => __DIR__ . '/../..' . '/tests/Stubs/Http/NotMiddleware.php',
+        'Tests\\Stubs\\Template\\FakeRenderer' => __DIR__ . '/../..' . '/tests/Stubs/Template/FakeRenderer.php',
+        'Tests\\Stubs\\Transformers\\FakeUser' => __DIR__ . '/../..' . '/tests/Stubs/Transformers/FakeUser.php',
+        'Tests\\Stubs\\Transformers\\FakeUserController' => __DIR__ . '/../..' . '/tests/Stubs/Transformers/FakeUserController.php',
+        'Tests\\Stubs\\Transformers\\FakeUserRepository' => __DIR__ . '/../..' . '/tests/Stubs/Transformers/FakeUserRepository.php',
+        'Tests\\Stubs\\Transformers\\FakeUserTransformer' => __DIR__ . '/../..' . '/tests/Stubs/Transformers/FakeUserTransformer.php',
         'Tests\\Unit\\Diff\\ObjectDiffStrategyTest' => __DIR__ . '/../..' . '/tests/Unit/Diff/ObjectDiffStrategyTest.php',
-        'Tests\\Unit\\ServiceLoader\\ServiceLoaderTest' => __DIR__ . '/../..' . '/tests/Unit/ServiceLoader/ServiceLoaderTest.php',
         'TheSeer\\Tokenizer\\Exception' => __DIR__ . '/..' . '/theseer/tokenizer/src/Exception.php',
         'TheSeer\\Tokenizer\\NamespaceUri' => __DIR__ . '/..' . '/theseer/tokenizer/src/NamespaceUri.php',
         'TheSeer\\Tokenizer\\NamespaceUriException' => __DIR__ . '/..' . '/theseer/tokenizer/src/NamespaceUriException.php',

@@ -1,8 +1,10 @@
 <?php
 
-namespace JDS\Http;
+namespace JDS\Exceptions\Http;
 
-class FileWriteException extends \RuntimeException
+use RuntimeException;
+
+class FileWriteException extends RuntimeException
 {
 
 }
