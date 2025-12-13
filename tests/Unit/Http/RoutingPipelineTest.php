@@ -1,7 +1,7 @@
 <?php
 
 use JDS\Http\Middleware\ExtractRouteInfo;
-use JDS\Http\MiddlewareResolver;
+use JDS\Http\Middleware\MiddlewareResolver;
 use JDS\Http\Request;
 use JDS\Http\Response;
 use JDS\Http\RouteDispatcher;

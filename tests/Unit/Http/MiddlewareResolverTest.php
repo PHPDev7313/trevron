@@ -2,7 +2,7 @@
 
 use JDS\Error\StatusCode;
 use JDS\Exceptions\Error\StatusException;
-use JDS\Http\MiddlewareResolver;
+use JDS\Http\Middleware\MiddlewareResolver;
 use JDS\Http\Request;
 use Psr\Container\ContainerInterface;
 use Tests\Stubs\Http\AnotherMiddleware;
