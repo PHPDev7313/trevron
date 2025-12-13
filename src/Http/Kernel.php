@@ -29,9 +29,14 @@ final class Kernel
 	public function handle(Request $request): Response
 	{
         //
+        // MAY THROW - by design
+        //
+
+        //
         // mark request start time for profiling & lifecycle monitoring
         //
-        $request->setStartTime(microtime(true));
+        $start = microtime(true);
+        $request->setStartTime($start);
 
 
 		try {
@@ -84,12 +89,8 @@ final class Kernel
         // 4. Fire early response event-used for response transformation or logging
         // event fired BEFORE the response is finalized
         //
-		$this->eventDispatcher->dispatch(
-            new ResponseEvent($request, $response)
-        );
-
-		return $response;
-	}
+        return $this->dispatchResponseEvent($request, $response);
+    }
 
     /**
      * Responsible for creating the Response object when an exception occors.
@@ -117,33 +118,56 @@ final class Kernel
      */
 	public function terminate(Request $request, Response $response): void
     {
-        $end = microtime(true);
-        $duration = $end - $request->getStartTime();
+        // This MUST NEVER THROW - by Law
+        try {
+            $end = microtime(true);
+            $duration = max(0.0, ($end - $request->getStartTime()));
 
-        //
-        // Lifecycle monitoring, profiling, activity logging
-        // MAIN TERMINATION EVENT
-        //
-        $this->eventDispatcher->dispatch(
-            new TerminateEvent(
-                $request,
-                $response,
-                $request->getStartTime(),
-                $end,
-                $duration
-            )
-        );
+            //
+            // Lifecycle monitoring, profiling, activity logging
+            // MAIN TERMINATION EVENT
+            //
+            $this->eventDispatcher->dispatch(
+                new TerminateEvent(
+                    $request,
+                    $response,
+                    $request->getStartTime(),
+                    $end,
+                    $duration
+                )
+            );
 
-        //
-        // Kernel-level cleanup: always safe to do here
-        // Kernel-level cleanup (still allowed)
-        //
-        if ($session = $request->getSession()) {
-            $session->clearFlash();
+            //
+            // Kernel-level cleanup: always safe to do here
+            // Kernel-level cleanup (still allowed)
+            //
+            if ($session = $request->getSession()) {
+                $session->clearFlash();
+            }
+        } catch (Throwable $e) {
+            //
+            // ABSOLUTELY NEVER throw from terminate()
+            //
+            // Optional: log to PHP error log or a faisafe logger
+            //
+            error_log(
+                sprintf(
+                    '[Kernel::terminate] Swallowed exception: %s (%s:%d)',
+                    $e->getMessage(),
+                    $e->getFile(),
+                    $e->getLine()
+                )
+            );
         }
 	}
+
+    private function dispatchResponseEvent(Request $request, Response $reponse): Response
+    {
+        $event = new ResponseEvent($request, $reponse);
+
+        $this->eventDispatcher->dispatch($event);
+
+        return $event->getResponse();
+    }
 }
-
-
-
 
