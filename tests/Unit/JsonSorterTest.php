@@ -10,7 +10,6 @@ it('sorts files oldest to newest and newest to oldest', function () {
     $f2 = create_tmp_file(__DIR__ . '/json', 'b.json', '{"i":2}');
 
     $files = [$f1, $f2];
-    dd($files);
     $oldest = $sorter->sortByOldest($files);
     expect($oldest[0])->toBe($f1);
     $newest = $sorter->sortNewest($files);

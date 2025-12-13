@@ -5,6 +5,13 @@ schema.json
 docs
 logs
 framework_error.log
+/coverage/
+/vendor/pestphp/pest/.temp/
+vendor/pestphp/pest/.temp/
+vendor/pestphp/pest/.temp/test-results
+
+
+
 
 
 

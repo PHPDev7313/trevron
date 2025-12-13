@@ -5,7 +5,7 @@ use JDS\Http\Event\ResponseEvent;
 use JDS\Http\Request;
 use JDS\Http\Response;
 
-function makeRequest(): Request
+function makeRequest1(): Request
 {
     return new Request(
         method: 'GET',
@@ -26,7 +26,7 @@ it('1. runs listeners in order and retains the same event instance', function ()
         $log[] = 'second';
     });
 
-    $event = new ResponseEvent(makeRequest(), new Response());
+    $event = new ResponseEvent(makeRequest1(), new Response());
     $returned = $dispatcher->dispatch($event);
 
     expect($log)->toBe(['first', 'second']);
@@ -41,7 +41,7 @@ it('2. allows listeners to modify or replace the response', function () {
         $event->setResponse($new);
     });
 
-    $event = new ResponseEvent(makeRequest(), new Response('original', 200, []));
+    $event = new ResponseEvent(makeRequest1(), new Response('original', 200, []));
     $dispatcher->dispatch($event);
 
     expect($event->getResponse()->getStatusCode())->toBe(201);
@@ -61,7 +61,7 @@ it('3. stops propagation when stopPropagation() is called', function () {
         $log[] = 'should_not_run';
     });
 
-    $event = new ResponseEvent(makeRequest(), new Response());
+    $event = new ResponseEvent(makeRequest1(), new Response());
     $dispatcher->dispatch($event);
 
     expect($log)->toBe(['first']);
@@ -69,7 +69,7 @@ it('3. stops propagation when stopPropagation() is called', function () {
 
 it('4. passes silently when there are no listeners', function () {
     $dispatcher = new EventDispatcher();
-    $event = new ResponseEvent(makeRequest(), new Response());
+    $event = new ResponseEvent(makeRequest1(), new Response());
 
     $returned = $dispatcher->dispatch($event);
 

@@ -2,6 +2,8 @@
 
 namespace JDS\Http;
 
+use JDS\Exceptions\Http\InvalidArgumentException;
+
 final class StatusCodeManager
 {
     /**
