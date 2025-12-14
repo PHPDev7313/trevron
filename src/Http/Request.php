@@ -42,6 +42,31 @@ class Request
     // Basic Getters
     // ============================================================
 
+    public static function createFromGlobals(): static
+    {
+        $server = $_SERVER;
+
+        $method = $server['REQUEST_METHOD'] ?? 'GET';
+
+        $uri = $server['REQUEST_URI'] ?? '/';
+
+        //
+        // Strip query string from URI to get pathInfo
+        //
+        $pathInfo = parse_url($uri, PHP_URL_PATH) ?? '/';
+
+        return new static(
+            $method,
+            $uri,
+            $pathInfo,
+            $_GET,
+            $_POST,
+            $_COOKIE,
+            $server,
+            $_FILES,
+        );
+    }
+
     public function getMethod(): string
     {
         return strtoupper($this->method);
