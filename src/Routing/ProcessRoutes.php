@@ -24,7 +24,7 @@ class ProcessRoutes
             }
 
             $method = $route[0];
-            $uri = self::normalizeRoutePath($_ENV['ROUTE_PATH'], $route[1]);
+            $uri = self::normalizeUri($route[1]);
             $controllerInfo = $route[2];
 
             //
@@ -84,18 +84,15 @@ class ProcessRoutes
             'metadata' => $metadataList,
         ];
     }
-
-    private static function normalizeRoutePath(string $prefix, string $route): string
+    private static function normalizeUri(string $uri): string
     {
-        $prefix = trim($prefix, '/');
-        $route = trim($route, '/');
+        $uri = trim($uri);
 
-        if ($prefix === '') {
-            return '/' . $route;
+        if ($uri === '' || $uri === '/') {
+            return '/';
         }
 
-        return '/' . $prefix . '/' . $route;
+        return '/' . trim($uri, '/');
     }
-
 }
 

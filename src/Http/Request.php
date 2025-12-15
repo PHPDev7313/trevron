@@ -55,8 +55,24 @@ class Request
         //
         $pathInfo = parse_url($uri, PHP_URL_PATH) ?? '/';
 
+        // -------------------------------------------------------------
+        // STRIP ROUTE PATH PREFIX (deloyment concern)
+        // -------------------------------------------------------------
+        $routePath = trim($_ENV['ROUTE_PATH'] ?? '');
+
+        if ($routePath !== '') {
+            $prefix = '/' . trim($routePath, '/');
+
+            if ($pathInfo === $prefix ||
+                str_starts_with($pathInfo, $prefix . '/')
+            ) {
+                $pathInfo = substr($pathInfo, strlen($prefix));
+                $pathInfo = $pathInfo === '' ? '/' : $pathInfo;
+            }
+        }
+
         return new static(
-            $method,
+            strtoupper($method),
             $uri,
             $pathInfo,
             $_GET,
