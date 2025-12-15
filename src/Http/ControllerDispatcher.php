@@ -232,5 +232,24 @@ class ControllerDispatcher
             )
         };
     }
+
+    public function dispatchFallback(string $controllerClass, Request $request): Response
+    {
+        if (!$this->container->has($controllerClass)) {
+            throw new ControllerInvocationException(
+                "Fallback controller '{$controllerClass}' not found."
+            );
+        }
+
+        $controller = $this->container->get($controllerClass);
+
+        if (!is_callable($controller)) {
+            throw new ControllerInvocationException(
+                "Fallback controller '{$controllerClass}' is not invokable."
+            );
+        }
+
+        return $controller($request);
+    }
 }
 
