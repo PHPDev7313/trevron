@@ -127,10 +127,6 @@ class Request
     // Route Object
     // ============================================================
 
-    public function setRoute(Route $route): void
-    {
-        $this->route = $route;
-    }
 
     public function getRoute(): ?Route
     {
@@ -140,6 +136,13 @@ class Request
     public function hasRoute(): bool
     {
         return $this->route !== null;
+    }
+
+    public function withRoute(Route $route): self
+    {
+        $clone = clone $this;
+        $clone->route = $route;
+        return $clone;
     }
 
     // ============================================================

@@ -23,14 +23,15 @@ class RouteResolverMiddleware implements MiddlewareInterface
         $route = $this->matcher->match($request);
 
         if ($route !== null) {
-            $request->setRoute($route);
 
             //
             // Optional but recommended
             //
-            $request = $request->withAttribute(
-                'route.middleware',
-                $route->getMiddleware()
+            $request = $request
+                ->withRoute($route)
+                ->withAttribute(
+                    'route.middleware',
+                    $route->getMiddleware()
             );
         }
         return $next->handle($request);
