@@ -5,6 +5,11 @@ namespace JDS\Error;
 enum StatusCode: int
 {
     // -------------------------------------------------
+    // 400 ERRORS
+    // -------------------------------------------------
+    case HTTP_ROUTE_NOT_FOUND = 404;
+
+    // -------------------------------------------------
     // SERVER (500–599)
     // -------------------------------------------------
     case SERVER_INTERNAL_ERROR = 500;
@@ -286,6 +291,8 @@ enum StatusCode: int
             "HTTP Kernel Error: Route resolved but dispatching the controller failed.",
             self::HTTP_PIPELINE_FAILURE =>
             "HTTP Kernel Error: Middleware pipeline encountered an unhandled exception.",
+            self::HTTP_ROUTE_NOT_FOUND =>
+            "HTTP Routing Error: Route not found",
 
             // HTTP Kernel
             self::HTTP_KERNEL_GENERAL_FAILURE =>
