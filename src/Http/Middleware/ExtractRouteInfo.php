@@ -37,7 +37,7 @@ final class ExtractRouteInfo implements MiddlewareInterface
                     //
                     // Normalize path
                     //
-                    $fullPath = $this->normalizeRoutePath($this->routePath, $route->getPath());
+                    $fullPath = $this->normalizeRoute($route->getPath());
 
                     //
                     // Register with FastRoute
@@ -93,16 +93,14 @@ final class ExtractRouteInfo implements MiddlewareInterface
         return $next->handle($request);
     }
 
-    private function normalizeRoutePath(string $prefix, string $route): string
+    private function normalizeRoute(string $route): string
     {
-        $prefix = trim($prefix, '/');
+
         $route = trim($route, '/');
 
-        if ($prefix === '') {
-            return '/' . $route;
-        }
 
-        return '/' . $prefix . '/' . $route;
+
+        return '/' . $route;
     }
 }
 
