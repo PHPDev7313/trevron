@@ -51,7 +51,8 @@ class Router implements RouterInterface
         //
         return [
             [$controller, $method],
-            $request->getRouteParam(),
+            $request->getRouteParams(),
         ];
     }
 }
+
