@@ -4,6 +4,7 @@ namespace JDS\Http;
 
 
 use JDS\Contracts\Middleware\MiddlewareResolverInterface;
+use JDS\Controller\Error\NotFoundController;
 use JDS\Error\StatusCode;
 use JDS\EventDispatcher\EventDispatcher;
 use JDS\Exceptions\Error\StatusException;
@@ -64,6 +65,13 @@ final class Kernel
             //
             // Known framework exception -> convert to safe response
             //
+            if ($e->getCode() === StatusCode::HTTP_ROUTE_NOT_FOUND) {
+                $controller = $this->controllerDispatcher
+                    ->dispatchFallback(NotFoundController::class, $request);
+
+                return $controller;
+            }
+
             return $this->createExceptionResponse($e);
 
 		} catch (Throwable $e) {
