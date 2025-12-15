@@ -94,12 +94,13 @@ final class ExtractRouteInfo implements MiddlewareInterface
 
     private function normalizeRoute(string $route): string
     {
+        $route = trim($route);
 
-        $route = trim($route, '/');
+        if ($route === '' || $route === '/') {
+            return '/';
+        }
 
-
-
-        return '/' . $route;
+        return '/' . trim($route, '/');
     }
 }
 
