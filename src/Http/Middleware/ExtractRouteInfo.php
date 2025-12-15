@@ -5,14 +5,13 @@ namespace JDS\Http\Middleware;
 
 use Exception;
 use FastRoute\Dispatcher;
-use FastRoute\Route;
 use FastRoute\RouteCollector;
 use JDS\Contracts\Middleware\MiddlewareInterface;
 use JDS\Contracts\Middleware\RequestHandlerInterface;
 use JDS\Error\StatusCode;
 use JDS\Exceptions\Error\StatusException;
-use JDS\Http\HttpException;
-use JDS\Http\HttpRequestMethodException;
+use JDS\Exceptions\Http\HttpException;
+use JDS\Exceptions\Http\HttpRequestMethodException;
 use JDS\Http\Request;
 use JDS\Http\Response;
 use function FastRoute\simpleDispatcher;
@@ -22,8 +21,6 @@ final class ExtractRouteInfo implements MiddlewareInterface
     public function __construct(
         private readonly array  $routes,
         private readonly string $routePath,
-        private readonly string $appPath,
-        private readonly string $baseUrl
     )
     {
     }
@@ -82,7 +79,7 @@ final class ExtractRouteInfo implements MiddlewareInterface
 
     private function handleFoundRoute(array $routeInfo, Request $request, RequestHandlerInterface $next): Response
     {
-        /** @var Route $route */
+
         $route = $routeInfo[1];
         $vars = $routeInfo[2]; // dynamic parameters
 
