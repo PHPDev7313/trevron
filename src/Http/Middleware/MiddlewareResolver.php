@@ -3,6 +3,7 @@
 namespace JDS\Http\Middleware;
 
 use JDS\Contracts\Middleware\MiddlewareInterface;
+use JDS\Contracts\Middleware\MiddlewareResolverInterface;
 use JDS\Contracts\Middleware\RequestHandlerInterface;
 use JDS\Error\StatusCode;
 use JDS\Exceptions\Error\StatusException;
@@ -19,7 +20,7 @@ use Throwable;
  *
  * Output: ordered array of *instance* of MiddlewareInterface.
  */
-final class MiddlewareResolver implements RequestHandlerInterface
+final class MiddlewareResolver implements MiddlewareResolverInterface, RequestHandlerInterface
 {
 
     public function __construct(
