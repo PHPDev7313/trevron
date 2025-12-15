@@ -20,7 +20,6 @@ final class ExtractRouteInfo implements MiddlewareInterface
 {
     public function __construct(
         private readonly array  $routes,
-        private readonly string $routePath,
     )
     {
     }
