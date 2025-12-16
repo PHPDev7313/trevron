@@ -11,9 +11,10 @@ Mr
 ---
 
 # Error Handling & Disclosure System
+
 ## Architecture Specification
 
-**Version:** 1.0
+**Version:** 1.1
 
 **Status:** Active (Living Document)
 
@@ -27,10 +28,10 @@ Mr
 
 This specification governs how the framework:
 
-- Classifies failures
-- Controls disclosure of sensitive information
-- Renders errors across multiple formats (HTML, JSON, CLI)
-- Separates development diagnostics from production safety
+* Classifies failures
+* Controls disclosure of sensitive information
+* Renders errors across multiple formats (HTML, JSON, CLI)
+* Separates development diagnostics from production safety
 
 This document does **not** describe UI styling, logging backends, or third-party integrations, except where they affect disclosure guarantees.
 
@@ -49,17 +50,19 @@ Error disclosure is treated as an explicit capability that must be intentionally
 ### 2.3 Separation of Responsibilities
 
 No single layer is allowed to:
-- Both decide *what is safe* and *how it is rendered*
-- Inspect raw exceptions inside presentation logic
+
+* Both decide *what is safe* and *how it is rendered*
+* Inspect raw exceptions inside presentation logic
 
 Each layer has a single, enforceable responsibility.
 
 ### 2.4 Audience Awareness
 
 Errors may be rendered for:
-- Humans (HTML)
-- Machines (JSON)
-- Developers (CLI)
+
+* Humans (HTML)
+* Machines (JSON)
+* Developers (CLI)
 
 The same underlying error context may be rendered differently depending on the audience.
 
@@ -95,15 +98,15 @@ Error classification defines *what went wrong* in a framework-stable, machine-re
 
 ### 4.2 Characteristics
 
-- Independent of HTTP transport
-- Independent of presentation
-- Stable across framework versions
+* Independent of HTTP transport
+* Independent of presentation
+* Stable across framework versions
 
 ### 4.3 Common Dimensions
 
-- **HTTP Status** (e.g. 404, 500)
-- **Internal Status Code** (e.g. ROUTE_NOT_FOUND)
-- **Status Category** (e.g. CLIENT, SERVER, SECURITY)
+* **HTTP Status** (e.g. 404, 500)
+* **Internal Status Code** (e.g. ROUTE_NOT_FOUND)
+* **Status Category** (e.g. CLIENT, SERVER, SECURITY)
 
 Classification **never implies disclosure**.
 
@@ -117,15 +120,15 @@ Classification **never implies disclosure**.
 
 ### 5.2 Required Properties
 
-- HTTP status code
-- Internal status code
-- Status category
-- Public-safe message
+* HTTP status code
+* Internal status code
+* Status category
+* Public-safe message
 
 ### 5.3 Optional Properties
 
-- Throwable (exception)
-- Debug metadata (stack traces, context data)
+* Throwable (exception)
+* Debug metadata (stack traces, context data)
 
 ### 5.4 Safety Rule
 
@@ -141,21 +144,22 @@ The disclosure policy determines whether sensitive error details may be exposed 
 
 ### 6.2 Core Rules
 
-- Disclosure is explicit
-- Disclosure is revocable
-- Disclosure is independent of `.env` mode flags
+* Disclosure is explicit
+* Disclosure is revocable
+* Disclosure is independent of `.env` mode flags
 
 ### 6.3 Policy Types
 
-- **Production Policy**: Never allows sensitive disclosure
-- **Development Policy**: Allows disclosure only when explicitly authorized
+* **Production Policy**: Never allows sensitive disclosure
+* **Development Policy**: Allows disclosure only when explicitly authorized
 
 ### 6.4 Authorization Model
 
 Authorization must:
-- Be secret-based
-- Be non-user-controllable
-- Be injectable at runtime
+
+* Be secret-based
+* Be non-user-controllable
+* Be injectable at runtime
 
 ---
 
@@ -168,9 +172,10 @@ The sanitizer enforces disclosure decisions and acts as the final safety gate be
 ### 7.2 Behavior
 
 When disclosure is **not** allowed:
-- Exceptions are removed
-- Debug metadata is stripped
-- Only public-safe data remains
+
+* Exceptions are removed
+* Debug metadata is stripped
+* Only public-safe data remains
 
 ### 7.3 Guarantee
 
@@ -182,23 +187,23 @@ No renderer may receive sensitive data unless the sanitizer explicitly allows it
 
 ### 8.1 HTML Rendering
 
-- Human-readable
-- Friendly language
-- Shared error layouts
-- Optional debug sections (development only)
+* Human-readable
+* Friendly language
+* Shared error layouts
+* Optional debug sections (development only)
 
 ### 8.2 JSON Rendering
 
-- Structured and predictable
-- Machine-readable contracts
-- Internal codes allowed
-- Debug data conditionally included
+* Structured and predictable
+* Machine-readable contracts
+* Internal codes allowed
+* Debug data conditionally included
 
 ### 8.3 CLI Rendering
 
-- Always verbose
-- Intended for trusted developer use
-- Not subject to HTTP disclosure rules
+* Always verbose
+* Intended for trusted developer use
+* Not subject to HTTP disclosure rules
 
 ---
 
@@ -206,11 +211,11 @@ No renderer may receive sensitive data unless the sanitizer explicitly allows it
 
 The Kernel is responsible for:
 
-- Catching unhandled throwables
-- Mapping exceptions to error classifications
-- Creating ErrorContext instances
-- Invoking the disclosure pipeline
-- Selecting the appropriate renderer
+* Catching unhandled throwables
+* Mapping exceptions to error classifications
+* Creating ErrorContext instances
+* Invoking the disclosure pipeline
+* Selecting the appropriate renderer
 
 The Kernel must not render errors directly.
 
@@ -220,10 +225,10 @@ The Kernel must not render errors directly.
 
 The following are intentionally excluded from this architecture:
 
-- UI theming or branding
-- Automatic disclosure based on host or IP
-- Error handling logic inside templates
-- Direct exception rendering
+* UI theming or branding
+* Automatic disclosure based on host or IP
+* Error handling logic inside templates
+* Direct exception rendering
 
 ---
 
@@ -231,10 +236,10 @@ The following are intentionally excluded from this architecture:
 
 The following behaviors must be covered by automated tests:
 
-- Sensitive data is never exposed without authorization
-- Disclosure fails closed when misconfigured
-- HTML and JSON outputs remain stable
-- Sanitization always removes exceptions when required
+* Sensitive data is never exposed without authorization
+* Disclosure fails closed when misconfigured
+* HTML and JSON outputs remain stable
+* Sanitization always removes exceptions when required
 
 ---
 
@@ -242,32 +247,120 @@ The following behaviors must be covered by automated tests:
 
 ### 12.1 Versioning Policy
 
-- MAJOR: Breaking architectural changes
-- MINOR: New capabilities without breaking guarantees
-- PATCH: Internal refinements
+* MAJOR: Breaking architectural changes
+* MINOR: New capabilities without breaking guarantees
+* PATCH: Internal refinements
 
 ### 12.2 Change Control
 
 All changes must:
-- Preserve fail-closed behavior
-- Respect separation of concerns
-- Be documented in a version increment
+
+* Preserve fail-closed behavior
+* Respect separation of concerns
+* Be documented in a version increment
 
 ---
 
-## 13. Future Extensions (Non-Binding)
+## 13. ErrorResponder Abstraction (v1.1)
+
+### 13.1 Purpose
+
+The ErrorResponder is a centralized orchestration component responsible for converting a sanitized `ErrorContext` into a concrete response format appropriate for the request audience.
+
+It exists to remove conditional logic from the Kernel and to ensure that all error responses pass through a single, auditable path.
+
+### 13.2 Responsibilities
+
+The ErrorResponder **must**:
+
+* Accept a fully sanitized `ErrorContext`
+* Inspect request characteristics (e.g., expected response format)
+* Delegate rendering to the appropriate renderer
+* Return a fully-formed response object
+
+The ErrorResponder **must not**:
+
+* Perform error classification
+* Inspect raw exceptions
+* Decide whether disclosure is allowed
+
+### 13.3 Renderer Selection Strategy
+
+Renderer selection may be based on:
+
+* Explicit request headers (e.g., Accept)
+* Execution context (HTTP vs CLI)
+
+Renderer selection must be deterministic and testable.
+
+### 13.4 Compliance Requirement
+
+All error responses exposed outside the Kernel **must** originate from the ErrorResponder. Any bypass is considered an architectural violation.
+
+---
+
+## 14. Threat Model Appendix (v1.1)
+
+### 14.1 Threats Explicitly Addressed
+
+This architecture is designed to mitigate the following classes of threats:
+
+#### 14.1.1 Information Disclosure
+
+* Accidental exposure of stack traces
+* Leakage of file paths or internal class names
+* Exposure of internal error codes to untrusted users
+
+#### 14.1.2 Misconfiguration Risk
+
+* Incorrect environment flags
+* Missing configuration values
+* Partial deployments
+
+#### 14.1.3 Developer Error
+
+* Forgetting to disable debug output
+* Rendering exceptions directly
+* Bypassing centralized error handling
+
+#### 14.1.4 User Manipulation
+
+* Forcing debug output via headers
+* Query parameter manipulation
+* Cookie or session tampering
+
+### 14.2 Explicitly Out-of-Scope Threats
+
+The following are acknowledged but not addressed by this architecture:
+
+* Compromised server environments
+* Malicious insiders with deployment access
+* Runtime memory inspection attacks
+* Denial-of-service attacks
+
+These threats must be handled by infrastructure, operational policy, or external security controls.
+
+### 14.3 Fail-Closed Guarantees
+
+In all identified threat scenarios, the system guarantees:
+
+* Debug data is stripped unless explicitly authorized
+* Exceptions are never rendered directly
+* Safe defaults are applied when components fail
+
+---
+
+## 15. Future Extensions (Non-Binding)
 
 Potential future additions include:
 
-- Exception-to-status mapping tables
-- Central ErrorResponder abstraction
-- Structured logging integration
-- External error reporting hooks
-- Security audit trails
+* Exception-to-status mapping tables
+* Structured logging integration
+* External error reporting hooks
+* Security audit trails
 
 ---
 
 ## 14. Canonical Statement
 
 This specification defines the authoritative error handling architecture for the framework. Any implementation or extension that violates the principles or guarantees described herein is considered non-compliant.
-
