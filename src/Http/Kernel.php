@@ -66,10 +66,8 @@ final class Kernel
             // Known framework exception -> convert to safe response
             //
             if ($e->getCode() === StatusCode::HTTP_ROUTE_NOT_FOUND) {
-                $controller = $this->controllerDispatcher
+                return $this->controllerDispatcher
                     ->dispatchFallback(NotFoundController::class, $request);
-
-                return $controller;
             }
 
             return $this->createExceptionResponse($e);

@@ -292,7 +292,7 @@ enum StatusCode: int
             self::HTTP_PIPELINE_FAILURE =>
             "HTTP Kernel Error: Middleware pipeline encountered an unhandled exception.",
             self::HTTP_ROUTE_NOT_FOUND =>
-            "HTTP Routing Error: Route not found",
+            "HTTP Error 404: The requested route does not exist",
 
             // HTTP Kernel
             self::HTTP_KERNEL_GENERAL_FAILURE =>
