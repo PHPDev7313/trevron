@@ -14,7 +14,7 @@ Mr
 
 ## Architecture Specification
 
-**Version:** 1.1
+**Version:** 1.2 (FINAL)
 
 **Status:** Active (Living Document)
 
@@ -350,14 +350,71 @@ In all identified threat scenarios, the system guarantees:
 
 ---
 
-## 15. Future Extensions (Non-Binding)
+## 15. Traceability Matrix (v1.2 FINAL)
 
-Potential future additions include:
+This matrix maps architectural responsibilities defined in this specification to concrete framework components. It serves as an audit and refactoring aid.
 
-* Exception-to-status mapping tables
-* Structured logging integration
-* External error reporting hooks
-* Security audit trails
+| Specification Section      | Responsibility                | Canonical Component                                    |
+| -------------------------- | ----------------------------- | ------------------------------------------------------ |
+| §4 Error Classification    | Normalize failure semantics   | StatusCode, StatusCategory                             |
+| §5 ErrorContext            | Single source of error truth  | ErrorContext                                           |
+| §6 Disclosure Policy       | Decide disclosure capability  | DebugDisclosurePolicyInterface                         |
+| §7 Error Sanitization      | Enforce safety gate           | ErrorSanitizer                                         |
+| §8 Rendering Strategy      | Format error output           | HtmlErrorRenderer, JsonErrorRenderer, CliErrorRenderer |
+| §9 Kernel Responsibilities | Capture and classify failures | HttpKernel, ConsoleKernel                              |
+| §13 ErrorResponder         | Orchestrate final response    | ErrorResponder                                         |
+
+No component may assume responsibilities assigned to another section.
+
+---
+
+## 16. Compliance Checklist (v1.2 FINAL)
+
+All error-handling implementations **must** satisfy the following checklist to be considered compliant with this specification.
+
+### 16.1 Architectural Compliance
+
+* [ ] Errors flow through ErrorContext
+* [ ] ErrorContext is sanitized before rendering
+* [ ] ErrorResponder is the sole response orchestrator
+* [ ] Kernel does not render errors directly
+
+### 16.2 Security & Disclosure Compliance
+
+* [ ] Sensitive data is removed when disclosure is not authorized
+* [ ] Disclosure does not depend solely on `.env` values
+* [ ] No renderer inspects raw exceptions
+* [ ] Debug data cannot be enabled via HTTP input
+
+### 16.3 Presentation Compliance
+
+* [ ] Twig templates contain no classification logic
+* [ ] JSON responses follow a stable error contract
+* [ ] Production output contains no stack traces or file paths
+
+### 16.4 Failure Mode Compliance
+
+* [ ] Misconfiguration defaults to non-disclosure
+* [ ] Missing policies fail closed
+* [ ] Sanitizer behavior is covered by tests
+
+### 16.5 Testing Compliance
+
+* [ ] Unit tests verify sanitization behavior
+* [ ] Integration tests verify renderer selection
+* [ ] Regression tests prevent disclosure leaks
+
+Any unchecked item represents a specification violation.
+
+---
+
+## 17. Version Freeze Statement
+
+Version **1.2 FINAL** represents a frozen architectural baseline.
+
+No new concepts may be introduced without incrementing the MINOR or MAJOR version number.
+
+All implementation work must conform to this specification unless explicitly superseded by a later version.
 
 ---
 
