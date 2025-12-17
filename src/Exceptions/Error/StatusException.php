@@ -33,5 +33,15 @@ class StatusException extends RuntimeException
     {
         return $this->statusCode->category();
     }
+
+    public function getStatusCode(): StatusCode
+    {
+        return $this->statusCode;
+    }
+
+    public function getHttpStatus(): int
+    {
+        return $this->statusCode->valueInt();
+    }
 }
 

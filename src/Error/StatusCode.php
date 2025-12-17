@@ -395,5 +395,25 @@ enum StatusCode: int
     {
         return sprintf('[%d] %s', $this->value, $this->defaultMessage());
     }
+
+    public function key(): string
+    {
+        return $this->name;
+    }
+
+    public function valueInt(): int
+    {
+        return $this->value;
+    }
+
+    public function categoryKey(): string
+    {
+        return $this->category()->name;
+    }
+
+    public function categoryValue(): int
+    {
+        return $this->category()->value;
+    }
 }
 

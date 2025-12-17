@@ -4,7 +4,8 @@ namespace JDS\Http;
 
 
 use JDS\Contracts\Middleware\MiddlewareResolverInterface;
-use JDS\Controller\Error\NotFoundController;
+use JDS\Error\ErrorContext;
+use JDS\Error\Response\ErrorResponder;
 use JDS\Error\StatusCode;
 use JDS\EventDispatcher\EventDispatcher;
 use JDS\Exceptions\Error\StatusException;
@@ -16,10 +17,10 @@ use Throwable;
 final class Kernel
 {
 	public function __construct(
-		private readonly bool                       $debug, // true in dev, false in prod
-        private readonly MiddlewareResolverInterface $resolver,
-		private readonly ControllerDispatcher $controllerDispatcher,
-		private readonly EventDispatcher            $eventDispatcher
+        private readonly MiddlewareResolverInterface    $resolver,
+		private readonly ControllerDispatcher           $controllerDispatcher,
+        private readonly EventDispatcher                $eventDispatcher,
+        private readonly ErrorResponder                 $errorResponder,
 	)
 	{
 	}
@@ -61,62 +62,39 @@ final class Kernel
             //
             $response = $pipeline->handle($request);
 
+            return $this->dispatchResponseEvent($request, $response);
+
         } catch (StatusException $e) {
-            //
-            // Known framework exception -> convert to safe response
-            //
-            if ($e->getCode() === StatusCode::HTTP_ROUTE_NOT_FOUND) {
-                return $this->controllerDispatcher
-                    ->dispatchFallback(NotFoundController::class, $request);
-            }
 
-            return $this->createExceptionResponse($e);
-
-		} catch (Throwable $e) {
-
-            //
-            // Pass exception to the centralized ErrorProcessor
-            // Log + process error via ErrorProcessor
-            //
-            $wrapped = new StatusException(
-                StatusCode::HTTP_KERNEL_GENERAL_FAILURE,
-                "Unhandled kernel exception: {$e->getMessage()}",
-                $e
+            $context = new ErrorContext(
+                httpStatus: $e->getHttpStatus(),
+                statusCode: $e->getStatusCodeEnum(),
+                category: $e->getStatusCode()->category(),
+                publicMessage: $e->getStatusCode()->defaultmessage(),
+                exception: $e,
+                debug: [
+                    'exception_class' => get_class($e),
+                    'message' => $e->getMessage(),
+                ]
             );
 
-            //
-            // Build an appropriate Response object
-            // convert into Response
-            //
-            return $this->createExceptionResponse($wrapped);
+            return $this->errorResponder->respond($request, $context);
+
+		} catch (Throwable $e) {
+            $context = new ErrorContext(
+                httpStatus: StatusCode::SERVER_INTERNAL_ERROR->valueInt(),
+                statusCode: StatusCode::SERVER_INTERNAL_ERROR,
+                category: $e->getStatusCode()->category(),
+                publicMessage: $e->getStatusCodeEnum()->defaultmessage(),
+                exception: $e,
+                debug: [
+                    'exception_class' => get_class($e),
+                    'message' => $e->getMessage(),
+                ]
+            );
+
+            return $this->errorResponder->respond($request, $context);
 		}
-
-        //
-        // 4. Fire early response event-used for response transformation or logging
-        // event fired BEFORE the response is finalized
-        //
-        return $this->dispatchResponseEvent($request, $response);
-    }
-
-    /**
-     * Responsible for creating the Response object when an exception occors.
-     */
-    private function createExceptionResponse(StatusException $exception): Response
-    {
-        //
-        // In debug mode, bubble up for a detailed error page / Whoops
-        //
-        if ($this->debug) {
-            throw $exception;
-        }
-
-        //
-        // Fallback error response (safe for production)
-        //
-        return new Response(
-            $exception->getMessage(),
-            $exception->getCode()
-        );
     }
 
     /**

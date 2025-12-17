@@ -51,5 +51,15 @@ enum StatusCategory: int
 
         return self::Server; // safe default for unknown category
     }
+
+    public function key(): string
+    {
+        return $this->name;
+    }
+
+    public function valueInt(): int
+    {
+        return $this->value;
+    }
 }
 
