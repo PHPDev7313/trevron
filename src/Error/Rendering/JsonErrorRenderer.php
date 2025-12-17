@@ -23,8 +23,8 @@ class JsonErrorRenderer implements ErrorRendererInterface
                         'value' => $context->statusCode->valueInt(),
                 ],
                 'category'  => [
-                        'key'   => $context->statusCode->categoryKey(),
-                        'value' => $context->statusCode->categoryValue(),
+                        'key'   => $context->category->key(),
+                        'value' => $context->category->valueInt(),
                 ],
                 'message'   => $context->publicMessage,
             ],

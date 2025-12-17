@@ -3,6 +3,7 @@
 namespace JDS\Http;
 
 
+use JDS\Contracts\Http\ControllerDispatcherInterface;
 use JDS\Contracts\Middleware\MiddlewareResolverInterface;
 use JDS\Error\ErrorContext;
 use JDS\Error\Response\ErrorResponder;
@@ -18,7 +19,7 @@ final class Kernel
 {
 	public function __construct(
         private readonly MiddlewareResolverInterface    $resolver,
-		private readonly ControllerDispatcher           $controllerDispatcher,
+		private readonly ControllerDispatcherInterface  $controllerDispatcher,
         private readonly EventDispatcher                $eventDispatcher,
         private readonly ErrorResponder                 $errorResponder,
 	)
@@ -67,30 +68,32 @@ final class Kernel
         } catch (StatusException $e) {
 
             $context = new ErrorContext(
-                httpStatus: $e->getHttpStatus(),
-                statusCode: $e->getStatusCodeEnum(),
-                category: $e->getStatusCode()->category(),
-                publicMessage: $e->getStatusCode()->defaultmessage(),
-                exception: $e,
-                debug: [
-                    'exception_class' => get_class($e),
-                    'message' => $e->getMessage(),
-                ]
+                    httpStatus: $e->getHttpStatus(),
+                    statusCode: $e->getStatusCodeEnum(),
+                      category: $e->getStatusCode()->category(),
+                 publicMessage: $e->getStatusCode()->defaultmessage(),
+                     exception: $e,
+                         debug: [
+                            'exception_class' => get_class($e),
+                            'message' => $e->getMessage(),
+                        ]
             );
 
             return $this->errorResponder->respond($request, $context);
 
 		} catch (Throwable $e) {
+            $statusCode = StatusCode::SERVER_INTERNAL_ERROR;
+
             $context = new ErrorContext(
-                httpStatus: StatusCode::SERVER_INTERNAL_ERROR->valueInt(),
-                statusCode: StatusCode::SERVER_INTERNAL_ERROR,
-                category: $e->getStatusCode()->category(),
-                publicMessage: $e->getStatusCodeEnum()->defaultmessage(),
-                exception: $e,
-                debug: [
-                    'exception_class' => get_class($e),
-                    'message' => $e->getMessage(),
-                ]
+                    httpStatus: $statusCode->valueInt(),
+                    statusCode: $statusCode,
+                      category: $statusCode->category(),
+                 publicMessage: $statusCode->defaultmessage(),
+                     exception: $e,
+                         debug: [
+                            'exception_class' => get_class($e),
+                            'message' => $e->getMessage(),
+                        ]
             );
 
             return $this->errorResponder->respond($request, $context);

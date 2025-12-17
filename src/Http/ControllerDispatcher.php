@@ -2,6 +2,7 @@
 
 namespace JDS\Http;
 
+use JDS\Contracts\Http\ControllerDispatcherInterface;
 use JDS\Contracts\Rendering\RendererInterface;
 use JDS\Controller\AbstractController;
 use JDS\Exceptions\Controller\ControllerInvocationException;
@@ -15,7 +16,7 @@ use ReflectionMethod;
 use ReflectionNamedType;
 use Throwable;
 
-class ControllerDispatcher
+class ControllerDispatcher implements ControllerDispatcherInterface
 {
     public function __construct(
         private readonly ContainerInterface $container,

@@ -2,6 +2,7 @@
 
 namespace JDS\Http;
 
+use JDS\Contracts\Http\ControllerDispatcherInterface;
 use JDS\Contracts\Middleware\RequestHandlerInterface;
 use JDS\Error\StatusCode;
 use JDS\Exceptions\Error\StatusException;
@@ -10,7 +11,7 @@ use Throwable;
 final class RouteDispatcher implements RequestHandlerInterface
 {
     public function __construct(
-        private ControllerDispatcher  $controllerDispatcher,
+        private ControllerDispatcherInterface  $controllerDispatcher,
     )
     {
     }
