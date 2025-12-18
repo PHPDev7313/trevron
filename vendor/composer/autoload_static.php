@@ -1035,6 +1035,7 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\Error\\Rendering\\ErrorRendererInterface' => __DIR__ . '/../..' . '/src/Error/Rendering/ErrorRendererInterface.php',
         'JDS\\Error\\Rendering\\HtmlErrorRenderer' => __DIR__ . '/../..' . '/src/Error/Rendering/HtmlErrorRenderer.php',
         'JDS\\Error\\Rendering\\JsonErrorRenderer' => __DIR__ . '/../..' . '/src/Error/Rendering/JsonErrorRenderer.php',
+        'JDS\\Error\\Rendering\\TemplateEngineInterface' => __DIR__ . '/../..' . '/src/Error/Rendering/TemplateEngineInterface.php',
         'JDS\\Error\\Response\\ErrorResponder' => __DIR__ . '/../..' . '/src/Error/Response/ErrorResponder.php',
         'JDS\\Error\\Sanitization\\ErrorSanitizer' => __DIR__ . '/../..' . '/src/Error/Sanitization/ErrorSanitizer.php',
         'JDS\\Error\\StatusCategory' => __DIR__ . '/../..' . '/src/Error/StatusCategory.php',

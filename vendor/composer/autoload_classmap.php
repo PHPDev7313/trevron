@@ -728,6 +728,7 @@ return array(
     'JDS\\Error\\Rendering\\ErrorRendererInterface' => $baseDir . '/src/Error/Rendering/ErrorRendererInterface.php',
     'JDS\\Error\\Rendering\\HtmlErrorRenderer' => $baseDir . '/src/Error/Rendering/HtmlErrorRenderer.php',
     'JDS\\Error\\Rendering\\JsonErrorRenderer' => $baseDir . '/src/Error/Rendering/JsonErrorRenderer.php',
+    'JDS\\Error\\Rendering\\TemplateEngineInterface' => $baseDir . '/src/Error/Rendering/TemplateEngineInterface.php',
     'JDS\\Error\\Response\\ErrorResponder' => $baseDir . '/src/Error/Response/ErrorResponder.php',
     'JDS\\Error\\Sanitization\\ErrorSanitizer' => $baseDir . '/src/Error/Sanitization/ErrorSanitizer.php',
     'JDS\\Error\\StatusCategory' => $baseDir . '/src/Error/StatusCategory.php',

@@ -3,7 +3,7 @@
         'name' => 'jds/trevron',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '36b4ddb0a5e0eb7105f5c5b2041f5d51ba025c8e',
+        'reference' => 'c7f17c066ad4f08208f9ff9afea4ecc3cc893f6b',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -88,7 +88,7 @@
         'jds/trevron' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '36b4ddb0a5e0eb7105f5c5b2041f5d51ba025c8e',
+            'reference' => 'c7f17c066ad4f08208f9ff9afea4ecc3cc893f6b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
