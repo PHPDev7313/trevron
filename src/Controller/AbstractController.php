@@ -24,7 +24,7 @@ abstract class AbstractController
 
     protected ?ContainerInterface $container = null;
     protected Request $request;
-    protected string $routePath;
+    private string $routePath;
     protected CentralizedLogger $logger;
 
     /**
@@ -38,13 +38,14 @@ abstract class AbstractController
      */
     public function setContainer(ContainerInterface $container): void
     {
+        $routePath = $this->container->get('config')->get('routePath');
         $this->container = $container;
         $this->validateContainer();
-        $this->setRoutePath($this->container->get('config')->get('routePath'));
+        $this->setRoutePath($routePath);
         $this->logger = $this->container->get('manager')->getLogger('audit');
     }
 
-    public function setRoutePath(string $routePath): void
+    private function setRoutePath(string $routePath): void
     {
         $this->routePath = $routePath;
     }

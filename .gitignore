@@ -5,4 +5,6 @@ schema.json
 docs
 logs
 framework_error.log
+/coverage/
+/coverage/**
 

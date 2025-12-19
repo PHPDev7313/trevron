@@ -16,7 +16,11 @@ class ExtractRouteInfo implements MiddlewareInterface
 {
 
     private array $routeMeta = []; // stores metadata for the current route
-    public function __construct(private readonly array $routes, private readonly string $routePath, private readonly string $appPath, private readonly string $baseUrl)
+    public function __construct(
+        private readonly array $routes,
+        private readonly string $routePath,
+        private readonly string $appPath,
+        private readonly string $baseUrl)
     {
         $this->setRouteMeta($this->routes['metadata']);
     }
