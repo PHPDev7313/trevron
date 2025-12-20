@@ -1,9 +1,9 @@
 <?php
 
-namespace JDS\Http\Generators;
+namespace JDS\Http\Navigation;
 
 
-use JDS\Contracts\Http\Generators\MenuGeneratorInterface;
+use JDS\Contracts\Http\Navigation\MenuGeneratorInterface;
 use JDS\Http\InvalidArgumentException;
 
 class MenuGenerator implements MenuGeneratorInterface

@@ -2,7 +2,6 @@
 
 namespace JDS\Http;
 
-
 use JDS\Contracts\Http\ControllerDispatcherInterface;
 use JDS\Contracts\Middleware\MiddlewareResolverInterface;
 use JDS\Error\ErrorContext;
@@ -28,13 +27,11 @@ final class Kernel
 
     /**
      * Handle the request through the middleware pipeline + controller dispatcher.
+     *
+     * MAY THROW - by design (outside error-handling domain)
      */
 	public function handle(Request $request): Response
 	{
-        //
-        // MAY THROW - by design
-        //
-
         //
         // mark request start time for profiling & lifecycle monitoring
         //
@@ -63,15 +60,19 @@ final class Kernel
             //
             $response = $pipeline->handle($request);
 
+            //
+            // 4. Fire early response event (may mutate response)
+            //
             return $this->dispatchResponseEvent($request, $response);
 
         } catch (StatusException $e) {
+            $statusCode = $e->getStatusCodeEnum();
 
             $context = new ErrorContext(
                     httpStatus: $e->getHttpStatus(),
-                    statusCode: $e->getStatusCodeEnum(),
-                      category: $e->getStatusCode()->category(),
-                 publicMessage: $e->getStatusCode()->defaultmessage(),
+                    statusCode: $statusCode,
+                      category: $statusCode->category(),
+                 publicMessage: $statusCode->defaultmessage(),
                      exception: $e,
                          debug: [
                             'exception_class' => get_class($e),
@@ -102,10 +103,11 @@ final class Kernel
 
     /**
      * Executes after the response has already been sent to the client.
+     *
+     * This MUST NEVER THROW - by Law
      */
 	public function terminate(Request $request, Response $response): void
     {
-        // This MUST NEVER THROW - by Law
         try {
             $end = microtime(true);
             $duration = max(0.0, ($end - $request->getStartTime()));

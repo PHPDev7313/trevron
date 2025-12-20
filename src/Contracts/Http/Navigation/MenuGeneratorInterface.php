@@ -1,6 +1,6 @@
 <?php
 
-namespace JDS\Contracts\Http\Generators;
+namespace JDS\Contracts\Http\Navigation;
 
 interface MenuGeneratorInterface
 {

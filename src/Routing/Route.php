@@ -11,7 +11,7 @@ class Route implements RouteMiddlewareAwareInterface
     public function __construct(
         private string $method,
         private string $path,
-        private array $handler, // [ControllerClass, method]
+        private array $handler,
         /** @var class-string<MiddlewareInterface>[] */
         private array $middleware = []
     )

@@ -1,25 +1,26 @@
 <?php
 
-namespace JDS\Routing;
+namespace JDS\Http\Controller;
 
-use JDS\Contracts\Routing\RouterInterface;
+use JDS\Contracts\Http\Controller\ControllerDispatchResultInterface;
 use JDS\Controller\AbstractController;
 use JDS\Exceptions\Controller\ControllerMethodNotFoundException;
 use JDS\Exceptions\Controller\ControllerNotFoundException;
 use JDS\Http\Request;
+use JDS\Routing\Route;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 
-class Router implements RouterInterface
+class ControllerResolver implements ControllerDispatchResultInterface
 {
 
-    public function dispatch(Request $request, ContainerInterface $container)
+    public function dispatch(Request $request, ContainerInterface $container): array
     {
         $route = $request->getRoute();
 
         if (!$route instanceof Route) {
             throw new RuntimeException(
-                "No Route attatched to Request. Ensure ExtractRouteInfo runs before Router::dispatch()."
+                "No Route attatched to Request. Ensure ExtractRouteInfo runs before Controller-Reslover::dispatch."
             );
         }
 

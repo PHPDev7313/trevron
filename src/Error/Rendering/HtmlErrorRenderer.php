@@ -1,6 +1,7 @@
 <?php
 //
 // Version 1.2 Final (v1.2 §8)
+// Locked
 //
 
 namespace JDS\Error\Rendering;
@@ -9,6 +10,17 @@ use JDS\Error\ErrorContext;
 use JDS\Http\Request;
 use JDS\Http\Response;
 
+/**
+ * HtmlErrorRenderer v1.2 FINAL
+ *
+ * This ifle is ARCHITECTURALLY FROZEN.
+ *
+ * Any behavioral change requires:
+ * - Contract test updates
+ * - Version bump (v1.3+)
+ * - Architecture review
+ * -
+ */
 final class HtmlErrorRenderer implements ErrorRendererInterface
 {
     public function __construct(

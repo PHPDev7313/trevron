@@ -1,6 +1,8 @@
 <?php
 
-namespace JDS\Contracts\Http\Generators;
+namespace JDS\Contracts\Http\Navigation;
+
+use JDS\Http\Request;
 
 /**
  * # Requirements & Definitions
@@ -29,6 +31,6 @@ interface BreadcrumbGeneratorInterface
      *
      * @return array An array representing the breadcrumb trail.
      */
-    public function generateBreadcrumbs(): array;
+    public function generateBreadcrumbs(Request $request): array;
 }
 

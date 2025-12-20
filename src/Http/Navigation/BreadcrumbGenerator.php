@@ -1,9 +1,10 @@
 <?php
 
-namespace JDS\Http\Generators;
+namespace JDS\Http\Navigation;
 
 
-use JDS\Contracts\Http\Generators\BreadcrumbGeneratorInterface;
+use JDS\Contracts\Http\Navigation\BreadcrumbGeneratorInterface;
+use JDS\Http\Request;
 
 class BreadcrumbGenerator implements BreadcrumbGeneratorInterface
 {
@@ -11,10 +12,10 @@ class BreadcrumbGenerator implements BreadcrumbGeneratorInterface
 	{
 	}
 
-    public function generateBreadcrumbs(): array
+    public function generateBreadcrumbs(Request $request): array
     {
         // $path starts out from here
-        $path = $this->getURI(); // Get the current URI (e.g., /pec/roles)
+        $path = $request->getUri(); // Get the current URI (e.g., /pec/roles)
         $breadcrumbs = [];       // Initialize breadcrumbs array
 
         // check loop while $path !== null
@@ -55,13 +56,6 @@ class BreadcrumbGenerator implements BreadcrumbGeneratorInterface
         }
 
         return $breadcrumbs; // Return finalized breadcrumbs
-    }
-
-    private function getURI(): string
-    {
-        $uri = $_SERVER['REQUEST_URI'] ?? '';
-        $cleanUri = strtok($uri, '?');
-        return $cleanUri !== false ? rawurldecode($cleanUri) : '';
     }
 
     private function mergeAndNormalizeRoutePath(string $routePath, string $route): string

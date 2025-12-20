@@ -1,12 +1,21 @@
 # Jessop Digital Systems
 
+# Architecture Specification
 ## Error Handling & Disclosure System
 
-**Copyright (c) 2025**
-December 15, 2025
+Project: Trevron Framework
 
-### Designed By
-Mr
+Document: HTTP Kernel & Error Handling Architecture
+
+**Version: v1.2 FINAL**
+
+Status: **ARCHITECTURALLY FROZEN**
+
+Effective Date: December 19, 2025
+
+Owner: Mr J (Jessop Digital Systems)
+
+© 2025 Jessop Digital Systems
 
 ---
 
@@ -354,15 +363,15 @@ In all identified threat scenarios, the system guarantees:
 
 This matrix maps architectural responsibilities defined in this specification to concrete framework components. It serves as an audit and refactoring aid.
 
-| Specification Section      | Responsibility                | Canonical Component                                    |
-| -------------------------- | ----------------------------- | ------------------------------------------------------ |
-| §4 Error Classification    | Normalize failure semantics   | StatusCode, StatusCategory                             |
-| §5 ErrorContext            | Single source of error truth  | ErrorContext                                           |
-| §6 Disclosure Policy       | Decide disclosure capability  | DebugDisclosurePolicyInterface                         |
-| §7 Error Sanitization      | Enforce safety gate           | ErrorSanitizer                                         |
-| §8 Rendering Strategy      | Format error output           | HtmlErrorRenderer, JsonErrorRenderer, CliErrorRenderer |
-| §9 Kernel Responsibilities | Capture and classify failures | HttpKernel, ConsoleKernel                              |
-| §13 ErrorResponder         | Orchestrate final response    | ErrorResponder                                         |
+| Specification Section       | Responsibility                | Canonical Component                                    |
+|-----------------------------|-------------------------------|--------------------------------------------------------|
+| §4 Error Classification     | Normalize failure semantics   | StatusCode, StatusCategory                             |
+| §5 ErrorContext             | Single source of error truth  | ErrorContext                                           |
+| §6 Disclosure Policy        | Decide disclosure capability  | DebugDisclosurePolicyInterface                         |
+| §7 Error Sanitization       | Enforce safety gate           | ErrorSanitizer                                         |
+| §8 Rendering Strategy       | Format error output           | HtmlErrorRenderer, JsonErrorRenderer, CliErrorRenderer |
+| §9 Kernel Responsibilities  | Capture and classify failures | HttpKernel, ConsoleKernel                              |
+| §13 ErrorResponder          | Orchestrate final response    | ErrorResponder                                         |
 
 No component may assume responsibilities assigned to another section.
 
@@ -374,35 +383,35 @@ All error-handling implementations **must** satisfy the following checklist to b
 
 ### 16.1 Architectural Compliance
 
-* [ ] Errors flow through ErrorContext
-* [ ] ErrorContext is sanitized before rendering
-* [ ] ErrorResponder is the sole response orchestrator
-* [ ] Kernel does not render errors directly
+* [x] Errors flow through ErrorContext
+* [x] ErrorContext is sanitized before rendering
+* [x] ErrorResponder is the sole response orchestrator
+* [x] Kernel does not render errors directly
 
 ### 16.2 Security & Disclosure Compliance
 
-* [ ] Sensitive data is removed when disclosure is not authorized
-* [ ] Disclosure does not depend solely on `.env` values
-* [ ] No renderer inspects raw exceptions
-* [ ] Debug data cannot be enabled via HTTP input
+* [x] Sensitive data is removed when disclosure is not authorized
+* [x] Disclosure does not depend solely on `.env` values
+* [x] No renderer inspects raw exceptions
+* [x] Debug data cannot be enabled via HTTP input
 
 ### 16.3 Presentation Compliance
 
-* [ ] Twig templates contain no classification logic
-* [ ] JSON responses follow a stable error contract
-* [ ] Production output contains no stack traces or file paths
+* [x] Twig templates contain no classification logic
+* [x] JSON responses follow a stable error contract
+* [x] Production output contains no stack traces or file paths
 
 ### 16.4 Failure Mode Compliance
 
-* [ ] Misconfiguration defaults to non-disclosure
-* [ ] Missing policies fail closed
-* [ ] Sanitizer behavior is covered by tests
+* [x] Misconfiguration defaults to non-disclosure
+* [x] Missing policies fail closed
+* [x] Sanitizer behavior is covered by tests
 
 ### 16.5 Testing Compliance
 
-* [ ] Unit tests verify sanitization behavior
-* [ ] Integration tests verify renderer selection
-* [ ] Regression tests prevent disclosure leaks
+* [x] Unit tests verify sanitization behavior
+* [x] Integration tests verify renderer selection
+* [x] Regression tests prevent disclosure leaks
 
 Any unchecked item represents a specification violation.
 

@@ -4,13 +4,15 @@ namespace JDS\Routing;
 
 use JDS\Error\StatusCode;
 use JDS\Exceptions\Error\StatusException;
+use JDS\Http\Navigation\NavigationMetadataCollection;
 
-class ProcessRoutes
+final class ProcessRoutes
 {
-    public static function process(array $routes): array
+
+    public static function process(array $routes): ProcessedRoutes
     {
         $metadataList = [];
-
+        $processedRoutes = [];
         foreach ($routes as $route) {
 
             //
@@ -73,16 +75,17 @@ class ProcessRoutes
             //
             // Add final route entry
             //
-            $processedRoutes[] = [
-                $method,
-                $uri,
-                $cleanControllerInfo,
-            ];
+            $processedRoutes[] = new Route(
+                method: $method,
+                path: $uri,
+                handler: $cleanControllerInfo,
+                middleware: $middleware,
+            );
         }
-        return [
-            'routes' => $processedRoutes,
-            'metadata' => $metadataList,
-        ];
+        return new ProcessedRoutes(
+            new RouteCollection($processedRoutes),
+            new NavigationMetadataCollection($metadataList),
+        );
     }
     private static function normalizeUri(string $uri): string
     {
