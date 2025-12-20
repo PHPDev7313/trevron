@@ -5,9 +5,14 @@ namespace JDS\Error;
 enum StatusCode: int
 {
     // -------------------------------------------------
-    // 400 ERRORS
+    // 400 ClientErrors
     // -------------------------------------------------
+    case HTTP_BAD_REQUEST = 400;
+    case HTTP_UNAUTHORIZED = 401;
+    case HTTP_FORBIDDEN = 403;
     case HTTP_ROUTE_NOT_FOUND = 404;
+    case HTTP_METHOD_NOT_ALLOWED = 405;
+    case HTTP_UNPROCESSABLE_ENTITY = 422;
 
     // -------------------------------------------------
     // SERVER (500–599)
@@ -177,6 +182,26 @@ enum StatusCode: int
     public function defaultMessage(): string
     {
         return match ($this) {
+            // HTTP Client Errors
+            self::HTTP_BAD_REQUEST =>
+            "HTTP Error 400: The request is malformed or invalid.",
+
+            self::HTTP_UNAUTHORIZED =>
+            "HTTP Error 401: Authentication is required.",
+
+            self::HTTP_FORBIDDEN =>
+            "HTTP Error 403: You do not have permission to access this resource.",
+
+            self::HTTP_ROUTE_NOT_FOUND =>
+            "HTTP Error 404: The requested route does not exist.",
+
+            self::HTTP_METHOD_NOT_ALLOWED =>
+            "HTTP Error 405: The HTTP method is not allowed for this route.",
+
+            self::HTTP_UNPROCESSABLE_ENTITY =>
+            "HTTP Error 422: The request was well-formed but failed validation.",
+
+
             // Server
             self::SERVER_INTERNAL_ERROR => "Server Error: Internal server error",
             self::SERVER_GENERAL_ERROR => "Server Error: General error",
@@ -291,8 +316,6 @@ enum StatusCode: int
             "HTTP Kernel Error: Route resolved but dispatching the controller failed.",
             self::HTTP_PIPELINE_FAILURE =>
             "HTTP Kernel Error: Middleware pipeline encountered an unhandled exception.",
-            self::HTTP_ROUTE_NOT_FOUND =>
-            "HTTP Error 404: The requested route does not exist",
 
             // HTTP Kernel
             self::HTTP_KERNEL_GENERAL_FAILURE =>
@@ -382,7 +405,7 @@ enum StatusCode: int
             // Images
             //
             self::ROUTE_METADATA_INVALID =>
-            "Route Metadata Error: Invalid route definition: missing method, path, or controller.",
+            "Route Metadata Error: Route metadata is invalid or malformed.",
         };
     }
 

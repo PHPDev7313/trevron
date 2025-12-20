@@ -133,6 +133,11 @@ class Request
         return $this->route;
     }
 
+    public function setRoute(Route $route): void
+    {
+        $this->route = $route;
+    }
+
     public function hasRoute(): bool
     {
         return $this->route !== null;
