@@ -38,8 +38,8 @@ abstract class AbstractController
      */
     public function setContainer(ContainerInterface $container): void
     {
-        $routePath = $this->container->get('config')->get('routePath');
         $this->container = $container;
+        $routePath = $this->container->get('config')->get('routePath');
         $this->validateContainer();
         $this->setRoutePath($routePath);
         $this->logger = $this->container->get('manager')->getLogger('audit');
