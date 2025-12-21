@@ -18,6 +18,7 @@ class ExtractRouteInfo implements MiddlewareInterface
     private array $routeMeta = []; // stores metadata for the current route
     public function __construct(
         private readonly array $routes,
+        private readonly string $routePath,
         private readonly string $appPath,
         private readonly string $baseUrl)
     {
@@ -36,7 +37,7 @@ class ExtractRouteInfo implements MiddlewareInterface
         $dispatcher = simpleDispatcher(function (RouteCollector $routeCollector) use (&$routeData) {
             foreach ($this->routes['routes'] as $route) {
                 // Use unified method for normalization and merging
-                $route[1] = $this->mergeAndNormalizeRoutePath($route[1]);
+                $route[1] = $this->mergeAndNormalizeRoutePath($this->routePath, $route[1]);
 
                 // Add route to dispatcher
                 $routeCollector->addRoute(...$route);
@@ -102,18 +103,33 @@ class ExtractRouteInfo implements MiddlewareInterface
     }
 
 
-    private function mergeAndNormalizeRoutePath(string $route): string
+    private function mergeAndNormalizeRoutePath(string $routePath, string $route): string
     {
+        $routePath = trim($routePath, '/');
         $route = '/' . ltrim($route, '/');
 
+        // prevent duplicate base path
+        if ($routePath !== '') {
+            $pattern = '#^/' . preg_quote($routePath, '#') . '(/|$)#';
+            $route = preg_replace($pattern, '/', $route);
+        }
+
         // Rebuild with base path exactly once
-        $final =  ltrim($route, '/');
+        $final = '/' . ($routePath !== '' ? $routePath . '/' : '') . ltrim($route, '/');
 
         // normalize slashes
         $final = preg_replace('#/+#', '/', $final);
 
         // preserve trailing slash for root
         return $route === '/' ? rtrim($final, '/') . '/' : rtrim($final, '/');
+
+
+//        // Normalize the routePath
+//        $routePath = trim($routePath, '/') !== '' ? '/' . trim($routePath, '/') : '';
+//
+//        // Normalize and concatenate with the given route
+//        $normalizeRoute = rtrim($routePath . '/' . ltrim(trim($route, '/'), '/'), '/');
+//        return ($route === '/' ? $normalizeRoute . '/' : $normalizeRoute);
     }
 
 

@@ -22,7 +22,7 @@ class Authenticate implements MiddlewareInterface
 		if (!$this->session->isAuthenticated()) {
 			$this->session->setFlash('error', 'Please sign in first!');
 
-			return new RedirectResponse($requestHandler->getContainer()->get('config')->get('routePath') . '/login');
+			return new RedirectResponse('/login');
 		}
         // Retrieve the route metadata (roles, permissions, etc.)
         $routeMeta = $requestHandler->getRouteMeta();

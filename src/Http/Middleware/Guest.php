@@ -25,7 +25,7 @@ class Guest implements MiddlewareInterface
 
 		if ($this->session->isAuthenticated()) {
 
-			return new RedirectResponse($requestHandler->getContainer()->get('config')->get('routePath') . '/');
+			return new RedirectResponse('/');
 		}
 
 		return $requestHandler->handle($request);
