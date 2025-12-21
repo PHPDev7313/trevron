@@ -105,13 +105,31 @@ class ExtractRouteInfo implements MiddlewareInterface
 
     private function mergeAndNormalizeRoutePath(string $routePath, string $route): string
     {
-        // Normalize the routePath
-        $routePath = trim($routePath, '/') !== '' ? '/' . trim($routePath, '/') : '';
+        $routePath = trim($routePath, '/');
+        $route = '/' . ltrim($route, '/');
 
-        // Normalize and concatenate with the given route
-        $normalizeRoute = rtrim($routePath . '/' . ltrim(trim($route, '/'), '/'), '/');
-//        $normalizeRoute = rtrim(ltrim(trim($route, '/'), '/'), '/');
-        return ($route === '/' ? $normalizeRoute . '/' : $normalizeRoute);
+        // prevent duplicate base path
+        if ($routePath !== '') {
+            $pattern = '#^/' . preg_quote($routePath, '#') . '(/|$)#';
+            $route = preg_replace($pattern, '/', $route);
+        }
+
+        // Rebuild with base path exactly once
+        $final = '/' . ($routePath !== '' ? $routePath . '/' : '') . ltrim($route, '/');
+
+        // normalize slashes
+        $final = preg_replace('#/+#', '/', $final);
+
+        // preserve trailing slash for root
+        return $route === '/' ? rtrim($final, '/') . '/' : rtrim($final, '/');
+
+
+//        // Normalize the routePath
+//        $routePath = trim($routePath, '/') !== '' ? '/' . trim($routePath, '/') : '';
+//
+//        // Normalize and concatenate with the given route
+//        $normalizeRoute = rtrim($routePath . '/' . ltrim(trim($route, '/'), '/'), '/');
+//        return ($route === '/' ? $normalizeRoute . '/' : $normalizeRoute);
     }
 
 
