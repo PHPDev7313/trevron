@@ -122,14 +122,6 @@ class ExtractRouteInfo implements MiddlewareInterface
 
         // preserve trailing slash for root
         return $route === '/' ? rtrim($final, '/') . '/' : rtrim($final, '/');
-
-
-//        // Normalize the routePath
-//        $routePath = trim($routePath, '/') !== '' ? '/' . trim($routePath, '/') : '';
-//
-//        // Normalize and concatenate with the given route
-//        $normalizeRoute = rtrim($routePath . '/' . ltrim(trim($route, '/'), '/'), '/');
-//        return ($route === '/' ? $normalizeRoute . '/' : $normalizeRoute);
     }
 
 
