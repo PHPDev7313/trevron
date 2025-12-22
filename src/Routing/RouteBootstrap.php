@@ -1,11 +1,14 @@
 <?php
 /*
- * Trevron Framework - v1.2 FINAL
+ * Trevron Framework — v1.2 FINAL
  *
  * © 2025 Jessop Digital Systems
- * Date: December 22, 2025
+ * Date: December 19, 2025
  *
- * see: RouteingARCHITECTURE.v1.2.FINAL.md
+ * This file is part of the v1.2 FINAL architectural baseline.
+ * Changes require an architecture review and a version bump.
+ *
+ * See: RoutingARCHITECTURE.v1.2.FINAL.md
  */
 
 namespace JDS\Routing;

@@ -58,8 +58,8 @@ final class ExtractRouteInfo implements MiddlewareInterface
 
             Dispatcher::METHOD_NOT_ALLOWED =>
                 throw new HttpRequestMethodException(
-                    message: "Method not allowed.",
-                    statusCode: 405
+                    "Method not allowed.",
+                    405
                 ),
 
             Dispatcher::NOT_FOUND =>
