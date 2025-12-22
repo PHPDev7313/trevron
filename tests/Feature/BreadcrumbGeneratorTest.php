@@ -1,6 +1,6 @@
 <?php
 
-use JDS\Http\Generators\BreadcrumbGenerator;
+use JDS\Http\Navigation\BreadcrumbGenerator;
 
 it('generates breadcrumbs for a given route', function () {
    $routePrefix = '/pec';

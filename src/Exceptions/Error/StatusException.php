@@ -1,4 +1,15 @@
 <?php
+/*
+ * Trevron Framework — v1.2 FINAL
+ *
+ * © 2025 Jessop Digital Systems
+ * Date: December 19, 2025
+ *
+ * This file is part of the v1.2 FINAL architectural baseline.
+ * Changes require an architecture review and a version bump.
+ *
+ * See: RoutingFINALv12ARCHITECTURE.md
+ */
 
 namespace JDS\Exceptions\Error;
 
@@ -32,6 +43,16 @@ class StatusException extends RuntimeException
     public function getStatusCategory(): StatusCategory
     {
         return $this->statusCode->category();
+    }
+
+    public function getStatusCode(): StatusCode
+    {
+        return $this->statusCode;
+    }
+
+    public function getHttpStatus(): int
+    {
+        return $this->statusCode->valueInt();
     }
 }
 

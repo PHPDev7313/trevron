@@ -1,16 +1,29 @@
 <?php
+/*
+ * Trevron Framework — v1.2 FINAL
+ *
+ * © 2025 Jessop Digital Systems
+ * Date: December 19, 2025
+ *
+ * This file is part of the v1.2 FINAL architectural baseline.
+ * Changes require an architecture review and a version bump.
+ *
+ * See: RoutingFINALv12ARCHITECTURE.md
+ */
 
 namespace JDS\Routing;
 
 use JDS\Error\StatusCode;
 use JDS\Exceptions\Error\StatusException;
+use JDS\Http\Navigation\NavigationMetadataCollection;
 
-class ProcessRoutes
+final class ProcessRoutes
 {
-    public static function process(array $routes): array
+
+    public static function process(array $routes): ProcessedRoutes
     {
         $metadataList = [];
-
+        $processedRoutes = [];
         foreach ($routes as $route) {
 
             //
@@ -73,16 +86,17 @@ class ProcessRoutes
             //
             // Add final route entry
             //
-            $processedRoutes[] = [
-                $method,
-                $uri,
-                $cleanControllerInfo,
-            ];
+            $processedRoutes[] = new Route(
+                method: $method,
+                path: $uri,
+                handler: $cleanControllerInfo,
+                middleware: $middleware,
+            );
         }
-        return [
-            'routes' => $processedRoutes,
-            'metadata' => $metadataList,
-        ];
+        return new ProcessedRoutes(
+            new RouteCollection($processedRoutes),
+            new NavigationMetadataCollection($metadataList),
+        );
     }
     private static function normalizeUri(string $uri): string
     {

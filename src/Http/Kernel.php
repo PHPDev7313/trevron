@@ -1,10 +1,21 @@
 <?php
-
+/*
+ * Trevron Framework — v1.2 FINAL
+ *
+ * © 2025 Jessop Digital Systems
+ * Date: December 19, 2025
+ *
+ * This file is part of the v1.2 FINAL architectural baseline.
+ * Changes require an architecture review and a version bump.
+ *
+ * See: KernelFINALv12ARCHITECTURE.md
+ */
 namespace JDS\Http;
 
-
+use JDS\Contracts\Http\ControllerDispatcherInterface;
 use JDS\Contracts\Middleware\MiddlewareResolverInterface;
-use JDS\Controller\Error\NotFoundController;
+use JDS\Error\ErrorContext;
+use JDS\Error\Response\ErrorResponder;
 use JDS\Error\StatusCode;
 use JDS\EventDispatcher\EventDispatcher;
 use JDS\Exceptions\Error\StatusException;
@@ -16,23 +27,21 @@ use Throwable;
 final class Kernel
 {
 	public function __construct(
-		private readonly bool                       $debug, // true in dev, false in prod
-        private readonly MiddlewareResolverInterface $resolver,
-		private readonly ControllerDispatcher $controllerDispatcher,
-		private readonly EventDispatcher            $eventDispatcher
+        private readonly MiddlewareResolverInterface    $resolver,
+		private readonly ControllerDispatcherInterface  $controllerDispatcher,
+        private readonly EventDispatcher                $eventDispatcher,
+        private readonly ErrorResponder                 $errorResponder,
 	)
 	{
 	}
 
     /**
      * Handle the request through the middleware pipeline + controller dispatcher.
+     *
+     * MAY THROW - by design (outside error-handling domain)
      */
 	public function handle(Request $request): Response
 	{
-        //
-        // MAY THROW - by design
-        //
-
         //
         // mark request start time for profiling & lifecycle monitoring
         //
@@ -61,72 +70,54 @@ final class Kernel
             //
             $response = $pipeline->handle($request);
 
+            //
+            // 4. Fire early response event (may mutate response)
+            //
+            return $this->dispatchResponseEvent($request, $response);
+
         } catch (StatusException $e) {
-            //
-            // Known framework exception -> convert to safe response
-            //
-            if ($e->getCode() === StatusCode::HTTP_ROUTE_NOT_FOUND) {
-                $controller = $this->controllerDispatcher
-                    ->dispatchFallback(NotFoundController::class, $request);
+            $statusCode = $e->getStatusCodeEnum();
 
-                return $controller;
-            }
-
-            return $this->createExceptionResponse($e);
-
-		} catch (Throwable $e) {
-
-            //
-            // Pass exception to the centralized ErrorProcessor
-            // Log + process error via ErrorProcessor
-            //
-            $wrapped = new StatusException(
-                StatusCode::HTTP_KERNEL_GENERAL_FAILURE,
-                "Unhandled kernel exception: {$e->getMessage()}",
-                $e
+            $context = new ErrorContext(
+                    httpStatus: $e->getHttpStatus(),
+                    statusCode: $statusCode,
+                      category: $statusCode->category(),
+                 publicMessage: $statusCode->defaultmessage(),
+                     exception: $e,
+                         debug: [
+                            'exception_class' => get_class($e),
+                            'message' => $e->getMessage(),
+                        ]
             );
 
-            //
-            // Build an appropriate Response object
-            // convert into Response
-            //
-            return $this->createExceptionResponse($wrapped);
+            return $this->errorResponder->respond($request, $context);
+
+		} catch (Throwable $e) {
+            $statusCode = StatusCode::SERVER_INTERNAL_ERROR;
+
+            $context = new ErrorContext(
+                    httpStatus: $statusCode->valueInt(),
+                    statusCode: $statusCode,
+                      category: $statusCode->category(),
+                 publicMessage: $statusCode->defaultmessage(),
+                     exception: $e,
+                         debug: [
+                            'exception_class' => get_class($e),
+                            'message' => $e->getMessage(),
+                        ]
+            );
+
+            return $this->errorResponder->respond($request, $context);
 		}
-
-        //
-        // 4. Fire early response event-used for response transformation or logging
-        // event fired BEFORE the response is finalized
-        //
-        return $this->dispatchResponseEvent($request, $response);
-    }
-
-    /**
-     * Responsible for creating the Response object when an exception occors.
-     */
-    private function createExceptionResponse(StatusException $exception): Response
-    {
-        //
-        // In debug mode, bubble up for a detailed error page / Whoops
-        //
-        if ($this->debug) {
-            throw $exception;
-        }
-
-        //
-        // Fallback error response (safe for production)
-        //
-        return new Response(
-            $exception->getMessage(),
-            $exception->getCode()
-        );
     }
 
     /**
      * Executes after the response has already been sent to the client.
+     *
+     * This MUST NEVER THROW - by Law
      */
 	public function terminate(Request $request, Response $response): void
     {
-        // This MUST NEVER THROW - by Law
         try {
             $end = microtime(true);
             $duration = max(0.0, ($end - $request->getStartTime()));

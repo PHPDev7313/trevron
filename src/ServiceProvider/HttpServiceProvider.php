@@ -3,8 +3,8 @@
 namespace JDS\ServiceProvider;
 
 use JDS\Configuration\Config;
+use JDS\Contracts\Http\Controller\ControllerDispatchResultInterface;
 use JDS\Contracts\Middleware\RequestHandlerInterface;
-use JDS\Contracts\Routing\RouterInterface;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\EventDispatcher\EventDispatcher;
 use JDS\Http\Kernel;
@@ -19,7 +19,7 @@ use League\Container\Container;
 class HttpServiceProvider  implements ServiceProviderInterface
 {
     protected array $provides = [
-        RouterInterface::class,
+        ControllerDispatchResultInterface::class,
         RequestHandlerInterface::class,
         RouterDispatch::class,
         ExtractRouteInfo::class,
@@ -39,7 +39,7 @@ class HttpServiceProvider  implements ServiceProviderInterface
         //
         // 1. RouterInterface -> Router
         //
-        $container->add(RouterInterface::class, Route::class);
+        $container->add(ControllerDispatchResultInterface::class, Route::class);
 
         //
         // 2. RequestHandlerInterface -> RequestHandler
@@ -67,7 +67,7 @@ class HttpServiceProvider  implements ServiceProviderInterface
         //
         $container->add(RouterDispatch::class)
             ->addArguments([
-                RouterInterface::class,
+                ControllerDispatchResultInterface::class,
                 $container
             ]);
 

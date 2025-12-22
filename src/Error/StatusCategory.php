@@ -1,34 +1,46 @@
 <?php
+/*
+ * Trevron Framework — v1.2 FINAL
+ *
+ * © 2025 Jessop Digital Systems
+ * Date: December 19, 2025
+ *
+ * This file is part of the v1.2 FINAL architectural baseline.
+ * Changes require an architecture review and a version bump.
+ *
+ * See: RoutingFINALv12ARCHITECTURE.md
+ */
 
 namespace JDS\Error;
 
 enum StatusCategory: int
 {
-    case Server         = 500;
-    case Containers     = 2100;
-    case Controllers    = 2200;
-    case Authentication = 2300;
-    case Entity         = 2400;
-    case Enum           = 2500;
-    case EventListener  = 2600;
-    case Form           = 2700;
-    case Logging        = 2800;
-    case Middleware     = 2900;
-    case Provider       = 3000;
-    case Repository     = 3100;
-    case Security       = 3200;
-    case Template       = 3300;
-    case Traits         = 3400;
-    case Console        = 3500;
-    case ConsoleKernel  = 3600;
-    case Http           = 3800;
-    case HttpKernel     = 3900;
-    case Database       = 4100;
-    case Mail           = 4200;
-    case FileSystem     = 4300;
-    case Json           = 4400;
-    case Image          = 4500;
-    case Routes         = 4600;
+    case Client             = 400;
+    case Server             = 500;
+    case Containers         = 2100;
+    case Controllers        = 2200;
+    case Authentication     = 2300;
+    case Entity             = 2400;
+    case Enum               = 2500;
+    case EventListener      = 2600;
+    case Form               = 2700;
+    case Logging            = 2800;
+    case Middleware         = 2900;
+    case Provider           = 3000;
+    case Repository         = 3100;
+    case Security           = 3200;
+    case Template           = 3300;
+    case Traits             = 3400;
+    case Console            = 3500;
+    case ConsoleKernel      = 3600;
+    case Http               = 3800;
+    case HttpKernel         = 3900;
+    case Database           = 4100;
+    case Mail               = 4200;
+    case FileSystem         = 4300;
+    case Json               = 4400;
+    case Image              = 4500;
+    case Routes             = 4600;
 
     /**
      * Reverse lookup from numeric code to category
@@ -50,6 +62,16 @@ enum StatusCategory: int
         }
 
         return self::Server; // safe default for unknown category
+    }
+
+    public function key(): string
+    {
+        return $this->name;
+    }
+
+    public function valueInt(): int
+    {
+        return $this->value;
     }
 }
 

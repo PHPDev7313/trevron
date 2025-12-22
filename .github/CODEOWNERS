@@ -1,0 +1,32 @@
+# ==============================================================
+# CODEOWNERS - Jessop Digital Systems
+# ==============================================================
+# Purpose:
+# - Prevent accidental changes to architecturally fronzen code
+# - Require explicity review for high-risk subsystems
+# - Allow fast iteration elsewhere
+#
+# v1.2 FINAL governs locked areas
+# ==============================================================
+
+
+# --------------------------------------------------------------
+# 🔒 TIER 1 - ARCHITECTURALLY FROZEN (v1.2 FINAL)
+# Any change here requires deliberate approval
+# --------------------------------------------------------------
+
+/src/Http/Kernel.php                    @PHPDev7313
+/src/Http/RouteDispatcher.php           @PHPDev7313
+
+/src/Error/**                           @PHPDev7313
+
+/src/EventDispatcher/**                 @PHPDev7313
+
+/src/Contracts/**                       @PHPDev7313
+
+
+
+
+
+
+
