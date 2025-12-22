@@ -309,10 +309,25 @@ No component may assume responsibilities assigned to another section.
 
 ## 10. Version Freeze Statement
 
-Version **v1.2 FINAL** represents a frozen routing baseline.
+Version v1.2 FINAL represents a frozen architectural baseline for the routing
+and navigation system.
 
-No new concepts may be introduced without incrementing the MINOR or MAJOR version number.
+The following are ARCHITECTURALLY GUARANTEED and MUST NOT change without a
+version bump:
 
-All implementation work must conform to this specification unless explicitly superseded by a later version.
+- Route definitions are processed via ProcessRoutes
+- Routing data and navigation metadata are strictly separated
+- Navigation metadata is optional, validated, and non-behavioral
+- Routing execution does not depend on metadata
+- Breadcrumbs and navigation structures are derived exclusively from metadata
+- Routing failures fail closed via StatusCode classification
+- No component bypasses ExtractRouteInfo or ControllerResolver
+
+Any change to these guarantees REQUIRES:
+- Updated contract tests
+- Architecture review
+- A new version (v1.3+)
+
+v1.2 FINAL is considered closed and stable until at least Q2 2026.
 
 ---
