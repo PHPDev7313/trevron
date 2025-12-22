@@ -26,7 +26,11 @@ class BreadcrumbGenerator implements BreadcrumbGeneratorInterface
     public function generateBreadcrumbs(Request $request): array
     {
         // $path starts out from here
-        $path = $request->getUri(); // Get the current URI (e.g., /pec/roles)
+        $path = $this->mergeAndNormalizeRoutePath(
+            $this->routePrefix,
+            $request->getPathInfo()
+        ); // Get the current URI (e.g., /pec/roles)
+
         $breadcrumbs = [];       // Initialize breadcrumbs array
 
         // check loop while $path !== null
@@ -52,7 +56,10 @@ class BreadcrumbGenerator implements BreadcrumbGeneratorInterface
 
                     // Update `$path` to the parent path, ensuring it's normalized or null
                     $path = ($route['path'] !== null)
-                        ? $this->mergeAndNormalizeRoutePath($this->routePrefix, $route['path'])
+                        ? $this->mergeAndNormalizeRoutePath(
+                            $this->routePrefix,
+                            $route['path']
+                        )
                         : null;
 
                     $matched = true;

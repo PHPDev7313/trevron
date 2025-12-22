@@ -331,3 +331,111 @@ Any change to these guarantees REQUIRES:
 v1.2 FINAL is considered closed and stable until at least Q2 2026.
 
 ---
+
+## Routing Responsibility Boundary (v1.2 FINAL)
+
+Routing is split into three explicit responsibilities:
+
+1. **Route Definition (Application Layer)**
+  - Applications define routes using plain arrays
+  - Optional navigation metadata is allowed
+  - No framework objects are constructed in application code
+
+2. **Route Processing (Framework Layer)**
+  - `ProcessRoutes` validates and normalizes definitions
+  - Executable routes are converted into `Route` objects
+  - Navigation metadata is extracted into a separate collection
+  - Invalid metadata fails closed with `ROUTE_METADATA_INVALID`
+
+3. **Route Dispatch (Framework Layer)**
+  - Routes are registered once during bootstrap
+  - A FastRoute dispatcher is built from processed routes
+  - The dispatcher is injected into middleware
+
+---
+
+## Route Bootstrap Contract (v1.2 FINAL)
+
+Routes are registered exactly once during application bootstrap.
+
+The framework provides a bootstrap mechanism that:
+- Accepts `ProcessedRoutes`
+- Registers only executable routes with FastRoute
+- Stores the `Route` object as the FastRoute handler
+
+Example (authoritative):
+
+```php
+$processed = ProcessRoutes::process($definitions);
+
+$dispatcher = RouteBootstrap::buildDispatcher($processed);
+```
+---
+
+This **prevents future architectural drift**.
+
+---
+
+### D. Lock down ExtractRouteInfo behavior
+
+You should explicitly document the guarantees your contract tests enforce:
+
+```md
+## ExtractRouteInfo Middleware Guarantees (v1.2 FINAL)
+
+`ExtractRouteInfo` guarantees:
+
+- FOUND:
+  - Attaches the matched `Route` to the Request
+  - Attaches route parameters
+  - Delegates to the next middleware
+
+- METHOD_NOT_ALLOWED:
+  - Throws `HttpRequestMethodException` (HTTP 405)
+
+- NOT_FOUND:
+  - Throws `HttpException` (HTTP 404)
+
+- Dispatcher failure:
+  - Throws `StatusException(HTTP_ROUTE_DISPATCH_FAILURE)`
+
+No rendering, logging, or recovery occurs in this middleware.
+```
+
+---
+
+## Navigation & Breadcrumb Architecture (v1.2 FINAL)
+
+Breadcrumb generation is:
+
+- Driven exclusively by validated route metadata
+- Independent of routing execution
+- Deterministic and prefix-aware
+- Safe for use in views and templates
+
+### Guarantees
+
+- Navigation metadata is never exposed to the routing engine
+- Breadcrumbs are generated without FastRoute access
+- Deployment prefixes are handled consistently
+- Parent-child relationships are explicit via metadata
+
+The breadcrumb chain is resolved by walking metadata parents
+until the root is reached.
+
+---
+
+## Architectural Freeze Notice
+
+Routing & Navigation v1.2 is ARCHITECTURALLY FROZEN.
+
+All behavior is enforced by contract tests located at:
+
+tests/Contract/Http/Routing/RoutingV12ContractTest.php
+
+Do not modify routing, metadata, or navigation behavior without:
+- Updating the contract tests
+- Bumping the framework version
+- Updating this document
+
+
