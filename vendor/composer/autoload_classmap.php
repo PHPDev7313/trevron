@@ -4410,6 +4410,8 @@ return array(
     'Tests\\Contract\\Stubs\\Http\\Kernel\\StatusExceptionThrowingDispatcher' => $baseDir . '/tests/Contract/Stubs/Http/Kernel/StatusExceptionThrowingDispatcher.php',
     'Tests\\Contract\\Stubs\\Http\\Kernel\\SuccessfulControllerDispatcher' => $baseDir . '/tests/Contract/Stubs/Http/Kernel/SuccessfulControllerDispatcher.php',
     'Tests\\Contract\\Stubs\\Http\\Kernel\\ThrowableThrowingDispatcher' => $baseDir . '/tests/Contract/Stubs/Http/Kernel/ThrowableThrowingDispatcher.php',
+    'Tests\\Contract\\Stubs\\Http\\Routing\\FakeDispatcher' => $baseDir . '/tests/Contract/Stubs/Http/Routing/FakeDispatcher.php',
+    'Tests\\Contract\\Stubs\\Http\\Routing\\NullNextHandler' => $baseDir . '/tests/Contract/Stubs/Http/Routing/NullNextHandler.php',
     'Tests\\Stubs\\Controller\\TestController' => $baseDir . '/tests/Stubs/Controller/TestController.php',
     'Tests\\Stubs\\EventDispatcher\\FakeEvent' => $baseDir . '/tests/Stubs/EventDispatcher/FakeEvent.php',
     'Tests\\Stubs\\EventDispatcher\\FakeStoppableEvent' => $baseDir . '/tests/Stubs/EventDispatcher/FakeStoppableEvent.php',

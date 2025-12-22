@@ -5,7 +5,7 @@ schema.json
 /docs/*
 !/docs/architecture/
 !/docs/architecture/**
-/logs/*
+/logs/*.log
 framework_error.log
 /coverage/
 /vendor/pestphp/pest/.temp/

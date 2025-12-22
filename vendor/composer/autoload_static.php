@@ -4717,6 +4717,8 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'Tests\\Contract\\Stubs\\Http\\Kernel\\StatusExceptionThrowingDispatcher' => __DIR__ . '/../..' . '/tests/Contract/Stubs/Http/Kernel/StatusExceptionThrowingDispatcher.php',
         'Tests\\Contract\\Stubs\\Http\\Kernel\\SuccessfulControllerDispatcher' => __DIR__ . '/../..' . '/tests/Contract/Stubs/Http/Kernel/SuccessfulControllerDispatcher.php',
         'Tests\\Contract\\Stubs\\Http\\Kernel\\ThrowableThrowingDispatcher' => __DIR__ . '/../..' . '/tests/Contract/Stubs/Http/Kernel/ThrowableThrowingDispatcher.php',
+        'Tests\\Contract\\Stubs\\Http\\Routing\\FakeDispatcher' => __DIR__ . '/../..' . '/tests/Contract/Stubs/Http/Routing/FakeDispatcher.php',
+        'Tests\\Contract\\Stubs\\Http\\Routing\\NullNextHandler' => __DIR__ . '/../..' . '/tests/Contract/Stubs/Http/Routing/NullNextHandler.php',
         'Tests\\Stubs\\Controller\\TestController' => __DIR__ . '/../..' . '/tests/Stubs/Controller/TestController.php',
         'Tests\\Stubs\\EventDispatcher\\FakeEvent' => __DIR__ . '/../..' . '/tests/Stubs/EventDispatcher/FakeEvent.php',
         'Tests\\Stubs\\EventDispatcher\\FakeStoppableEvent' => __DIR__ . '/../..' . '/tests/Stubs/EventDispatcher/FakeStoppableEvent.php',
