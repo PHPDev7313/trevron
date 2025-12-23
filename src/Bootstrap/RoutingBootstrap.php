@@ -1,6 +1,17 @@
 <?php
+/*
+ * Trevron Framework — v1.2 FINAL
+ *
+ * © 2025 Jessop Digital Systems
+ * Date: December 23, 2025
+ *
+ * This file is part of the v1.2 FINAL architectural baseline.
+ * Changes require an architecture review and a version bump.
+ *
+ * See: BootstrapARCHITECTURE.v1.2.FINAL.md
+ */
 
-namespace JDS\Contracts\Bootstrap;
+namespace JDS\Bootstrap;
 
 use FastRoute\Dispatcher;
 use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
@@ -9,7 +20,7 @@ use JDS\Routing\ProcessedRoutes;
 use JDS\Routing\RouteBootstrap;
 use League\Container\Container;
 
-class RoutingBootstrap implements BootstrapPhaseInterface
+final class RoutingBootstrap implements BootstrapPhaseInterface
 {
     public function __construct(
         private readonly ProcessedRoutes $routes
@@ -19,7 +30,7 @@ class RoutingBootstrap implements BootstrapPhaseInterface
     {
         $dispatcher = RouteBootstrap::buildDispatcher($this->routes);
 
-        $container->add(Dispatcher::clss, $dispatcher)
+        $container->add(Dispatcher::class, $dispatcher)
             ->setShared(true);
 
         $container->add(ExtractRouteInfo::class)
