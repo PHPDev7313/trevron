@@ -11,8 +11,11 @@
  * See: BootstrapARCHITECTURE.v1.2.FINAL.md
  */
 
+declare(strict_types=1);
+
 namespace JDS\Bootstrap;
 
+use JDS\Contracts\Bootstrap\BootstrapAwareContainerInterface;
 use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
 use League\Container\Container;
 
@@ -32,14 +35,16 @@ final class BootstrapRunner
 
     public function run(): void
     {
-        foreach ($this->phase as $phase) {
-            if (!$phase instanceof BootstrapPhaseInterface) {
-                throw new \RuntimeException(
-                    'All bootstrap phses must implement BootstrapPhaseInterface.'
-                );
-            }
+        if ($this->container instanceof BootstrapAwareContainerInterface) {
+            $this->container->enterBootstrap();
+        }
 
+        foreach ($this->phase as $phase) {
             $phase->bootstrap($this->container);
+        }
+
+        if ($this->container instanceof BootstrapAwareContainerInterface) {
+            $this->container->exitBootstrap();
         }
     }
 }

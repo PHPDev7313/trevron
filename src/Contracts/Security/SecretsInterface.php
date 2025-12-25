@@ -14,5 +14,7 @@ interface SecretsInterface
      */
     public function all(): array;
 
+    public function has(string $path): bool;
+
 }
 
