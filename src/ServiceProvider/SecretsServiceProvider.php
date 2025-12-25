@@ -68,13 +68,14 @@ final class SecretsServiceProvider implements ServiceProviderInterface
         return new SecretsManager($secretsFilePath, $crypto);
     }
 
+    /** @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
     protected function loadSchema(string $schemaFilePath): array
     {
         $schema = json_decode(file_get_contents($schemaFilePath), true);
 
         if (!is_array($schema)) {
             $filename = basename($schemaFilePath);
-            throw new CryptoRuntimeException("Invalid schema file {filename} - MUST be valid JSON.");
+            throw new CryptoRuntimeException("Invalid schema file {$filename} - MUST be valid JSON.");
         }
 
         return $schema;
