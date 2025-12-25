@@ -11,6 +11,8 @@
  * See: BootstrapARCHITECTURE.v1.2.FINAL.md
  */
 
+declare(strict_types=1);
+
 namespace JDS\Contracts\Bootstrap;
 
 use League\Container\Container;

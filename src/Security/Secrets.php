@@ -4,14 +4,18 @@ namespace JDS\Security;
 
 use JDS\Contracts\Security\SecretsInterface;
 
-class Secrets implements SecretsInterface
+final class Secrets implements SecretsInterface
 {
 
     /**
      * @param array<string, mixed> $secrets
      */
-    public function __construct(private readonly array $secrets)
+    private readonly array $secrets;
+
+    public function __construct(array $secrets)
     {
+        // Defensive deep copy to prevent reference leaks
+        $this->secrets = self::deepCopy($secrets);
     }
 
     /**
@@ -36,7 +40,17 @@ class Secrets implements SecretsInterface
      */
     public function all(): array
     {
-        return $this->secrets;
+        return self::deepCopy($this->secrets);
+    }
+
+    private static function deepCopy(array $array): array
+    {
+        return unserialize(serialize($array), ['allowed_classes' => false]);
+    }
+
+    public function has(string $path): bool
+    {
+        return $this->get($path, '__missing__') !== '__missing__';
     }
 }
 

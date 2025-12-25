@@ -30,7 +30,10 @@ final class RoutingBootstrap implements BootstrapPhaseInterface
     {
         $dispatcher = RouteBootstrap::buildDispatcher($this->routes);
 
-        $container->add(Dispatcher::class, $dispatcher)
+        $container->add(Dispatcher::class)
+            ->addArgument(
+                RouteBootstrap::buildDispatcher($this->routes)
+            )
             ->setShared(true);
 
         $container->add(ExtractRouteInfo::class)
