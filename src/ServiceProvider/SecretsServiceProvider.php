@@ -21,37 +21,68 @@ final class SecretsServiceProvider implements ServiceProviderInterface
             /** @var SecretsConfigInterface $config */
             $config = $container->get(SecretsConfigInterface::class);
 
-            if (!extension_loaded('sodium')) {
-                throw new CryptoRuntimeException(
-                    "The sodium extension is required for secrets handling. [Secrets:Service:Provider]."
-                );
-            }
+            $this->assertSodiumLoaded();
 
-            $crypto = SecretsCrypto::fromBase64($config->appKeyBase64());
-            $manager = new SecretsManager(
-                $config->secretsFile(),
-                $crypto
-            );
+            $crypto = $this->makeCrypto($config->appKeyBase64());
+            $manager = $this->makeManager($config->secretsFile(), $crypto);
 
             $secretsArray = $manager->load();
 
-            $schema = json_decode(
-                file_get_contents($config->schemaFile()),
-                true,
-                512,
-                JSON_THROW_ON_ERROR
-            );
+            $schema = $this->loadSchema($config->schemaFile());
+            $validator = $this->makeValidator($schema);
 
-            $validator = new SecretsValidator($schema);
             $validator->validate($secretsArray);
 
             return new Secrets($secretsArray);
-        });
+         });
 
+        // Aliases
         $container->addShared(
             Secrets::class,
             fn () => $container->get(SecretsInterface::class)
         );
+        $container->addShared(
+            'secrets',
+            fn () => $container->get(SecretsInterface::class)
+        );
+    }
+
+    // ----- Test seams (protected, produciton safe) -----
+
+    protected function assertSodiumLoaded(): void
+    {
+        if (!extension_loaded('sodium')) {
+            throw new CryptoRuntimeException(
+                'The sodium extension is required for secrets encryption/decryption.'
+            );
+        }
+    }
+
+    protected function makeCrypto(string $appSecretKeyBase64): SecretsCrypto
+    {
+        return SecretsCrypto::fromBase64($appSecretKeyBase64);
+    }
+
+    protected function makeManager(string $secretsFilePath, SecretsCrypto $crypto): SecretsManager
+    {
+        return new SecretsManager($secretsFilePath, $crypto);
+    }
+
+    protected function loadSchema(string $schemaFilePath): array
+    {
+        $schema = json_decode(file_get_contents($schemaFilePath), true);
+
+        if (!is_array($schema)) {
+            $filename = basename($schemaFilePath);
+            throw new CryptoRuntimeException("Invalid schema file {filename} - MUST be valid JSON.");
+        }
+
+        return $schema;
+    }
+
+    protected function makeValidator(array $schema): SecretsValidator
+    {
+        return new SecretsValidator($schema);
     }
 }
 
