@@ -1,27 +1,66 @@
 <?php
+/*
+ * Trevron Framework — v1.2 FINAL
+ *
+ * © 2025 Jessop Digital Systems
+ * Date: December 27, 2025
+ *
+ * This file is part of the v1.2 FINAL architectural baseline.
+ * Changes require an architecture review and a version bump.
+ *
+ * See: BootstrapLifecycleAndInvariants.v1.2.FINAL.md
+ */
 
 namespace JDS\Security;
 
+use JDS\Contracts\Security\LockableSecretsInterface;
 use JDS\Contracts\Security\SecretsInterface;
+use JDS\Exceptions\Bootstrap\BootstrapInvariantViolationException;
 
-final class Secrets implements SecretsInterface
+final class Secrets implements SecretsInterface, LockableSecretsInterface
 {
+    private bool $locked = false;
 
-    /**
-     * @param array<string, mixed> $secrets
-     */
-    private readonly array $secrets;
+    /** @param array<string, mixed> $secrets */
+    private array $secrets;
 
     public function __construct(array $secrets)
     {
-        // Defensive deep copy to prevent reference leaks
         $this->secrets = self::deepCopy($secrets);
     }
 
-    /**
-     * @inheritDoc
-     */
+    public function lock(): void
+    {
+        $this->locked = true;
+    }
+
+    public function isLocked(): bool
+    {
+        return $this->locked;
+    }
+
     public function get(string $path, mixed $default = null): mixed
+    {
+        return $this->resolve($path, $default);
+    }
+
+    public function has(string $path): bool
+    {
+        return $this->resolve($path, '__missing__') !== '__missing__';
+    }
+
+    public function all(): array
+    {
+        if (!$this->locked) {
+            throw new BootstrapInvariantViolationException(
+                'Secrets accessed before being locked.'
+            );
+        }
+
+        return self::deepCopy($this->secrets);
+    }
+
+    private function resolve(string $path, mixed $default): mixed
     {
         $segments = explode('.', $path);
         $value = $this->secrets;
@@ -32,25 +71,12 @@ final class Secrets implements SecretsInterface
             }
             $value = $value[$segment];
         }
-        return $value;
-    }
 
-    /**
-     * @inheritDoc
-     */
-    public function all(): array
-    {
-        return self::deepCopy($this->secrets);
+        return $value;
     }
 
     private static function deepCopy(array $array): array
     {
-        return unserialize(serialize($array), ['allowed_classes' => false]);
-    }
-
-    public function has(string $path): bool
-    {
-        return $this->get($path, '__missing__') !== '__missing__';
+        return unserialize(serialize($array));
     }
 }
-

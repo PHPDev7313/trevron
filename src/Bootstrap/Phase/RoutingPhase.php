@@ -2,25 +2,29 @@
 
 namespace JDS\Bootstrap\Phase;
 
+use JDS\Contracts\Bootstrap\BoostrapPhase;
 use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
-use JDS\Http\Middleware\ExtractRouteInfo;
-use JDS\Routing\RouteBootstrap;
+use JDS\Contracts\Routing\LockableRouterInterface;
+use JDS\Exceptions\Bootstrap\BootstrapInvariantViolationException;
 use League\Container\Container;
 
 class RoutingPhase implements BootstrapPhaseInterface
 {
-    public function __construct(
-        private readonly RouteBootstrap $bootstrap
-    ) {}
+    public function phase(): BoostrapPhase
+    {
+        return BoostrapPhase::ROUTING;
+    }
 
     public function bootstrap(Container $container): void
     {
-        $dispatcher = $this->bootstrap->buildDispatcher();
+        if (!$container->has(LockableRouterInterface::class)) {
+            throw new BootstrapInvariantViolationException(
+                "Routing bootstrap missing."
+            );
+        }
 
-        $container->addShared(
-            ExtractRouteInfo::class,
-            fn () => new ExtractRouteInfo($dispatcher)
-        );
+        $router = $container->get(LockableRouterInterface::class);
+        $router->lock();
     }
 }
 

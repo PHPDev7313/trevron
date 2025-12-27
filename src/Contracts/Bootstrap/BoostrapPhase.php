@@ -13,11 +13,13 @@
 
 declare(strict_types=1);
 
-namespace JDS\Exceptions\Bootstrap;
+namespace JDS\Contracts\Bootstrap;
 
-use RuntimeException;
-
-final class BootstrapInvariantViolationException extends RuntimeException
+enum BoostrapPhase: int
 {
+    case CONFIG = 10; // configuration is loaded
+    case ROUTING = 20; // routes + dispatcher wired
+    case SECRETS = 30; // secrets validated + locked
+    case COMMANDS = 40; // console commands registered
 }
 
