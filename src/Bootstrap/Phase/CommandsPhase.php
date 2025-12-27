@@ -1,0 +1,58 @@
+<?php
+/*
+ * Trevron Framework — v1.2 FINAL
+ *
+ * © 2025 Jessop Digital Systems
+ * Date: December 27, 2025
+ *
+ * This file is part of the v1.2 FINAL architectural baseline.
+ * Changes require an architecture review and a version bump.
+ *
+ * See: BootstrapLifecycleAndInvariants.v1.2.FINAL.md
+ */
+
+declare(strict_types=1);
+
+namespace JDS\Bootstrap\Phase;
+
+use JDS\Console\CommandRegistry;
+use JDS\Contracts\Bootstrap\BoostrapPhase;
+use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
+use JDS\Contracts\Console\CommandRegistryInterface;
+use League\Container\Container;
+
+final class CommandsPhase implements BootstrapPhaseInterface
+{
+    /** @param list<class-string> $commands */
+    public function __construct(
+        private readonly array $commands
+    ) {}
+
+    public function phase(): BoostrapPhase
+    {
+        return BoostrapPhase::COMMANDS;
+    }
+
+    public function bootstrap(Container $container): void
+    {
+        $commands = $this->commands;
+
+
+        // Register populated registry lazily (NO get() here)
+        $container->addShared(CommandRegistryInterface::class, function () use ($commands) {
+            $registry = new CommandRegistry();
+
+            foreach ($commands as $commandClass) {
+                $registry->register($commandClass);
+            }
+            return $registry;
+        });
+
+        // Optional: alias concrete type too
+        $container->addShared(CommandRegistry::class, function (Container $c) {
+            return $c->get(CommandRegistryInterface::class);
+        });
+
+    }
+}
+

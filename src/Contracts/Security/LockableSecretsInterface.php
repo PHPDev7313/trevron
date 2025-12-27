@@ -11,13 +11,11 @@
  * See: BootstrapLifecycleAndInvariants.v1.2.FINAL.md
  */
 
-declare(strict_types=1);
+namespace JDS\Contracts\Security;
 
-namespace JDS\Exceptions\Bootstrap;
-
-use RuntimeException;
-
-final class BootstrapInvariantViolationException extends RuntimeException
+interface LockableSecretsInterface
 {
+    public function lock(): void;
+    public function isLocked(): bool;
 }
 
