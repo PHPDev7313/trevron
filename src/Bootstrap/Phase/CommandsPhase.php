@@ -19,6 +19,7 @@ use JDS\Console\CommandRegistry;
 use JDS\Contracts\Bootstrap\BoostrapPhase;
 use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
 use JDS\Contracts\Console\CommandRegistryInterface;
+use JDS\Exceptions\Bootstrap\BootstrapInvariantViolationException;
 use League\Container\Container;
 
 final class CommandsPhase implements BootstrapPhaseInterface
@@ -35,6 +36,13 @@ final class CommandsPhase implements BootstrapPhaseInterface
 
     public function bootstrap(Container $container): void
     {
+        if ($container->has(CommandRegistryInterface::class)) {
+            throw new BootstrapInvariantViolationException(
+                "CommandRegistry registerd more than once."
+            );
+        }
+
+        // Register fully populated, immutable registry
         $commands = $this->commands;
 
 
@@ -45,14 +53,17 @@ final class CommandsPhase implements BootstrapPhaseInterface
             foreach ($commands as $commandClass) {
                 $registry->register($commandClass);
             }
+
+            $registry->lock();
+
             return $registry;
         });
 
         // Optional: alias concrete type too
-        $container->addShared(CommandRegistry::class, function (Container $c) {
-            return $c->get(CommandRegistryInterface::class);
-        });
-
+        $container->addShared(
+            CommandRegistry::class,
+            fn (Container $c) => $c->get(CommandRegistryInterface::class)
+        );
     }
 }
 
