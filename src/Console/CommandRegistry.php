@@ -17,6 +17,7 @@ namespace JDS\Console;
 
 use JDS\Contracts\Console\Command\CommandInterface;
 use JDS\Contracts\Console\CommandRegistryInterface;
+use JDS\Exceptions\Bootstrap\BootstrapInvariantViolationException;
 use JDS\Exceptions\Console\ConsoleRuntimeException;
 
 final class CommandRegistry implements CommandRegistryInterface
@@ -26,16 +27,11 @@ final class CommandRegistry implements CommandRegistryInterface
 
     private bool $locked = false;
 
-    public function lock(): void
-    {
-        $this->locked = true;
-    }
-
     public function register(string $commandClass): void
     {
         if ($this->locked) {
-            throw new ConsoleRuntimeException(
-                "CommandRegistry is locked after bootstrap. [Console:Registry]."
+            throw new BootstrapInvariantViolationException(
+                "Commands may not be registered after the COMMAND phase. [Console:Registry]."
             );
         }
 
@@ -56,6 +52,16 @@ final class CommandRegistry implements CommandRegistryInterface
         }
     }
 
+    public function lock(): void
+    {
+        $this->locked = true;
+    }
+
+    public function isLocked(): bool
+    {
+        return $this->locked;
+    }
+
     /**
      * @inheritDoc
      */
@@ -63,5 +69,6 @@ final class CommandRegistry implements CommandRegistryInterface
     {
         return $this->commands;
     }
+
 }
 

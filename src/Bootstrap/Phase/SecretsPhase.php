@@ -19,17 +19,18 @@ class SecretsPhase implements BootstrapPhaseInterface
 
     public function bootstrap(Container $container): void
     {
-        if (!$container->has(SecretsInterface::class)) {
+        if (!$container->has(LockableSecretsInterface::class)) {
             throw new BootstrapInvariantViolationException(
-                "Secrets service not registered before SECRETS phase."
+                "Lockable secrets service must be registered before SECRETS phase."
             );
         }
 
-        $secrets = $container->get(SecretsInterface::class);
+        /** @var LockableSecretsInterface $secrets */
+        $secrets = $container->get(LockableSecretsInterface::class);
 
-        if (!$secrets instanceof LockableSecretsInterface) {
+        if ($secrets->isLocked()) {
             throw new BootstrapInvariantViolationException(
-                "Secrets implementation is not lockable."
+                "SECRETS phase executed more than once."
             );
         }
 

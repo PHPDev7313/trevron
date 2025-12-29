@@ -13,7 +13,7 @@
 
 namespace JDS\Contracts\Security;
 
-interface LockableSecretsInterface
+interface LockableSecretsInterface extends SecretsInterface
 {
     public function lock(): void;
     public function isLocked(): bool;
