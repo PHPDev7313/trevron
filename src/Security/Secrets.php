@@ -29,24 +29,14 @@ final class Secrets implements SecretsInterface, LockableSecretsInterface
         $this->secrets = self::deepCopy($secrets);
     }
 
-    public function lock(): void
-    {
-        $this->locked = true;
-    }
-
-    public function isLocked(): bool
-    {
-        return $this->locked;
-    }
-
     public function get(string $path, mixed $default = null): mixed
     {
-        return $this->resolve($path, $default);
+        return $this->read($path, $default);
     }
 
     public function has(string $path): bool
     {
-        return $this->resolve($path, '__missing__') !== '__missing__';
+        return $this->get($path, '__missing__') !== '__missing__';
     }
 
     public function all(): array
@@ -60,7 +50,24 @@ final class Secrets implements SecretsInterface, LockableSecretsInterface
         return self::deepCopy($this->secrets);
     }
 
-    private function resolve(string $path, mixed $default): mixed
+    public function lock(): void
+    {
+        if ($this->locked) {
+            throw new BootstrapInvariantViolationException(
+                "Secrets already locked."
+            );
+        }
+
+        $this->locked = true;
+    }
+
+    public function isLocked(): bool
+    {
+        return $this->locked;
+    }
+
+
+    private function read(string $path, mixed $default): mixed
     {
         $segments = explode('.', $path);
         $value = $this->secrets;
@@ -80,3 +87,4 @@ final class Secrets implements SecretsInterface, LockableSecretsInterface
         return unserialize(serialize($array));
     }
 }
+
