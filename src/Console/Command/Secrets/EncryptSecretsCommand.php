@@ -35,7 +35,7 @@ class EncryptSecretsCommand extends BaseCommand implements CommandInterface
         }
 
          if (!is_file($this->plainPath)) {
-            $file = basename($this->plainPath, '.json');
+            $file = basename($this->plainPath, '/secrets.plaintext.json');
             $this->error("Plain secrets file missing: {$file}. [Encrypt:Secrets:Command].");
             return 1;
         }
@@ -52,7 +52,7 @@ class EncryptSecretsCommand extends BaseCommand implements CommandInterface
         // Validate before encrypting
         //
         if (isset($params['validate'])) {
-            $schemaPath = dirname($this->plainPath) . 'secrets.schema.json';
+            $schemaPath = dirname($this->plainPath) . '/secrets.schema.json';
             $file = basename($schemaPath, '.json');
             if (!is_file($schemaPath)) {
                 $this->error("Schema file not found for validation: {$file}. [Encrypt:Secrets:Command].");
@@ -73,7 +73,7 @@ class EncryptSecretsCommand extends BaseCommand implements CommandInterface
 
         $manager->save($secrets);
 
-        $this->writeln("Secrets encrypted to {$this->encPath}. [Encrypt:Secrets:Command].");
+        $this->writeln("Secrets encrypted to '{$this->encPath}'.");
         return 0;
     }
 }

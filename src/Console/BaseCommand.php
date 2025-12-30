@@ -38,36 +38,35 @@ abstract class BaseCommand implements CommandInterface
 
     protected function printHelp(): void
     {
-        fwrite(STDOUT, "Command: {$this->name}\n");
+        echo "Command: {$this->name}\n";
 
         if ($this->description) {
-            fwrite(STDOUT, "{$this->description}\n\n");
+            echo "{$this->description}\n\n";
         }
 
         if (!empty($this->arguments)) {
-            fwrite(STDOUT, "Arguments:\n");
+            echo "Arguments:\n";
             foreach ($this->arguments as $arg => $desc) {
-                fwrite(STDOUT, sprintf("  %-15s %s\n", $arg, $desc));
+                echo sprintf("  %-15s %s\n", $arg, $desc);
             }
-            fwrite(STDOUT, "\n");
+            echo "\n";
         }
 
         if (!empty($this->options)) {
-            fwrite(STDOUT, "Options:\n");
+            echo "Options:\n";
             foreach ($this->options as $opt => $desc) {
-                fwrite(STDOUT, sprintf("  --%-12s %s\n", $opt, $desc));
+                echo sprintf("  --%-12s %s\n", $opt, $desc);
             }
-            fwrite(STDOUT, "\n");
+            echo "\n";
         }
 
-        fwrite(STDOUT, "Usage:\n");
-        fwrite(STDOUT, "  php bin/console {$this->name} [options]\n");
-        fwrite(STDOUT, "\n");
+        echo "Usage:\n";
+        echo "  php bin/console {$this->name} [options]\n\n";
     }
 
     protected function line(string $msg): void
     {
-        fwrite(STDOUT, $msg. PHP_EOL);
+        echo $msg. PHP_EOL;
     }
 
 
@@ -83,9 +82,10 @@ abstract class BaseCommand implements CommandInterface
 
     protected function writeln(string $message): void
     {
-        fwrite(STDOUT, $message . PHP_EOL);
+        echo $message . PHP_EOL;
     }
 
+    //❗ Leave this alone (correct as-is)
     protected function error(string $message): void
     {
         fwrite(STDERR, $message . PHP_EOL);

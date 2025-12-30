@@ -22,6 +22,7 @@ use League\Container\Container;
 final class BootstrapContainer extends Container implements BootstrapAwareContainerInterface
 {
     private bool $bootstrapping = false;
+    private bool $resolutionAllowed = false;
 
     public function enterBootstrap(): void
     {
@@ -33,12 +34,22 @@ final class BootstrapContainer extends Container implements BootstrapAwareContai
         $this->bootstrapping = false;
     }
 
+    public function allowResolution(): void
+    {
+        $this->resolutionAllowed = true;
+    }
+
+    public function forbidResolution(): void
+    {
+        $this->resolutionAllowed = false;
+    }
+
     /**
      * Guard service resolution during bootstrap
      */
     public function get($id)
     {
-        if ($this->bootstrapping) {
+        if ($this->bootstrapping && !$this->resolutionAllowed) {
             throw new BootstrapResolutionNotAllowedException(
                 "Service resolution is forbidden during bootstrap. Tried to resolve: {$id}"
             );
@@ -49,7 +60,7 @@ final class BootstrapContainer extends Container implements BootstrapAwareContai
 
     public function getNew($id, array $args = [])
     {
-        if ($this->bootstrapping) {
+        if ($this->bootstrapping && !$this->resolutionAllowed) {
             throw new BootstrapResolutionNotAllowedException(
                 "Service resolution is forbidden during bootstrap (getNew). Tried to resolve: {$id}"
             );

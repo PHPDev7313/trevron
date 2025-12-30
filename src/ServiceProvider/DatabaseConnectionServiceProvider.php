@@ -4,110 +4,124 @@ namespace JDS\ServiceProvider;
 
 use Doctrine\DBAL\Connection;
 use JDS\Configuration\Config;
-use JDS\Contracts\Security\SecretsInterface;
+use JDS\Contracts\Security\LockableSecretsInterface;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Dbal\ConnectionFactory;
 use JDS\Exceptions\Database\DatabaseRuntimeException;
 use League\Container\Argument\Literal\ArrayArgument;
 use League\Container\Container;
 
-class DatabaseConnectionServiceProvider implements ServiceProviderInterface
+final class DatabaseConnectionServiceProvider implements ServiceProviderInterface
 {
-    private array $requiredKeys = ['driver', 'host', 'port', 'dbname'];
+    private const REQUIRED_CONFIG_KEYS = [
+        'driver',
+        'host',
+        'port',
+        'dbname',
+    ];
 
-    /**
-     * The services this provider can supply
-     */
+    private const REQUIRED_SECRET_KEYS = [
+        'db.user',
+        'db.password',
+    ];
+
     protected array $provides = [
         ConnectionFactory::class,
-        Connection::class
+        Connection::class,
     ];
 
     public function register(Container $container): void
     {
-        //
-        // 1. Fetch base db config from container (driver, host, dbname, port)
-        //
+        // --------------------------------------------------
+        // 1. Config MUST exist
+        // --------------------------------------------------
         if (!$container->has(Config::class)) {
             throw new DatabaseRuntimeException(
-                "Config must be loaded before registering database connection. [Database:Connection:Service:Provider]."
+                "Config must be loaded before database connection provider. [Database:Connection:Service:Provider]."
             );
         }
 
         /** @var Config $config */
         $config = $container->get(Config::class);
 
-
         $dbConfig = $config->get('db');
 
         if (!is_array($dbConfig)) {
             throw new DatabaseRuntimeException(
-                "Database configuration is missing or invalid. Expected an array. [Database:Connection:ServiceProvider]"
+                "Database configuration missing or invalid. Expected array at config key 'db'. [Database:Connection:Service:Provider]."
             );
         }
 
-        //
-        // 2. Validate non-sensitive DB keys (driver, host, port, dbname)
-        //
-        $this->validateDatabaseConfig($dbConfig);
+        $this->validateBaseConfig($dbConfig);
 
-        //
-        // 3. Overlay credentials from encrypted secrets
-        //
-        if (!$container->has(SecretsInterface::class)) {
+        // --------------------------------------------------
+        // 2. Secrets MUST exist AND be locked
+        // --------------------------------------------------
+        if (!$container->has(LockableSecretsInterface::class)) {
             throw new DatabaseRuntimeException(
-                "Missing Secrets configuration binding. Secrets must be available before DB provider loads. [Database:Connection:Service:Provider]."
+                "Secrets must be registered before database provider. [Database:Connection:Service:Provider]."
             );
         }
 
-        /** @var SecretsInterface $secrets */
-        $secrets = $container->get(SecretsInterface::class);
+        /** @var LockableSecretsInterface $secrets */
+        $secrets = $container->get(LockableSecretsInterface::class);
 
-        $dbConfig['user'] = $secrets->get('db.user', $dbConfig['user'] ?? null);
-        $dbConfig['password'] = $secrets->get('db.password', $dbConfig['password'] ?? null);
-
-        if (!$dbConfig['user'] && !$dbConfig['password']) {
+        if (!$secrets->isLocked()) {
             throw new DatabaseRuntimeException(
-                "Database credentials (user/password) missing: could not load from secrets. [Database:Connection:Service:Provider]."
+                "Secrets must be locked before database connection can be created. [Database:Connection:Service:Provider]."
             );
         }
 
-        //
-        // 4. Register the ConnectionFactory
-        //
+        $this->validateRequiredSecrets($secrets);
+
+        // --------------------------------------------------
+        // 3. Overlay credentials from secrets (NO fallback)
+        // --------------------------------------------------
+        $dbConfig['user']     = $secrets->get('db.user');
+        $dbConfig['password'] = $secrets->get('db.password');
+
+        // --------------------------------------------------
+        // 4. Register ConnectionFactory
+        // --------------------------------------------------
         $container->add(ConnectionFactory::class)
-            ->addArgument(new ArrayArgument($dbConfig));
+            ->addArgument(new ArrayArgument($dbConfig))
+            ->setShared(true);
 
+        // --------------------------------------------------
+        // 5. Register lazy shared Connection
+        // --------------------------------------------------
+        $container->addShared(Connection::class, function () use ($container) {
+            return $container->get(ConnectionFactory::class)->create();
+        });
+    }
 
-        //
-        // 5. Register shared Doctrine connection (lazy)
-        //
-        if (!$container->has(Connection::class)) {
-            $container->addShared(Connection::class, function () use ($container) {
-                return $container->get(ConnectionFactory::class)->create();
-            });
-        }
-   }
-
-    /**
-     * Framework / League requirement.
-     */
     public function provides(string $id): bool
     {
         return in_array($id, $this->provides, true);
     }
 
-    private function validateDatabaseConfig(array $config): void
+    private function validateBaseConfig(array $config): void
     {
-        $missingKeys = array_diff($this->requiredKeys, array_keys($config));
+        $missing = array_diff(self::REQUIRED_CONFIG_KEYS, array_keys($config));
 
-        if (!empty($missingKeys)) {
+        if (!empty($missing)) {
             throw new DatabaseRuntimeException(
-                "Missing required database configuration keys (non-sensitive): " .
-                implode(', ', $missingKeys) .
+                "Missing required database config keys: " . implode(', ', $missing) .
                 ". [Database:Connection:Service:Provider]."
             );
         }
     }
+
+    private function validateRequiredSecrets(LockableSecretsInterface $secrets): void
+    {
+        foreach (self::REQUIRED_SECRET_KEYS as $key) {
+            if (!$secrets->has($key)) {
+                throw new DatabaseRuntimeException(
+                    "Missing required database secret '{$key}'. [Database:Connection:Service:Provider]."
+                );
+            }
+        }
+    }
 }
+
 

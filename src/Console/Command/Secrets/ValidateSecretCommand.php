@@ -11,10 +11,10 @@ class ValidateSecretCommand extends BaseCommand implements CommandInterface
 {
     protected string $name = 'secrets:validate';
 
-    protected string $description = 'Validate plaintext secrets against the JSON schema.';
+    protected string $description = 'Validate plaintext secrets against the required secrets structure.';
 
     protected array $options = [
-        'validate'  => 'Validate secrets against the JSON schema to make sure it complies with standards',
+        'validate'  => 'Validate secrets against the required secrets structure',
         'help'      => 'Show help for this command'
     ];
 

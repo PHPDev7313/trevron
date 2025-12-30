@@ -62,7 +62,11 @@ final class CommandsPhase implements BootstrapPhaseInterface
         // Optional: alias concrete type too
         $container->addShared(
             CommandRegistry::class,
-            fn (Container $c) => $c->get(CommandRegistryInterface::class)
+            function () use ($container) {
+                return $container->get(CommandRegistryInterface::class);
+            }
+            // this means the same thing as the function () use ...
+//            fn () => $container->get(CommandRegistryInterface::class)
         );
     }
 }
