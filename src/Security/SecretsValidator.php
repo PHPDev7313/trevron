@@ -9,7 +9,17 @@
  * Changes require an architecture review and a version bump.
  *
  * See: BootstrapLifecycleAndInvariants.v1.2.FINAL.md
- */
+  * SecretsValidator
+ *
+ * Structural validator for secrets configuration.
+ *
+ * NOTE:
+ * - This is NOT a JSON Schema validator.
+ * - The schema MUST mirror the secrets structure exactly.
+ * - All schema keys are treated as REQUIRED.
+ *
+ * This validator enforces presence and nesting only.
+*/
 
 namespace JDS\Security;
 

@@ -8,8 +8,15 @@
  * This file is part of the v1.2 FINAL architectural baseline.
  * Changes require an architecture review and a version bump.
  *
- * See: BootstrapLifecycleAndInvariants.v1.2.FINAL.md
- */
+ * See: Secrets.v1.2.FINAL.md
+ *
+  * SECURITY CRITICAL PHASE
+ *
+ * Locks all secrets for runtime.
+ * Must execute exactly once.
+ * Must execute after secrets service registration.
+ * Must never be bypassed.
+*/
 
 namespace JDS\Contracts\Security;
 

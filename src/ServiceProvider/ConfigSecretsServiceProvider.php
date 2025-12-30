@@ -1,4 +1,22 @@
 <?php
+/*
+ * Trevron Framework — v1.2 FINAL
+ *
+ * © 2025 Jessop Digital Systems
+ * Date: December 29, 2025
+ *
+ * This file is part of the v1.2 FINAL architectural baseline.
+ * Changes require an architecture review and a version bump.
+ *
+ * See: BootstrapLifecycleAndInvariants.v1.2.FINAL.md
+ *
+ * SECURITY CRITICAL PHASE
+ *
+ * This phase locks all secrets and MUST:
+ * - Run exactly once
+ * - Run after secrets service registration
+ * - Never be bypassed or reordered
+ */
 
 namespace JDS\ServiceProvider;
 

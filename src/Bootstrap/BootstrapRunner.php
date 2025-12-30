@@ -20,7 +20,6 @@ use JDS\Contracts\Bootstrap\BootstrapAwareContainerInterface;
 use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
 use JDS\Contracts\Console\CommandRegistryInterface;
 use JDS\Exceptions\Bootstrap\BootstrapInvariantViolationException;
-use JDS\Exceptions\Bootstrap\BootstrapMissingPhaseException;
 use League\Container\Container;
 
 final class BootstrapRunner
@@ -59,15 +58,25 @@ final class BootstrapRunner
 
     public function run(): void
     {
-        $this->assertRequiredPhasesPresent();
-        $this->assertPhaseOrder();
-
         if ($this->container instanceof BootstrapAwareContainerInterface) {
             $this->container->enterBootstrap();
         }
 
-        foreach ($this->phases as $k => $phase) {
+        $this->assertRequiredPhasesPresent();
+        $this->assertPhaseOrder();
+
+        foreach ($this->phases as $phase) {
+            // 🔓 Allow resolution ONLY during the phase
+            if ($this->container instanceof BootstrapContainer) {
+                $this->container->allowResolution();
+            }
+
             $phase->bootstrap($this->container);
+
+            // 🔒 Lock resolution again
+            if ($this->container instanceof BootstrapContainer) {
+                $this->container->forbidResolution();
+            }
         }
 
         if ($this->container instanceof BootstrapAwareContainerInterface) {
