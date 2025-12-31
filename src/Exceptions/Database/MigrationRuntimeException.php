@@ -6,3 +6,4 @@ class MigrationRuntimeException extends \RuntimeException
 {
 
 }
+
