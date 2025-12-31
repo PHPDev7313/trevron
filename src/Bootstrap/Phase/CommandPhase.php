@@ -29,3 +29,4 @@ class CommandPhase implements BootstrapPhaseInterface
     }
 
 }
+

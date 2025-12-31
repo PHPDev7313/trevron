@@ -113,3 +113,4 @@ final class SecretsServiceProvider implements ServiceProviderInterface
         return new SecretsValidator($schema);
     }
 }
+
