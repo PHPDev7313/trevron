@@ -27,18 +27,9 @@ final class BootstrapRunner
     /** @var BootstrapPhaseInterface[] */
     private array $phases = [];
 
-    /** @param list<BoostrapPhase> */
-    private array $registeredPhases = [];
-
-    private const REQUIRED_PHASES = [
-        BoostrapPhase::CONFIG,
-        BoostrapPhase::ROUTING,
-        BoostrapPhase::SECRETS,
-        BoostrapPhase::COMMANDS,
-    ];
-
     public function __construct(
         private readonly Container $container,
+        private array $registeredPhases
     ) {}
 
     public function addPhase(BootstrapPhaseInterface $phase): void
@@ -88,7 +79,7 @@ final class BootstrapRunner
 
     private function assertRequiredPhasesPresent(): void
     {
-        foreach (self::REQUIRED_PHASES as $required) {
+        foreach ($this->registeredPhases as $required) {
             if (!in_array($required, $this->registeredPhases, true)) {
                 throw new BootstrapInvariantViolationException(
                     "Required bootstrap phase missing: {$required->name}"
