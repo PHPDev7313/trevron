@@ -27,23 +27,31 @@ final class BootstrapRunner
     /** @var BootstrapPhaseInterface[] */
     private array $phases = [];
 
+    /** @var list<BootstrapPhase> */
+    private array $requiredPhases;
+
+    /** @var list<BootstrapPhase> */
+    private array $addedPhases = [];
+
     public function __construct(
         private readonly Container $container,
-        private array $registeredPhases
-    ) {}
+        array $requiredPhases
+    ) {
+        $this->requiredPhases = $requiredPhases;
+    }
 
     public function addPhase(BootstrapPhaseInterface $phase): void
     {
         $phaseEnum = $phase->phase();
 
         // ❌ No duplicate phases
-        if (in_array($phaseEnum, $this->registeredPhases, true)) {
+        if (in_array($phaseEnum, $this->addedPhases, true)) {
             throw new BootstrapInvariantViolationException(
                 "Duplicate bootstrap phase registerd: {$phaseEnum->name}"
             );
         }
 
-        $this->registeredPhases[] = $phaseEnum;
+        $this->addedPhases[] = $phaseEnum;
         $this->phases[] = $phase;
     }
 
@@ -79,8 +87,8 @@ final class BootstrapRunner
 
     private function assertRequiredPhasesPresent(): void
     {
-        foreach ($this->registeredPhases as $required) {
-            if (!in_array($required, $this->registeredPhases, true)) {
+        foreach ($this->requiredPhases as $required) {
+            if (!in_array($required, $this->requiredPhases, true)) {
                 throw new BootstrapInvariantViolationException(
                     "Required bootstrap phase missing: {$required->name}"
                 );
@@ -90,7 +98,11 @@ final class BootstrapRunner
 
     private function assertPhaseOrder(): void
     {
-        $values = array_map(fn(BootstrapPhase $p) => $p->value, $this->registeredPhases);
+        $values = array_map(
+            fn (BootstrapPhase $p) => $p->value,
+            $this->addedPhases
+        );
+
         $sorted = $values;
         sort($sorted);
 
