@@ -2,7 +2,7 @@
 
 namespace Tests\Stubs\Bootstrap\Phase;
 
-use JDS\Contracts\Bootstrap\BoostrapPhase;
+use JDS\Contracts\Bootstrap\BootstrapPhase;
 use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
 use JDS\Contracts\Security\LockableSecretsInterface;
 use League\Container\Container;
@@ -10,9 +10,9 @@ use League\Container\Container;
 class TestSecretsProviderPhase implements BootstrapPhaseInterface
 {
 
-    public function phase(): BoostrapPhase
+    public function phase(): BootstrapPhase
     {
-        return BoostrapPhase::CONFIG;
+        return BootstrapPhase::CONFIG;
     }
 
     public function bootstrap(Container $container): void

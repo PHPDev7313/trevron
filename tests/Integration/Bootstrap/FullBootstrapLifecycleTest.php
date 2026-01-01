@@ -6,7 +6,7 @@ use JDS\Bootstrap\BootstrapRunner;
 use JDS\Bootstrap\Phase\CommandsPhase;
 use JDS\Bootstrap\Phase\SecretsPhase;
 use JDS\Bootstrap\RoutingBootstrap;
-use JDS\Contracts\Bootstrap\BoostrapPhase;
+use JDS\Contracts\Bootstrap\BootstrapPhase;
 use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
 use JDS\Contracts\Console\CommandRegistryInterface;
 use JDS\Contracts\Security\LockableSecretsInterface;
@@ -44,15 +44,15 @@ it('runs full bootstrap lifecycle and enforces all invariants', function () {
     $runner = new BootstrapRunner($container);
 
     // ---- CONFIG (stub) ----
-    $runner->addPhase(new StubPhase(BoostrapPhase::CONFIG));
+    $runner->addPhase(new StubPhase(BootstrapPhase::CONFIG));
 
     // ---- ROUTING ----
     $runner->addPhase(new class($routingBootstrap) implements BootstrapPhaseInterface {
         public function __construct(private RoutingBootstrap $routing) {}
 
-        public function phase(): BoostrapPhase
+        public function phase(): BootstrapPhase
         {
-            return BoostrapPhase::ROUTING;
+            return BootstrapPhase::ROUTING;
         }
 
         public function bootstrap(Container $container): void

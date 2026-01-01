@@ -20,7 +20,7 @@
 
 namespace JDS\Bootstrap\Phase;
 
-use JDS\Contracts\Bootstrap\BoostrapPhase;
+use JDS\Contracts\Bootstrap\BootstrapPhase;
 use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
 use JDS\Contracts\Security\LockableSecretsInterface;
 use JDS\Exceptions\Bootstrap\BootstrapInvariantViolationException;
@@ -28,9 +28,9 @@ use League\Container\Container;
 
 final class SecretsPhase implements BootstrapPhaseInterface
 {
-    public function phase(): BoostrapPhase
+    public function phase(): BootstrapPhase
     {
-        return BoostrapPhase::SECRETS;
+        return BootstrapPhase::SECRETS;
     }
 
     public function bootstrap(Container $container): void

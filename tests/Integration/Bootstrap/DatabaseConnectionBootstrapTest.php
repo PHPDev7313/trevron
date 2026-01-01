@@ -4,7 +4,7 @@ use Doctrine\DBAL\Connection;
 use JDS\Bootstrap\BootstrapRunner;
 use JDS\Bootstrap\Phase\SecretsPhase;
 use JDS\Configuration\Config;
-use JDS\Contracts\Bootstrap\BoostrapPhase;
+use JDS\Contracts\Bootstrap\BootstrapPhase;
 use JDS\Contracts\Security\LockableSecretsInterface;
 use JDS\Exceptions\Database\DatabaseRuntimeException;
 use JDS\ServiceProvider\DatabaseConnectionServiceProvider;
@@ -50,10 +50,10 @@ it('enforces secrets lock before database provider registration', function () {
     // --------------------------------------------------
     $runner = new BootstrapRunner($container);
 
-    $runner->addPhase(new NullBootstrapPhase(BoostrapPhase::CONFIG));
-    $runner->addPhase(new NullBootstrapPhase(BoostrapPhase::ROUTING));
+    $runner->addPhase(new NullBootstrapPhase(BootstrapPhase::CONFIG));
+    $runner->addPhase(new NullBootstrapPhase(BootstrapPhase::ROUTING));
     $runner->addPhase(new SecretsPhase());
-    $runner->addPhase(new NullBootstrapPhase(BoostrapPhase::COMMANDS));
+    $runner->addPhase(new NullBootstrapPhase(BootstrapPhase::COMMANDS));
 
     $runner->run();
 

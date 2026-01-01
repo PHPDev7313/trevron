@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace JDS\Contracts\Bootstrap;
 
-enum BoostrapPhase: int
+enum BootstrapPhase: int
 {
     case CONFIG = 10; // configuration is loaded
     case ROUTING = 20; // routes + dispatcher wired

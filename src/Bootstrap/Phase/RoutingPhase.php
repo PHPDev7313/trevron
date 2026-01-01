@@ -2,7 +2,7 @@
 
 namespace JDS\Bootstrap\Phase;
 
-use JDS\Contracts\Bootstrap\BoostrapPhase;
+use JDS\Contracts\Bootstrap\BootstrapPhase;
 use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
 use JDS\Contracts\Routing\LockableRouterInterface;
 use JDS\Exceptions\Bootstrap\BootstrapInvariantViolationException;
@@ -10,9 +10,9 @@ use League\Container\Container;
 
 class RoutingPhase implements BootstrapPhaseInterface
 {
-    public function phase(): BoostrapPhase
+    public function phase(): BootstrapPhase
     {
-        return BoostrapPhase::ROUTING;
+        return BootstrapPhase::ROUTING;
     }
 
     public function bootstrap(Container $container): void

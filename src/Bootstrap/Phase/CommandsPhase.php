@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace JDS\Bootstrap\Phase;
 
 use JDS\Console\CommandRegistry;
-use JDS\Contracts\Bootstrap\BoostrapPhase;
+use JDS\Contracts\Bootstrap\BootstrapPhase;
 use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
 use JDS\Contracts\Console\CommandRegistryInterface;
 use JDS\Exceptions\Bootstrap\BootstrapInvariantViolationException;
@@ -29,9 +29,9 @@ final class CommandsPhase implements BootstrapPhaseInterface
         private readonly array $commands
     ) {}
 
-    public function phase(): BoostrapPhase
+    public function phase(): BootstrapPhase
     {
-        return BoostrapPhase::COMMANDS;
+        return BootstrapPhase::COMMANDS;
     }
 
     public function bootstrap(Container $container): void
