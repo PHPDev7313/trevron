@@ -2,16 +2,16 @@
 
 namespace Tests\Stubs\Bootstrap\Phase;
 
-use JDS\Contracts\Bootstrap\BoostrapPhase;
+use JDS\Contracts\Bootstrap\BootstrapPhase;
 use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
 use League\Container\Container;
 
 class TestRoutingPhase implements BootstrapPhaseInterface
 {
 
-    public function phase(): BoostrapPhase
+    public function phase(): BootstrapPhase
     {
-        return BoostrapPhase::ROUTING;
+        return BootstrapPhase::ROUTING;
     }
 
     public function bootstrap(Container $container): void

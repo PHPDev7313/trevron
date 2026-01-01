@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace JDS\Bootstrap\Phase;
 
-use JDS\Contracts\Bootstrap\BoostrapPhase;
+use JDS\Contracts\Bootstrap\BootstrapPhase;
 use JDS\Contracts\Bootstrap\BootstrapInvariantInterface;
 use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
 use League\Container\Container;
@@ -16,9 +16,9 @@ final class FinalizePhase implements BootstrapPhaseInterface
     {
     }
 
-    public function phase(): BoostrapPhase
+    public function phase(): BootstrapPhase
     {
-        return BoostrapPhase::FINALIZE;
+        return BootstrapPhase::FINALIZE;
     }
 
     public function bootstrap(Container $container): void

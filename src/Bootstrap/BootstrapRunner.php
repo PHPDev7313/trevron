@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace JDS\Bootstrap;
 
-use JDS\Contracts\Bootstrap\BoostrapPhase;
+use JDS\Contracts\Bootstrap\BootstrapPhase;
 use JDS\Contracts\Bootstrap\BootstrapAwareContainerInterface;
 use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
 use JDS\Contracts\Console\CommandRegistryInterface;
@@ -90,7 +90,7 @@ final class BootstrapRunner
 
     private function assertPhaseOrder(): void
     {
-        $values = array_map(fn(BoostrapPhase $p) => $p->value, $this->registeredPhases);
+        $values = array_map(fn(BootstrapPhase $p) => $p->value, $this->registeredPhases);
         $sorted = $values;
         sort($sorted);
 

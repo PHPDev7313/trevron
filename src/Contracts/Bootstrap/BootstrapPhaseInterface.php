@@ -19,7 +19,7 @@ use League\Container\Container;
 
 interface BootstrapPhaseInterface
 {
-    public function phase(): BoostrapPhase;
+    public function phase(): BootstrapPhase;
 
     public function bootstrap(Container $container): void;
 }

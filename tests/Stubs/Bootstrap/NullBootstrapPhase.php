@@ -2,17 +2,17 @@
 
 namespace Tests\Stubs\Bootstrap;
 
-use JDS\Contracts\Bootstrap\BoostrapPhase;
+use JDS\Contracts\Bootstrap\BootstrapPhase;
 use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
 use League\Container\Container;
 
 class NullBootstrapPhase implements BootstrapPhaseInterface
 {
     public function __construct(
-        private readonly BoostrapPhase $phase
+        private readonly BootstrapPhase $phase
     ) {}
 
-    public function phase(): BoostrapPhase
+    public function phase(): BootstrapPhase
     {
         return $this->phase;
     }
