@@ -3,6 +3,7 @@
 namespace JDS\Console;
 
 use JDS\Contracts\Console\Command\CommandInterface;
+use JDS\Contracts\Console\CommandRegistryInterface;
 use JDS\Exceptions\Console\ConsoleRuntimeException;
 use JDS\Processing\ErrorProcessor;
 use League\Container\Container;
@@ -92,12 +93,12 @@ final class Kernel
 
     private function registerCommandFromRegistry(): void
     {
-        if (!$this->container->has(CommandRegistry::class)) {
+        if (!$this->container->has(CommandRegistryInterface::class)) {
             // Console may be intentionally disabled
             return;
         }
 
-        $registry = $this->container->get(CommandRegistry::class);
+        $registry = $this->container->get(CommandRegistryInterface::class);
 
         foreach ($registry->all() as $commandClass) {
             try {
