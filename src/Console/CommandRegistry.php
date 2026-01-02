@@ -19,9 +19,16 @@ use JDS\Contracts\Console\Command\CommandInterface;
 use JDS\Contracts\Console\CommandRegistryInterface;
 use JDS\Exceptions\Bootstrap\BootstrapInvariantViolationException;
 use JDS\Exceptions\Console\ConsoleRuntimeException;
+use League\Container\Container;
 
 final class CommandRegistry implements CommandRegistryInterface
 {
+    public function __construct(
+        private readonly Container $container
+    )
+    {
+    }
+
     /** @var class-string<CommandInterface>[] */
     private array $commands = [];
 
@@ -70,5 +77,63 @@ final class CommandRegistry implements CommandRegistryInterface
         return $this->commands;
     }
 
+    public function dispatchFromArgv(array $argv): int
+    {
+        // argv[0] = script name
+        // argv[1] = command name
+        $commandName = $argv[1] ?? null;
+
+        if (!is_string($commandName) || $commandName === '') {
+            throw new ConsoleRuntimeException(
+                "No command specified. [Command:Registry]."
+            );
+        }
+
+        // Ensure command was registerd
+        if (!in_array($this->resolveCommandClass($commandName), $this->commands, true)) {
+            throw new ConsoleRuntimeException(
+                "Unknown command '{$commandName}'. [Command:Registry]."
+            );
+        }
+
+        // Resolve command from container by name
+
+        if (!$this->container->has($commandName)) {
+            throw new ConsoleRuntimeException(
+                "Command '{$commandName}' not bound in container. [Command:Registry]."
+            );
+        }
+
+        /** @var CommandInterface $command */
+        $command = $this->container->get($commandName);
+
+        // Parse CLI options: --flag
+        $params = [];
+        foreach (array_slice($argv, 2) as $arg) {
+            if (str_starts_with($arg, '--')) {
+                $params[ltrim($arg, '-')] = true;
+            }
+        }
+
+        return $command->execute($params);
+    }
+
+    private function resolveCommandClass(string $commandName): string
+    {
+        foreach ($this->commands as $class) {
+            if (!property_exists($class, 'name')) {
+                continue;
+            }
+
+            $reflection = new \ReflectionClass($class);
+            $property = $reflection->getProperty('name');
+
+            if ($property->isDefault() && $property->getDefaultValue() === $commandName) {
+                return $class;
+            }
+        }
+
+        return '';
+    }
 }
 
