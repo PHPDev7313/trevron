@@ -1,4 +1,4 @@
-# Architecture Specification
+# Console Bootstrap Lifecycle - v1.2 FINAL
 
 Project: Trevron Framework
 
@@ -13,6 +13,8 @@ Effective Date: January 3, 2026
 Owner: Mr J (Jessop Digital Systems)
 
 © 2026 Jessop Digital Systems
+
+---
 
 ## Overview
 
@@ -43,6 +45,51 @@ Failure to satisfy any invariant results in a **hard bootstrap failure**.
 
 ---
 
+## Console Execution Modes
+
+The Console runtime operates in one of two **explicit modes**:
+
+### 1. Secrets Tooling Mode (`secrets:*`)
+
+Triggered when:
+
+```
+argv[1] starts with "secrets:"
+```
+
+**Characteristics**
+
+* Secrets schema and crypto configuration are required
+* Runtime `SecretsInterface` MUST NOT be resolved
+* Encrypted secrets file MAY be absent
+* Commands operate directly on secrets tooling
+
+This mode exists to allow:
+
+* Encryption
+* Decryption
+* Validation
+* Editing
+
+Without requiring runtime secret availability.
+
+---
+
+### 2. Runtime Command Mode (Default)
+
+Triggered when command is **not** `secrets:*`.
+
+**Characteristics**
+
+* Encrypted secrets file MUST exist
+* Secrets MUST be decrypted, validated, and locked
+* Database access is permitted
+* Runtime commands may execute
+
+Failure to distinguish these modes is a **security violation**.
+
+---
+
 ## Phase Definitions
 
 ### 1. CONFIG (Required)
@@ -59,10 +106,24 @@ Failure to satisfy any invariant results in a **hard bootstrap failure**.
 * No secrets resolved
 * No commands registered
 
+**Additional Guarantees**
+
+* Required environment variables are present and non-empty
+* Invalid or missing `.env` values cause immediate failure
+
+Required Console variables include (non-exhaustive):
+
+* `APP_ENV`
+* `APP_SECRET_KEY`
+* `SECRETS_FILE`
+* `SECRETS_PLAIN`
+* `SCHEMA_FILE`
+
 **Violations**
 
 * Missing config → fatal
 * Resolution during CONFIG → fatal
+* Missing required environment variables → fatal
 
 ---
 
@@ -75,6 +136,7 @@ Failure to satisfy any invariant results in a **hard bootstrap failure**.
 * Enforce cryptographic readiness
 
 **Why required**
+
 Console commands:
 
 * Require database credentials
@@ -122,13 +184,13 @@ Skipping secrets in Console is a **security violation**.
 
 ---
 
-## Non‑Repeatable Phase Rule
+## Non-Repeatable Phase Rule
 
 The following phase is **explicitly non-repeatable**:
 
 * `BootstrapPhase::COMMANDS`
 
-Reason:
+**Reason**
 
 * Command registration must be deterministic
 * Duplicate registration introduces security ambiguity
@@ -140,16 +202,16 @@ BootstrapRunner enforces:
 
 ---
 
-## Console‑Only Rules
+## Console-Only Rules
 
 The Console runtime differs from HTTP in critical ways:
 
-| Aspect            | HTTP  | Console       |
-|-------------------|-------|---------------|
-| Secrets optional  | Yes   | **No**        |
-| Commands phase    | No    | **Yes**       |
-| Registry locking  | N/A   | **Required**  |
-| Direct execution  | No    | **Yes**       |
+| Aspect            | HTTP   | Console      |
+|-------------------|--------|--------------|
+| Secrets optional  | Yes    | **No**       |
+| Commands phase    | No     | **Yes**      |
+| Registry locking  | N/A    | **Required** |
+| Direct execution  | No     | **Yes**      |
 
 ---
 
@@ -179,6 +241,43 @@ The Console runtime differs from HTTP in critical ways:
 
 ---
 
+## Bootstrap Verification
+
+The Console runtime provides a mandatory verification command:
+
+```
+php bin/console bootstrap:verify
+```
+
+**Purpose**
+
+* Validate all Console bootstrap invariants
+* Ensure container correctness
+* Detect misconfiguration early
+
+**Characteristics**
+
+* Read-only
+* No state mutation
+* No command execution
+* No side effects
+
+**Failure Behavior**
+
+Any invariant violation causes:
+
+* Immediate failure
+* Non-zero exit code
+* No runtime execution
+
+This command is intended for:
+
+* CI pipelines
+* Deployment checks
+* Developer diagnostics
+
+---
+
 ## Forbidden Actions
 
 The following are architectural violations:
@@ -193,9 +292,22 @@ Each violation must raise a **BootstrapInvariantViolationException**.
 
 ---
 
+## Failure Semantics
+
+On any bootstrap invariant violation:
+
+* Execution MUST halt immediately
+* No command execution may occur
+* Exit code MUST be non-zero
+* Partial container state MUST NOT persist
+
+Silent degradation is forbidden.
+
+---
+
 ## Summary (Hard Rules)
 
-* Console **always** runs CONFIG → SECRETS → COMMANDS
+* Console **always** runs `CONFIG → SECRETS → COMMANDS`
 * SECRETS is **never optional** in Console
 * COMMANDS is **final and immutable**
 * Phases are **instructions**, not services
@@ -204,4 +316,3 @@ Each violation must raise a **BootstrapInvariantViolationException**.
 This lifecycle is frozen for v1.2 FINAL.
 
 Any change requires a version bump and architecture review.
-
