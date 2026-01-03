@@ -919,7 +919,6 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\Bootstrap\\Invariant\\RoutingInvariant' => __DIR__ . '/../..' . '/src/Bootstrap/Invariant/RoutingInvariant.php',
         'JDS\\Bootstrap\\Invariant\\SecretsInvariant' => __DIR__ . '/../..' . '/src/Bootstrap/Invariant/SecretsInvariant.php',
         'JDS\\Bootstrap\\Phase\\CommandPhase' => __DIR__ . '/../..' . '/src/Bootstrap/Phase/CommandPhase.php',
-        'JDS\\Bootstrap\\Phase\\CommandsPhase' => __DIR__ . '/../..' . '/src/Bootstrap/Phase/CommandsPhase.php',
         'JDS\\Bootstrap\\Phase\\ConfigPhase' => __DIR__ . '/../..' . '/src/Bootstrap/Phase/ConfigPhase.php',
         'JDS\\Bootstrap\\Phase\\ConsoleCommandPhase' => __DIR__ . '/../..' . '/src/Bootstrap/Phase/ConsoleCommandPhase.php',
         'JDS\\Bootstrap\\Phase\\FinalizePhase' => __DIR__ . '/../..' . '/src/Bootstrap/Phase/FinalizePhase.php',
