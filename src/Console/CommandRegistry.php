@@ -89,15 +89,22 @@ final class CommandRegistry implements CommandRegistryInterface
             );
         }
 
-        // Ensure command was registerd
-        if (!in_array($this->resolveCommandClass($commandName), $this->commands, true)) {
+        $commandClass = $this->resolveCommandClass($commandName);
+
+        if ($commandClass === '') {
             throw new ConsoleRuntimeException(
                 "Unknown command '{$commandName}'. [Command:Registry]."
             );
         }
 
-        // Resolve command from container by name
+        // Ensure command was registerd
+        if (!in_array($commandName, $this->commands, true)) {
+            throw new ConsoleRuntimeException(
+                "Command '{$commandName}' is not registered. [Command:Registry]."
+            );
+        }
 
+        // Resolve command from container by name
         if (!$this->container->has($commandName)) {
             throw new ConsoleRuntimeException(
                 "Command '{$commandName}' not bound in container. [Command:Registry]."
@@ -109,10 +116,26 @@ final class CommandRegistry implements CommandRegistryInterface
 
         // Parse CLI options: --flag
         $params = [];
+
         foreach (array_slice($argv, 2) as $arg) {
-            if (str_starts_with($arg, '--')) {
-                $params[ltrim($arg, '-')] = true;
+            if (!is_string($arg)) {
+                continue;
             }
+
+            if (str_starts_with($arg, '--')) {
+                throw new ConsoleRuntimeException(
+                    "Invalid argument '{$arg}'. Only '--flag' options are supported. [Command:Registry]."
+                );
+            }
+
+            $key = ltrim($arg, '-');
+
+            if ($key === '') {
+                throw new ConsoleRuntimeException(
+                    "Invalid flag '--'. [Command:Registry]."
+                );
+            }
+            $params[$key] = true;
         }
 
         return $command->execute($params);

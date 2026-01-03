@@ -21,5 +21,13 @@ enum BootstrapPhase: int
     case ROUTING = 20; // routes + dispatcher wired
     case SECRETS = 30; // secrets validated + locked
     case COMMANDS = 40; // console commands registered
+
+    public function isRepeatable(): bool
+    {
+        return match ($this) {
+            self::COMMANDS => false,
+            default => false, // v1.2 FINAL: All phases are non-repeatable
+        };
+    }
 }
 

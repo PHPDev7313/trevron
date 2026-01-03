@@ -2,13 +2,14 @@
 /*
  * Trevron Framework — v1.2 FINAL
  *
- * © 2025 Jessop Digital Systems
- * Date: December 27, 2025
+ * © 2026 Jessop Digital Systems
+ * Date: January 3, 2026
  *
  * This file is part of the v1.2 FINAL architectural baseline.
  * Changes require an architecture review and a version bump.
  *
  * See: BootstrapLifecycleAndInvariants.v1.2.FINAL.md
+ * See: ConsoleBootstrapLifecycle.v1.2.FINAL.md
  */
 
 declare(strict_types=1);
@@ -28,6 +29,9 @@ final class BootstrapRunner
     private array $phases = [];
 
     /** @var list<BootstrapPhase> */
+    private array $registeredPhases = [];
+
+    /** @var list<BootstrapPhase> */
     private array $requiredPhases;
 
     /** @var list<BootstrapPhase> */
@@ -45,10 +49,12 @@ final class BootstrapRunner
         $phaseEnum = $phase->phase();
 
         // ❌ No duplicate phases
-        if (in_array($phaseEnum, $this->addedPhases, true)) {
-            throw new BootstrapInvariantViolationException(
-                "Duplicate bootstrap phase registerd: {$phaseEnum->name}"
-            );
+        if (in_array($phaseEnum, $this->registeredPhases, true)) {
+            if (!$phaseEnum->isRepeatable()) {
+                throw new BootstrapInvariantViolationException(
+                    "Bootstrap phase {$phaseEnum->name} is non-repeatable and was registered more than once."
+                );
+            }
         }
 
         $this->addedPhases[] = $phaseEnum;

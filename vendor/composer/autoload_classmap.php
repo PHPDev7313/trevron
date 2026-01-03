@@ -612,7 +612,6 @@ return array(
     'JDS\\Bootstrap\\Invariant\\RoutingInvariant' => $baseDir . '/src/Bootstrap/Invariant/RoutingInvariant.php',
     'JDS\\Bootstrap\\Invariant\\SecretsInvariant' => $baseDir . '/src/Bootstrap/Invariant/SecretsInvariant.php',
     'JDS\\Bootstrap\\Phase\\CommandPhase' => $baseDir . '/src/Bootstrap/Phase/CommandPhase.php',
-    'JDS\\Bootstrap\\Phase\\CommandsPhase' => $baseDir . '/src/Bootstrap/Phase/CommandsPhase.php',
     'JDS\\Bootstrap\\Phase\\ConfigPhase' => $baseDir . '/src/Bootstrap/Phase/ConfigPhase.php',
     'JDS\\Bootstrap\\Phase\\ConsoleCommandPhase' => $baseDir . '/src/Bootstrap/Phase/ConsoleCommandPhase.php',
     'JDS\\Bootstrap\\Phase\\FinalizePhase' => $baseDir . '/src/Bootstrap/Phase/FinalizePhase.php',
