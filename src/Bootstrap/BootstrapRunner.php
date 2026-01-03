@@ -94,7 +94,7 @@ final class BootstrapRunner
     private function assertRequiredPhasesPresent(): void
     {
         foreach ($this->requiredPhases as $required) {
-            if (!in_array($required, $this->requiredPhases, true)) {
+            if (!in_array($required, $this->addedPhases, true)) {
                 throw new BootstrapInvariantViolationException(
                     "Required bootstrap phase missing: {$required->name}"
                 );
