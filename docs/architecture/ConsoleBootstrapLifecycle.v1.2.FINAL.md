@@ -4,7 +4,7 @@ Project: Trevron Framework
 
 Document: Console Bootstrap Lifecycle — v1.2 FINAL
 
-**Version: v1.2 FINAL**
+Version: **v1.2 FINAL**
 
 Status: **ARCHITECTURALLY FROZEN**
 
@@ -30,9 +30,8 @@ This document is authoritative.
 
 The Console runtime enforces the following invariant phase set:
 
-```
 CONFIG  →  SECRETS  →  COMMANDS
-```
+
 
 These phases are:
 
