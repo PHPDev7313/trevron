@@ -54,13 +54,26 @@ final class CommandPhase implements BootstrapPhaseInterface
         // -----------------------------------------------------------
         // SECRETS - must exist AND be locked
         // -----------------------------------------------------------
-        if (!$container->has(SecretsInterface::class)) {
-            throw new BootstrapInvariantViolationException(
-                "Command Phase invariant violation: Secrets Interface missing. [Command:Phase]."
-            );
+        $isSecretsTooling = $container->has('console.is_secrets_command')
+            && $container->get('console.is_secrets_command') === true;
+
+        if (!$isSecretsTooling) {
+            // Tooling mode: SecretsInterface MUST NOT EXIST
+            if ($container->has(SecretsInterface::class)) {
+                throw new BootstrapInvariantViolationException(
+                    "Command Phase invariant violation: Secrets Interface must not be registered during secrets tooling. [Command:Phase]."
+                );
+            }
+        } else {
+            // Runtime mode: SecretsInterface MUST exist and resolve
+            if (!$container->has(SecretsInterface::class)) {
+                throw new BootstrapInvariantViolationException(
+                    "Command Phase invariant violation: Secrets Interface missing. [Command:Phase]."
+                );
+            }
         }
 
-        // resolving here is INTENTIONAL: validates key, schema file
+        // INTENTIONAL resolution (validates crypto + schema)
         $container->get(SecretsInterface::class);
 
         // ------------------------------------------------------------
