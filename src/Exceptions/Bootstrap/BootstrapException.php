@@ -13,7 +13,9 @@
 
 namespace JDS\Exceptions\Bootstrap;
 
-abstract class BootstrapExecption extends \RuntimeException
+use RuntimeException;
+
+abstract class BootstrapException extends RuntimeException
 {
     // Marker base class for all bootstrap-level failures
 }
