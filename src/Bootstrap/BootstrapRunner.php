@@ -9,7 +9,7 @@
  * Changes require an architecture review and a version bump.
  *
  * See: BootstrapLifecycleAndInvariants.v1.2.FINAL.md
- * See: ConsoleBootstrapLifecycle.v1.2.FINAL.md
+ *    : ConsoleBootstrapLifecycle.v1.2.FINAL.md
  */
 
 declare(strict_types=1);

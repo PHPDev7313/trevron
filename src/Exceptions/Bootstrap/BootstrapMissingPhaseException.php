@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace JDS\Exceptions\Bootstrap;
 
-use JDS\Exceptions\Bootstrap\BootstrapExecption;
+use JDS\Exceptions\Bootstrap\BootstrapException;
 
-final class BootstrapMissingPhaseException extends BootstrapExecption
+final class BootstrapMissingPhaseException extends BootstrapException
 {
     public function __construct(string $message)
     {
