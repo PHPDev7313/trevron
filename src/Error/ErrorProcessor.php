@@ -59,35 +59,3 @@ class ErrorProcessor
     }
 }
 
-
-
-
-// }
-
-//        $exitCode = 222;
-//        // maintain for proper error tracking
-//        if ($logger instanceof ExceptionLogger === false) {
-//            throw new HandlerRuntimeException("Logger must be an instance of Exception Logger.", $exitCode);
-//        }
-//        self::$logger = $logger;
-//        self::$isInitialized = true;
-//
-//
-//public static function process(
-//        Throwable $exception,
-//        int $code,
-//        string $userMessage = 'An error occurred.',
-//        string $level = 'error'
-//    ): void
-//    {
-//        if (!self::$isInitialized) {
-//            $exitCode = 221;
-//            throw new HandlerRuntimeException("ErrorProcessor is not initialized. Call 'initialize' first.", $exitCode);
-//        }
-//        $message = self::$logger->log($code, $userMessage, $level, $exception);
-//        ExceptionHandler::render($exception, $message);
-//    }
-
-
-
-
