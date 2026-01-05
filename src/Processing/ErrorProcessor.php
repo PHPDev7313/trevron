@@ -14,6 +14,7 @@
 
 namespace JDS\Processing;
 
+use JDS\Error\StatusCode;
 use JDS\Exceptions\Handlers\HandlerRuntimeException;
 use JDS\Handlers\ExceptionHandler;
 use JDS\Logging\ExceptionLogger;
@@ -29,10 +30,10 @@ class ErrorProcessor
         ExceptionLogger $logger
     ): void
     {
-        $exitCode = 222;
         // maintain for proper error tracking
         if ($logger instanceof ExceptionLogger === false) {
-            throw new HandlerRuntimeException("Logger must be an instance of Exception Logger.", $exitCode);
+            $exitCode = StatusCode::CONSOLE_KERNEL_INVALID_LOGGER_INSTANCE; // 222
+            throw new HandlerRuntimeException("Logger must be an instance of Exception Logger.", $exitCode->value);
         }
         self::$logger = $logger;
         self::$isInitialized = true;
@@ -40,16 +41,16 @@ class ErrorProcessor
 
     public static function process(
         Throwable $exception,
-        int $code,
+        StatusCode $code,
         string $userMessage = 'An error occurred.',
         string $level = 'error'
     ): void
     {
         if (!self::$isInitialized) {
-            $exitCode = 221;
-            throw new HandlerRuntimeException("ErrorProcessor is not initialized. Call 'initialize' first.", $exitCode);
+            $exitCode = StatusCode::CONSOLE_KERNEL_PROCESSOR_NOT_INITIALIZED; // 221
+            throw new HandlerRuntimeException("ErrorProcessor is not initialized. Call 'initialize' first.", $exitCode->value);
         }
-        $message = self::$logger->log($code, $userMessage, $level, $exception);
+        $message = self::$logger->log($code->value, $userMessage, $level, $exception);
         ExceptionHandler::render($exception, $message);
     }
 }

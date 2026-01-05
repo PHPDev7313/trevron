@@ -2,10 +2,10 @@
 
 namespace JDS\Console;
 
+use JDS\Error\StatusCode;
 use JDS\Exceptions\Console\ConsoleException;
 use JDS\Processing\ErrorProcessor;
 use League\Container\Container;
-
 
 class Application
 {
@@ -51,13 +51,13 @@ class Application
             return $command->execute($options);
 
         } catch (ConsoleException $e) {
-            $exitCode = 80;
-            ErrorProcessor::process($e, $exitCode, $e->getMessage());
-            return $exitCode;
+            $code = StatusCode::CONSOLE_COMMAND_REGISTRATION_FAILED;
+            ErrorProcessor::process($e, $code, $e->getMessage());
+            return $code->value;
         } catch (\Throwable $e) {
-            $exitCode = 89;
-            ErrorProcessor::process($e, $exitCode, "An Unexpected error occurred.");
-            return $exitCode;
+            $code = StatusCode::CONSOLE_KERNEL_PROCESSOR_ERROR;
+            ErrorProcessor::process($e, $code, "An Unexpected error occurred.");
+            return $code->value;
         }
 	}
 
@@ -96,27 +96,4 @@ class Application
         echo "Use --help after any command to see specific usage.\n";
     }
 }
-
-
-
-
-//            // check if the argument starts with '--' to identify it as an option
-//			if (str_starts_with($arg, '--')) {
-//				// split the option into key and value (if any)
-//				[$key, $value] = array_pad(explode('=', substr($arg, 2), 2), 2, null);
-//                // validate the option key presence
-//                if (empty($key)) {
-//                    throw new ConsoleException('Option name is missing');
-//                }
-//				// if an option has a value, ensure it follows the validation rule
-//				if (!is_null($value) && (int)$value < 1)  {
-//					throw new ConsoleException("Option  '{$key}' has an invalid value '{$value}'.");
-//				}
-//                // set the option value, 'true' is the default when no value is provided
-//				$options[$key] = $value ?? true;
-//			}
-//		}
-//		return $options;
-
-
 
