@@ -44,7 +44,7 @@ class LoggingServiceProvider implements ServiceProviderInterface
         /** @var Config $config */
         $config = $container->get(Config::class);
 
-        $loggerConfig = $config->get("loggers");
+        $loggerConfig = $config->get("logging.loggers");
 
         if (!is_array($loggerConfig) || empty($loggerConfig)) {
             throw new LoggerRuntimeException(
