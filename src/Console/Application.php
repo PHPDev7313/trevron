@@ -58,11 +58,6 @@ class Application
         } catch (\Throwable $e) {
             $code = StatusCode::CONSOLE_KERNEL_PROCESSOR_ERROR;
 
-            // 🔎 TEMPORARY: surface root cause during development
-            if ($this->container->has(Config::class)
-                && $this->container->get(Config::class)->isDevelopment()) {
-                throw $e;
-            }
             ErrorProcessor::process($e, $code, "An Unexpected error occurred. [Application].");
             return $code->value;
         }
