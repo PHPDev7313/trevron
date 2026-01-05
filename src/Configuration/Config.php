@@ -39,7 +39,7 @@ class Config implements ConfigInterface
     public function __construct(private array $config = [])
     {
         // validate and ensure the environment key has a valid value, or set a default
-        $env = $config["environment"] ?? null;
+        $env = $config['app']["environment"] ?? null;
 
         $this->environment = $this->validateEnvironment($env);
 

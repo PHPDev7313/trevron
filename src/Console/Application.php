@@ -2,6 +2,7 @@
 
 namespace JDS\Console;
 
+use JDS\Configuration\Config;
 use JDS\Error\StatusCode;
 use JDS\Exceptions\Console\ConsoleException;
 use JDS\Processing\ErrorProcessor;
@@ -56,7 +57,13 @@ class Application
             return $code->value;
         } catch (\Throwable $e) {
             $code = StatusCode::CONSOLE_KERNEL_PROCESSOR_ERROR;
-            ErrorProcessor::process($e, $code, "An Unexpected error occurred.");
+
+            // 🔎 TEMPORARY: surface root cause during development
+            if ($this->container->has(Config::class)
+                && $this->container->get(Config::class)->isDevelopment()) {
+                throw $e;
+            }
+            ErrorProcessor::process($e, $code, "An Unexpected error occurred. [Application].");
             return $code->value;
         }
 	}

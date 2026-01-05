@@ -41,6 +41,10 @@ class LoggingServiceProvider implements ServiceProviderInterface
             );
         }
 
+        if (!$container->has(ExceptionHandler::class)) {
+            $container->add(ExceptionHandler::class);
+        }
+
         /** @var Config $config */
         $config = $container->get(Config::class);
 
