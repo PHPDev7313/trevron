@@ -1,4 +1,16 @@
 <?php
+/*
+ * Trevron Framework — v1.2 FINAL
+ *
+ * © 2026 Jessop Digital Systems
+ * Date: January 5, 2026
+ *
+ * This file is part of the v1.2 FINAL architectural baseline.
+ * Changes require an architecture review and a version bump.
+ *
+ * See: BootstrapLifecycleAndInvariants.v1.2.FINAL.md
+ *    : ConsoleBootstrapLifecycle.v1.2.2.FINAL.md
+ */
 
 namespace JDS\Processing;
 
