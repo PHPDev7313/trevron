@@ -1,10 +1,10 @@
-# Console Bootstrap Lifecycle - v1.2 FINAL
+# Console Bootstrap Lifecycle - v1.2.0 FINAL
 
 Project: Trevron Framework
 
-Document: Console Bootstrap Lifecycle — v1.2 FINAL
+Document: Console Bootstrap Lifecycle — v1.2.0 FINAL
 
-Version: **v1.2 FINAL**
+Version: **v1.2.0 FINAL**
 
 Status: **ARCHITECTURALLY FROZEN**
 
@@ -18,7 +18,7 @@ Owner: Mr J (Jessop Digital Systems)
 
 ## Overview
 
-This document defines the **non-negotiable bootstrap invariants** for the **Console runtime** in Trevron v1.2 FINAL.
+This document defines the **non-negotiable bootstrap invariants** for the **Console runtime** in Trevron v1.2.0 FINAL.
 
 Console execution is **stateful, privileged, and destructive by nature** (database access, secrets mutation, migrations). For that reason, the console bootstrap lifecycle is **stricter** than HTTP.
 
@@ -312,6 +312,6 @@ Silent degradation is forbidden.
 * Phases are **instructions**, not services
 * Kernel executes only after invariants are satisfied
 
-This lifecycle is frozen for v1.2 FINAL.
+This lifecycle is frozen for v1.2.0 FINAL.
 
 Any change requires a version bump and architecture review.

@@ -1,10 +1,10 @@
-# Console Bootstrap Lifecycle — v1.2 FINAL
+# Console Bootstrap Lifecycle — v1.2.1 FINAL
 
 Project: **Trevron Framework**
 
-Document: **Console Bootstrap Lifecycle — v1.2 FINAL**
+Document: **Console Bootstrap Lifecycle — v1.2.1 FINAL**
 
-Version: **v1.2 FINAL**
+Version: **v1.2.1 FINAL**
 
 Status: **ARCHITECTURALLY FROZEN**
 
