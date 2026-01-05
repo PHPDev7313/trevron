@@ -22,7 +22,8 @@ use League\Container\Container;
 
 final class BootstrapDumpCommand implements CommandInterface
 {
-    protected static string $name = "bootstrap:dump";
+    protected string $name = "bootstrap:dump";
+    protected string $description = "Dump bootstrap file";
 
     public function __construct(
         private readonly Container $container
