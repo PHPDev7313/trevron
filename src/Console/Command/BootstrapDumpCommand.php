@@ -72,7 +72,7 @@ final class BootstrapDumpCommand implements CommandInterface
                 continue;
             }
 
-            $commands[] = $commandClass::$name;
+            $commands[] = $commandClass->name;
         }
         sort($commands);
 
