@@ -105,25 +105,42 @@ class ExtractRouteInfo implements MiddlewareInterface
 
     private function mergeAndNormalizeRoutePath(string $routePath, string $route): string
     {
-        $routePath = trim($routePath, '/');
-        $route = '/' . ltrim($route, '/');
+        // Normalize inputs
+        $routePath = trim(str_replace('\\', '/', $routePath), '/');
+        $route = trim(str_replace('\\', '/', $route), '/');
 
-        // prevent duplicate base path
-        if ($routePath !== '') {
-            $pattern = '#^/' . preg_quote($routePath, '#') . '(/|$)#';
-            $route = preg_replace($pattern, '/', $route);
+        // Split into segments
+        $baseSegments  = $routePath !== '' ? explode('/', $routePath) : [];
+        $routeSegments = $route !== '' ? explode('/', $route) : [];
+
+        // Remove ALL occurrences of base segments from route
+        if ($baseSegments !== []) {
+            $routeSegments = array_values(
+                array_filter(
+                    $routeSegments,
+                    fn ($segment) => !in_array($segment, $baseSegments, true)
+                )
+            );
         }
 
-        // Rebuild with base path exactly once
-        $final = '/' . ($routePath !== '' ? $routePath . '/' : '') . ltrim($route, '/');
+        // Merge base first, route second
+        $finalSegments = array_merge($baseSegments, $routeSegments);
 
-        // normalize slashes
-        $final = preg_replace('#/+#', '/', $final);
+        // Root route
+        if ($finalSegments === []) {
+            return '/';
+        }
 
-        // preserve trailing slash for root
-        return $route === '/' ? rtrim($final, '/') . '/' : rtrim($final, '/');
+        // Rebuild
+        $final = '/' . implode('/', $finalSegments);
+
+        // Preserve trailing slash semantics
+        if ($route === '') {
+            return rtrim($final, '/') . '/';
+        }
+
+        return rtrim($final, '/');
     }
-
 
     private function shouldRegenerateSitemap(): bool
     {
