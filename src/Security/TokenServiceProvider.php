@@ -9,9 +9,9 @@ use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Contracts\Security\TokenManagerInterface;
 use JDS\Contracts\Security\TokenStoreInterface;
 use League\Container\Argument\Literal\StringArgument;
-use League\Container\ServiceProvider\AbstractServiceProvider;
+use League\Container\Container;
 
-class TokenServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
+class TokenServiceProvider implements ServiceProviderInterface
 {
     protected $provides = [
         TokenManagerInterface::class,
@@ -23,9 +23,8 @@ class TokenServiceProvider extends AbstractServiceProvider implements ServicePro
         return in_array($id, $this->provides, true);
     }
 
-    public function register(): void
+    public function register(Container $container): void
     {
-        $container = $this->getContainer();
 
         /** @var Config $config */
         $config = $container->get('config');

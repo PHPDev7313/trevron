@@ -2,8 +2,8 @@
 
 namespace JDS\Authentication;
 
+use JDS\Exceptions\Http\FileWriteException;
 use JDS\Handlers\ExceptionHandler;
-use JDS\Http\FileWriteException;
 use Throwable;
 
 class AbstractSession

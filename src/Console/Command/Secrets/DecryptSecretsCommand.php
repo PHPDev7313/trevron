@@ -34,6 +34,15 @@ class DecryptSecretsCommand extends BaseCommand implements CommandInterface
         private readonly string $encPath
     ) {}
 
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function description(): string
+    {
+        return $this->description;
+    }
 
     public function execute(array $params = []): int
     {

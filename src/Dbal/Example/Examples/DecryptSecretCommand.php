@@ -9,12 +9,31 @@ use JDS\Security\SecretsManager;
 
 class DecryptSecretCommand implements CommandInterface
 {
+    protected string $name = 'secrets:decrypt';
+    protected string $description = 'Decrypt Secrets';
+
     public function __construct(
         private readonly string $appSecretKeyBase64,
         private readonly string $encryptedFilePath,
         private readonly ?string $outputPlainFilePath = null
     )
     {
+    }
+
+    /**
+     * @return string
+     */
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function description(): string
+    {
+        return $this->description;
     }
 
     public function execute(array $params = []): int

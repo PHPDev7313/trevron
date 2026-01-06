@@ -2,6 +2,7 @@
 
 namespace JDS\Bootstrap;
 
+use JDS\Contracts\Bootstrap\BootstrapPhase;
 use JDS\Contracts\Bootstrap\BootstrapPhaseInterface;
 use JDS\Contracts\Events\EventDispatcherInterface;
 use JDS\EventDispatcher\EventDispatcher;
@@ -17,6 +18,11 @@ class CoreServicePhase implements BootstrapPhaseInterface
             EventDispatcherInterface::class,
             EventDispatcher::class
         );
+    }
+
+    public function phase(): BootstrapPhase
+    {
+        // TODO: Implement phase() method.
     }
 }
 

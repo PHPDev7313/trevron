@@ -932,7 +932,6 @@ class ComposerStaticInitf14ea01bc0b0c6c0bf744346a82ce289
         'JDS\\Console\\BaseCommand' => __DIR__ . '/../..' . '/src/Console/BaseCommand.php',
         'JDS\\Console\\CommandRegistry' => __DIR__ . '/../..' . '/src/Console/CommandRegistry.php',
         'JDS\\Console\\Command\\BootstrapDumpCommand' => __DIR__ . '/../..' . '/src/Console/Command/BootstrapDumpCommand.php',
-        'JDS\\Console\\Command\\BootstrapVerfiyCommand' => __DIR__ . '/../..' . '/src/Console/Command/BootstrapVerfiyCommand.php',
         'JDS\\Console\\Command\\BootstrapVerifyCommand' => __DIR__ . '/../..' . '/src/Console/Command/BootstrapVerifyCommand.php',
         'JDS\\Console\\Command\\MigrateDatabase' => __DIR__ . '/../..' . '/src/Console/Command/MigrateDatabase.php',
         'JDS\\Console\\Command\\Secrets\\DecryptSecretsCommand' => __DIR__ . '/../..' . '/src/Console/Command/Secrets/DecryptSecretsCommand.php',

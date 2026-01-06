@@ -7,11 +7,23 @@ use JDS\Contracts\Security\TokenStoreInterface;
 
 class PurgeExpiredTokensCommand implements CommandInterface
 {
+    protected string $name = "purge:expired:tokens";
 
+    protected string $description = "Purge expired tokens";
     public function __construct(
         private TokenStoreInterface $tokens,
     )
     {
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function description(): string
+    {
+        return $this->description;
     }
 
     public function execute(array $params = []): int

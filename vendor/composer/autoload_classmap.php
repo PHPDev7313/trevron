@@ -625,7 +625,6 @@ return array(
     'JDS\\Console\\BaseCommand' => $baseDir . '/src/Console/BaseCommand.php',
     'JDS\\Console\\CommandRegistry' => $baseDir . '/src/Console/CommandRegistry.php',
     'JDS\\Console\\Command\\BootstrapDumpCommand' => $baseDir . '/src/Console/Command/BootstrapDumpCommand.php',
-    'JDS\\Console\\Command\\BootstrapVerfiyCommand' => $baseDir . '/src/Console/Command/BootstrapVerfiyCommand.php',
     'JDS\\Console\\Command\\BootstrapVerifyCommand' => $baseDir . '/src/Console/Command/BootstrapVerifyCommand.php',
     'JDS\\Console\\Command\\MigrateDatabase' => $baseDir . '/src/Console/Command/MigrateDatabase.php',
     'JDS\\Console\\Command\\Secrets\\DecryptSecretsCommand' => $baseDir . '/src/Console/Command/Secrets/DecryptSecretsCommand.php',
