@@ -9,7 +9,6 @@ use JDS\Http\InvalidArgumentException;
 use JDS\Http\Request;
 use JDS\Http\Response;
 use JDS\Processing\ErrorProcessor;
-use Monolog\Logger;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -24,7 +23,7 @@ abstract class AbstractController
 
     protected ?ContainerInterface $container = null;
     protected Request $request;
-    private string $routePath;
+    private ?string $routePath = null;
     protected CentralizedLogger $logger;
 
     /**
@@ -41,17 +40,24 @@ abstract class AbstractController
         $this->container = $container;
         $routePath = $this->container->get('config')->get('routePath');
         $this->validateContainer();
-        $this->setRoutePath($routePath);
+        if ($this->routePath === null) {
+            $this->setRoutePath($routePath);
+        }
         $this->logger = $this->container->get('manager')->getLogger('audit');
     }
 
     private function setRoutePath(string $routePath): void
     {
-        $this->routePath = $routePath;
+        if ($this->routePath === null) {
+            $this->routePath = $routePath;
+        }
     }
 
     public function getRoutePath(): string
     {
+        if ($this->routePath === null) {
+            throw new HttpRuntimeException("Route path is not set");
+        }
         return $this->routePath;
     }
 
@@ -59,7 +65,6 @@ abstract class AbstractController
      * Validates the container instance to ensure it has been properly initialized.
      *
      * @return void
-     * @throws ControllerRuntimeException If the container is not properly initialized.
      */
     private function validateContainer(): void
     {
@@ -551,9 +556,9 @@ abstract class AbstractController
             );
             exit($exitCode);
         }
-        
+
         $thumbnailPath = str_replace(".webp", "_thumbnail.webp", $outfile);
-        
+
         // Wrap the command execution in a try-catch block
         try {
             // Convert the image
@@ -565,7 +570,7 @@ abstract class AbstractController
                     "Image conversion failed for $filename: " . implode("\n", $output)
                 );
             }
-            
+
             // Generate the thumbnail
             $returnCode = null;
             exec("magick " . escapeshellarg($filename) . " -thumbnail 150x150 " . escapeshellarg($thumbnailPath) . " 2>&1", $output, $returnCode);
@@ -637,7 +642,7 @@ abstract class AbstractController
             exit($exitCode);
         }
     }
-    
+
     public function setPathToJson(?string $path=null): string|bool
     {
         if (is_null($path)) {
@@ -646,10 +651,10 @@ abstract class AbstractController
         // build the full path to the file
         $basePath = $this->container->get('config')->get('appPath');
         $fullPath = $basePath . $path;
-        
+
         // extract the directory path
         $directory = dirname($fullPath);
-        
+
         // check if the directory exists, if not, create it
         if (!is_dir($directory)) {
             if (!mkdir($directory, 0777, true) && !is_dir($directory)) {
@@ -657,10 +662,10 @@ abstract class AbstractController
                 throw new HttpRuntimeException('Directory could not be created.');
             }
         }
-        
+
         // Set the path to the JSON file
         return $fullPath;
     }
-    
+
 }
 
