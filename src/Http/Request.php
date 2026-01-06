@@ -33,7 +33,38 @@ class Request
 
     public function getPathInfo(): string
     {
-        return strtok($this->server['REQUEST_URI'], '?');
+        $uri = strtok($this->server['REQUEST_URI'] ?? '/', '?');
+
+        // Normalize separators and slashes
+        $uri = str_replace('\\', '/', $uri);
+        $uri = preg_replace('#/+#', '/', $uri);
+
+        // Preserve trailing slash intent
+        $hasTrailingSlash = str_ends_with($uri, '/');
+
+        // Trim for segment work
+        $uri = trim($uri, '/');
+
+        // Root
+        if ($uri === '') {
+            return '/';
+        }
+
+        $segments = explode('/', $uri);
+
+        // Deduplicate while preserving order
+        $unique = [];
+        foreach ($segments as $segment) {
+            if (!in_array($segment, $unique, true)) {
+                $unique[] = $segment;
+            }
+        }
+
+        $path = '/' . implode('/', $unique);
+
+        return $hasTrailingSlash
+            ? rtrim($path, '/') . '/'
+            : rtrim($path, '/');
     }
 
     public function getMethod(): string
