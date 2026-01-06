@@ -355,50 +355,6 @@ abstract class AbstractController
         return [];
     }
 
-//    private function newConvertImage(string $filename, string $outfile): void
-//    {
-//        // Ensure the file exists
-//        if (!file_exists($filename)) {
-//            throw new FileNotFoundException("File not found: $filename");
-//        }
-//
-//        try {
-//            // Load the image using Imagick
-//            $image = new Imagick($filename);
-//
-//            // Convert the image to WebP format or any format from the $outfile extension
-//            $image->setImageFormat(pathinfo($outfile, PATHINFO_EXTENSION));
-//            $image->writeImage($outfile);
-//
-//            // Create a 150x150 thumbnail
-//            $thumbnail = clone $image;
-//            $thumbnail->thumbnailImage(150, 150, true);
-//
-//            // Determine the thumbnail path
-//            $thumbnailPath = str_replace(".webp", "_thumbnail.webp", $outfile);
-//            $thumbnail->writeImage($thumbnailPath);
-//
-//            // Clear Imagick resources
-//            $image->clear();
-//            $thumbnail->clear();
-//        } catch (ImagickException $e) {
-//            // Handle Imagick errors
-//            $exitCode = 77;
-//             ErrorProcessor::process(
-//                 $e,
-//                 $exitCode,
-//                 "Failed to convert image to WebP."
-//             );
-//        } catch (Throwable $e) {
-//            $exitCode = 79;
-//            ErrorProcessor::process(
-//                $e,
-//                $exitCode,
-//                "Unexpected error during image conversion!"
-//            );
-//        }
-//    }
-
     private function logFileUploadError(int $error, int $key): void
     {
         $message = match ($error) {
@@ -544,6 +500,7 @@ abstract class AbstractController
         $response->setContent($message);
         $response->setStatus(500);
     }
+
     private function convertImage(string $filename, string $outfile): void // keep for now for reference
     {
         // Validate input file
@@ -600,48 +557,6 @@ abstract class AbstractController
         }
     }
 
-    private function olderconvertImage(string $filename, string $outfile): void // keep for now for reference
-    {
-        // Validate input file
-        if (!file_exists($filename)) {
-            $exitCode = 77;
-            ErrorProcessor::process(
-                new FileNotFoundException("File not found: $filename"),
-                $exitCode.
-                sprintf("Unable to find image file: %s", $filename)
-            );
-            exit($exitCode);
-        }
-
-        $thumbnailPath = str_replace(".webp", "_thumbnail.webp", $outfile);
-
-        // Convert the image
-        $output = [];
-        $returnCode = null;
-        exec("magick " . escapeshellarg($filename) . " " . escapeshellarg($outfile) . " 2>&1", $output, $returnCode);
-        if ($returnCode !== 0) {
-            $exitCode = 77;
-            ErrorProcessor::process(
-                new ImageProcessingException("Image conversion failed for $filename: " . implode("\n", $output)),
-                $exitCode,
-                sprintf("Image conversion failed for $filename: %s", implode("\n", $output))
-            );
-            exit($exitCode);
-        }
-
-        $returnCode = null;
-        // Generate the thumbnail
-        exec("magick " . escapeshellarg($filename) . " -thumbnail 150x150 " . escapeshellarg($thumbnailPath) . " 2>&1", $output, $returnCode);
-        if ($returnCode !== 0) {
-            $exitCode = 77;
-            ErrorProcessor::process(
-                new ImageProcessingException("Thumbnail generation failed for $filename: " . implode("\n", $output)),
-                $exitCode,
-                sprintf("Thumbnail generation failed for $filename: %s", implode("\n", $output))
-            );
-            exit($exitCode);
-        }
-    }
 
     public function setPathToJson(?string $path=null): string|bool
     {
@@ -669,3 +584,48 @@ abstract class AbstractController
 
 }
 
+
+
+
+//    private function olderconvertImage(string $filename, string $outfile): void // keep for now for reference
+//    {
+//        // Validate input file
+//        if (!file_exists($filename)) {
+//            $exitCode = 77;
+//            ErrorProcessor::process(
+//                new FileNotFoundException("File not found: $filename"),
+//                $exitCode.
+//                sprintf("Unable to find image file: %s", $filename)
+//            );
+//            exit($exitCode);
+//        }
+//
+//        $thumbnailPath = str_replace(".webp", "_thumbnail.webp", $outfile);
+//
+//        // Convert the image
+//        $output = [];
+//        $returnCode = null;
+//        exec("magick " . escapeshellarg($filename) . " " . escapeshellarg($outfile) . " 2>&1", $output, $returnCode);
+//        if ($returnCode !== 0) {
+//            $exitCode = 77;
+//            ErrorProcessor::process(
+//                new ImageProcessingException("Image conversion failed for $filename: " . implode("\n", $output)),
+//                $exitCode,
+//                sprintf("Image conversion failed for $filename: %s", implode("\n", $output))
+//            );
+//            exit($exitCode);
+//        }
+//
+//        $returnCode = null;
+//        // Generate the thumbnail
+//        exec("magick " . escapeshellarg($filename) . " -thumbnail 150x150 " . escapeshellarg($thumbnailPath) . " 2>&1", $output, $returnCode);
+//        if ($returnCode !== 0) {
+//            $exitCode = 77;
+//            ErrorProcessor::process(
+//                new ImageProcessingException("Thumbnail generation failed for $filename: " . implode("\n", $output)),
+//                $exitCode,
+//                sprintf("Thumbnail generation failed for $filename: %s", implode("\n", $output))
+//            );
+//            exit($exitCode);
+//        }
+//    }
