@@ -1,4 +1,43 @@
 <?php
+/*
+ * DatabaseConnectionServiceProvider — v1.2 FINAL
+ *
+ * © 2026 Jessop Digital Systems
+ * Date: January 7, 2026
+ *
+ * ARCHITECTURAL ROLE:
+ * -------------------
+ * Registers the Doctrine DBAL Connection as an INFRASTRUCTURE service.
+ *
+ * This provider:
+ *   - MUST be loaded after secrets are validated and locked
+ *   - MUST NOT be loaded in core bootstrap
+ *   - MUST fail fast on misconfiguration
+ *
+ * INVARIANTS ENFORCED:
+ * -------------------
+ * 1. Config service MUST exist and be valid
+ * 2. Required database config keys MUST be present
+ * 3. Secrets service MUST exist and be locked
+ * 4. Required secrets (db.user, db.password) MUST exist
+ * 5. Database connection MUST be registered lazily
+ *
+ * NON-GOALS (DO NOT ADD):
+ * ----------------------
+ * - No direct access to $_ENV
+ * - No fallback credentials
+ * - No silent failure or logging-only behavior
+ * - No eager connection or test queries
+ *
+ * This file is part of the v1.2 FINAL architectural baseline.
+ * Any changes require an architecture review and version bump.
+ *
+ * See:
+ *   - InfrastructureServices.v1.2.FINAL.md
+ *   - BootstrapLifecycleAndInvariants.v1.2.FINAL.md
+ */
+
+declare(strict_types=1);
 
 namespace JDS\ServiceProvider;
 
