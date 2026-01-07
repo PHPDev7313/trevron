@@ -6,6 +6,10 @@ class RedirectResponse extends Response
 {
 	public function __construct(string $url)
 	{
+        // Force absolute path
+        if ($url !== '' && $url[0] !== '/') {
+            $url = '/' . $url;
+        }
 		parent::__construct('', 302, ['location' => $url]);
 	}
 
