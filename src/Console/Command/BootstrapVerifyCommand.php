@@ -31,6 +31,16 @@ class BootstrapVerifyCommand implements CommandInterface
     {
     }
 
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function description(): string
+    {
+        return $this->description;
+    }
+
     public function execute(array $params = []): int
     {
         // CONFIG

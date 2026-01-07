@@ -13,6 +13,7 @@ namespace JDS\Console\Command;
 use JDS\Console\AbstractCommand;
 use JDS\Contracts\Console\Command\CommandInterface;
 use JDS\Contracts\Dbal\Migration\MigrationExecutorInterface;
+use JDS\Error\StatusCode;
 use JDS\Exceptions\Database\MigrationRuntimeException;
 use JDS\Processing\ErrorProcessor;
 use Throwable;
@@ -39,6 +40,15 @@ final class MigrateDatabase extends AbstractCommand implements CommandInterface
         private readonly MigrationExecutorInterface $executor
     ) {}
 
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function description(): string
+    {
+        return $this->description;
+    }
     protected function handle(array $params): int
     {
         try {
@@ -57,13 +67,13 @@ final class MigrateDatabase extends AbstractCommand implements CommandInterface
             );
 
         } catch (Throwable $e) {
-            $exitCode = 16;
+            $exitCode = StatusCode::DATABASE_MIGRATION_EXECUTION_FAILED;
             ErrorProcessor::process(
                 $e,
                 $exitCode,
                 "[Migration] Migration execution failed."
             );
-            return $exitCode;
+            return $exitCode->value;
         }
     }
 

@@ -15,6 +15,8 @@ namespace JDS\Contracts\Console\Command;
 
 interface CommandInterface
 {
+    public function name(): string;
+    public function description(): string;
 	public function execute(array $params = []): int;
 }
 

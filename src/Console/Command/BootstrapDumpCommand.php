@@ -31,6 +31,22 @@ final class BootstrapDumpCommand implements CommandInterface
     {
     }
 
+    /**
+     * @return string
+     */
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function description(): string
+    {
+        return $this->description;
+    }
+
     public function execute(array $params = []): int
     {
         $data = [
@@ -59,7 +75,7 @@ final class BootstrapDumpCommand implements CommandInterface
     {
         if (!$this->container->has(CommandRegistryInterface::class)) {
             throw new BootstrapCommandException(
-                "Command Registry Interface missing during bootstrap dump."
+                "Command Registry Interface missing during bootstrap dump. [Bootstrap:Dump:Command]."
             );
         }
 
@@ -68,12 +84,31 @@ final class BootstrapDumpCommand implements CommandInterface
         $commands = [];
 
         foreach ($registry->all() as $commandClass) {
-            if (!property_exists($commandClass, 'name')) {
+            // Basic sanity
+            if (!is_string($commandClass) || !class_exists($commandClass)) {
                 continue;
             }
+            try {
+                $ref = new \ReflectionClass($commandClass);
 
-            $commands[] = $commandClass->name;
+                if (!$ref->hasProperty('name')) {
+                    continue;
+                }
+                $prop = $ref->getProperty('name');
+
+                $value = $prop->isStatic()
+                    ? $prop->getValue()
+                    : $prop->getValue($ref->newInstanceWithoutConstructor());
+
+                if (is_string($value) && $value !== '') {
+                    $commands[] = $value;
+                }
+            } catch (\ReflectionException) {
+                // missing property, inaccessible class, etc. => skip it
+                continue;
+            }
         }
+
         sort($commands);
 
         return [

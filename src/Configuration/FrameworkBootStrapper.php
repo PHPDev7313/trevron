@@ -3,7 +3,6 @@
 namespace JDS\Configuration;
 
 use JDS\Exceptions\Console\ConsoleRuntimeException;
-use JDS\ServiceProvider\ConfigServiceProvider;
 use League\Container\Container;
 
 class FrameworkBootStrapper

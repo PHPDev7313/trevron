@@ -25,6 +25,16 @@ class ValidateSecretCommand extends BaseCommand implements CommandInterface
     {
     }
 
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function description(): string
+    {
+        return $this->description;
+    }
+
     public function execute(array $params = []): int
     {
         if ($this->helpRequested($params)) {
