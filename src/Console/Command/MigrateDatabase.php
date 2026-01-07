@@ -20,7 +20,7 @@ use Throwable;
 
 final class MigrateDatabase extends AbstractCommand implements CommandInterface
 {
-    protected string $name = "databae:migrations:migrate";
+    protected string $name = "database:migrations:migrate";
 
     protected string $description = "Run database migrations.";
 
