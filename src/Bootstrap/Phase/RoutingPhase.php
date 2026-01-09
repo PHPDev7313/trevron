@@ -17,14 +17,9 @@ class RoutingPhase implements BootstrapPhaseInterface
 
     public function bootstrap(Container $container): void
     {
-        if (!$container->has(LockableRouterInterface::class)) {
-            throw new BootstrapInvariantViolationException(
-                "Routing bootstrap missing."
-            );
-        }
-
-        $router = $container->get(LockableRouterInterface::class);
-        $router->lock();
+        // v1.2 FINAL
+        // Routing is compiled and immutable.
+        // This phase exists for ordering only.
     }
 }
 
