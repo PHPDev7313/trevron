@@ -1,9 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace JDS\Console;
 
 use JDS\Contracts\Console\Command\CommandInterface;
+use JDS\Error\ErrorProcessor;
+use JDS\Error\StatusCode;
 use JDS\Exceptions\ConsoleOptionException;
+use JDS\Exceptions\Http\NotFoundException;
+use Psr\Container\ContainerExceptionInterface;
 
 abstract class AbstractCommand implements CommandInterface
 {
@@ -43,23 +48,31 @@ abstract class AbstractCommand implements CommandInterface
      */
     final public function execute(array $params = []): int
     {
-        //
-        // built-in help
-        //
-        if (isset($params['help']) || isset($params['h'])) {
-            $this->displayHelp();
-            return 0;
+        try {
+            //
+            // built-in help
+            //
+            if (isset($params['help']) || isset($params['h'])) {
+                $this->displayHelp();
+                return 0;
+            }
+
+            //
+            // validate options
+            //
+            $this->validateOptions($params);
+
+            //
+            // call the actual command logic
+            //
+            return $this->handle($params);
+        } catch (ContainerExceptionInterface | NotFoundException $e) {
+            ErrorProcessor::process(
+                $e,
+                StatusCode::INFRASTRUCTURE_DEPENDENCY_MISSING
+            );
+            return StatusCode::INFRASTRUCTURE_DEPENDENCY_MISSING->value;
         }
-
-        //
-        // validate options
-        //
-        $this->validateOptions($params);
-
-        //
-        // call the actual command logic
-        //
-        return $this->handle($params);
     }
 
     /**

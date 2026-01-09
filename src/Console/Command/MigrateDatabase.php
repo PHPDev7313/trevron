@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace JDS\Console\Command;
 
+use Doctrine\DBAL\Connection;
 use JDS\Console\AbstractCommand;
 use JDS\Contracts\Console\Command\CommandInterface;
 use JDS\Contracts\Dbal\Migration\MigrationExecutorInterface;

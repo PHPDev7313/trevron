@@ -331,6 +331,130 @@ Any change to these guarantees REQUIRES:
 v1.2 FINAL is considered closed and stable until at least Q2 2026.
 
 ---
+## Explicitly Excluded Concepts (v1.2 FINAL)
+📌 Purpose
+
+This section exists to prevent architectural drift and eliminate ambiguity.
+The following concepts are explicitly NOT part of the HTTP routing system in Trevron v1.2 FINAL.
+Any appearance of these concepts in HTTP routing code is a contract violation and must be removed, not adapted.
+
+🚫 Explicitly Excluded Concepts
+### 1. Runtime Router Objects
+
+There is no Router object in v1.2 FINAL HTTP routing.
+Routing in v1.2 FINAL is:
+Fully compiled at bootstrap time
+Immutable at runtime
+Dispatcher-driven
+Middleware-based
+The framework does not expose:
+a mutable router
+a route registry
+a runtime route manager
+a router service in the container
+
+✅ Allowed
+
+FastRoute\Dispatcher
+RouteBootstrap::buildDispatcher()
+ExtractRouteInfo middleware
+
+❌ Disallowed
+
+Router
+LockableRouter
+RouterInterface
+Any object responsible for “owning” routes at runtime
+
+### 2. Router Locking or Router State Machines
+
+Routing does not require locking because it is immutable by design.
+Therefore, v1.2 FINAL explicitly forbids:
+Router locking APIs
+Router lifecycle states
+“bootstrapped but unlocked” routing states
+Route mutation guards
+These concepts are unnecessary and misleading under the v1.2 routing model.
+
+### 3. Route Registration Outside Bootstrap
+
+Routes:
+are defined by the application as plain arrays are compiled once by ProcessRoutes are registered once during bootstrap must never be added, removed, or modified afterward
+
+**❌ Disallowed:**
+
+Runtime route registration
+Conditional route registration during requests
+Environment-based runtime route switching
+Dynamic route mutation
+All such behavior requires a version bump and a new architecture.
+
+### 4. Routing Responsibility in Middleware Other Than ExtractRouteInfo
+
+Only one middleware is allowed to perform routing:
+ExtractRouteInfo
+All other middleware must assume one of the following:
+A route is already attached to the request
+A routing exception has already been thrown
+
+**❌ Middleware must never:**
+Register routes
+Build dispatchers
+Access route collections
+Read navigation metadata
+Perform controller resolution
+
+### 5. Navigation Metadata in Routing Execution
+
+Navigation metadata is not part of routing execution.
+Metadata: is validated at compile time is stored separately from executable routes exists only for navigation systems (breadcrumbs, menus)
+
+**❌ Routing must never:**
+
+Read metadata
+Branch on metadata
+Use metadata for matching or dispatch
+Depend on metadata presence
+This separation is a hard architectural guarantee.
+
+### 6. Container Usage During Route Matching
+
+Routing execution must not depend on the container.
+ExtractRouteInfo: does not access the container does not resolve services does not instantiate controllers
+This ensures routing remains: deterministic, testable framework-agnostic at execution time
+
+### 7. Console Routing
+
+Console commands are not routes.
+The HTTP routing system defined in this document: applies only to HTTP requests does not apply to console execution does not share routing concepts with console commands
+**Console commands:** are registered via CommandRegistry are resolved by name are executed directly
+There is no shared routing layer between HTTP and console.
+
+#### 7.2 Enforcement Guarantees
+
+The exclusions above are enforced by:
+Physical absence of excluded classes
+Bootstrap invariant checks
+
+**Contract tests in:**
+tests/Contract/Http/Routing/RoutingV12ContractTest.php
+
+Any reintroduction of excluded concepts requires: a new architecture document updated contract tests a version bump (v1.3+)
+
+#### 7.3 Final Architecture Lock Statement
+
+RoutingARCHITECTURE v1.2 FINAL is complete and closed.
+
+The HTTP routing system in Trevron v1.2 FINAL is: 
+deterministic 
+immutable
+dispatcher-driven
+metadata-isolated
+middleware-bounded
+
+No additional routing abstractions are permitted without a formal version change.
+
+---
 
 ## Routing Responsibility Boundary (v1.2 FINAL)
 

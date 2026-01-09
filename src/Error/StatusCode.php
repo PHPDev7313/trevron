@@ -39,6 +39,7 @@ enum StatusCode: int
     // -------------------------------------------------
     case CONTAINER_INITIALIZATION_FAILED = 2100;
     case CONTAINER_SERVICE_REGISTRATION_FAILED = 2101;
+    case INFRASTRUCTURE_DEPENDENCY_MISSING = 2102;
 
     // -------------------------------------------------
     // AUTHENTICATION (2300–2399)
@@ -225,6 +226,8 @@ enum StatusCode: int
             "Container Error: Initialization failed",
             self::CONTAINER_SERVICE_REGISTRATION_FAILED =>
             "Container Error: Unable to register service",
+            self::INFRASTRUCTURE_DEPENDENCY_MISSING =>
+            "Infrastructure Error: A required system dependency is not available. Ensure all required infrastructure services are properly configured and loaded before execution.",
 
             // Authentication
             self::AUTHENTICATION_FAILED =>

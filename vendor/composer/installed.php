@@ -3,7 +3,7 @@
         'name' => 'jds/trevron',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'cc845dea45c2cc50e6bb5abf0efac058d11a6f7b',
+        'reference' => '218c9d050909c494a2acfba1c4fe8cade0593f8d',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'brianium/paratest' => array(
-            'pretty_version' => 'v7.16.0',
-            'version' => '7.16.0.0',
-            'reference' => 'a10878ed0fe0bbc2f57c980f7a08065338b970b6',
+            'pretty_version' => 'v7.16.1',
+            'version' => '7.16.1.0',
+            'reference' => 'f0fdfd8e654e0d38bc2ba756a6cabe7be287390b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../brianium/paratest',
             'aliases' => array(),
@@ -88,7 +88,7 @@
         'jds/trevron' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'cc845dea45c2cc50e6bb5abf0efac058d11a6f7b',
+            'reference' => '218c9d050909c494a2acfba1c4fe8cade0593f8d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -726,9 +726,9 @@
             'dev_requirement' => false,
         ),
         'webmozart/assert' => array(
-            'pretty_version' => '2.0.0',
-            'version' => '2.0.0.0',
-            'reference' => '1b34b004e35a164bc5bb6ebd33c844b2d8069a54',
+            'pretty_version' => '2.1.1',
+            'version' => '2.1.1.0',
+            'reference' => 'bdbabc199a7ba9965484e4725d66170e5711323b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../webmozart/assert',
             'aliases' => array(),
