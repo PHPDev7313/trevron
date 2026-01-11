@@ -5,7 +5,7 @@ namespace JDS\Error\Disclosure;
 // Version 1.2 Final (v1.2 §6)
 //
 
-use JDS\Error\Disclosure\DebugDisclosurePolicyInterface;
+use JDS\Contracts\Error\Disclosure\DebugDisclosurePolicyInterface;
 
 final class ProductionDisclosurePolicy implements DebugDisclosurePolicyInterface
 {

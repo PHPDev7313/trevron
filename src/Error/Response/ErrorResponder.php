@@ -5,8 +5,8 @@ namespace JDS\Error\Response;
 // Version 1.2 Final (v1.2 §13)
 //
 
+use JDS\Contracts\Error\Rendering\ErrorRendererInterface;
 use JDS\Error\ErrorContext;
-use JDS\Error\Rendering\ErrorRendererInterface;
 use JDS\Error\Sanitization\ErrorSanitizer;
 use JDS\Http\Request;
 use JDS\Http\Response;

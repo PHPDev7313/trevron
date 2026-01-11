@@ -13,9 +13,9 @@ namespace Tests\Contract\Http;
 //
 
 
+use JDS\Contracts\Error\Rendering\ErrorRendererInterface;
 use JDS\Error\Disclosure\ProductionDisclosurePolicy;
 use JDS\Error\ErrorContext;
-use JDS\Error\Rendering\ErrorRendererInterface;
 use JDS\Error\Response\ErrorResponder;
 use JDS\Error\Sanitization\ErrorSanitizer;
 use JDS\Error\StatusCode;
@@ -108,7 +108,7 @@ it('[v1.2 FINAL] StatusException path delegates to ErrorResponder and returns it
 });
 
 it('[v1.2 FINAL] Throwable path normalizes to SERVER_INTERNAL_ERROR and delegates to ErrorResponder', function () {
-    $capturing = new class implements \JDS\Error\Rendering\ErrorRendererInterface {
+    $capturing = new class implements \JDS\Contracts\Error\Rendering\ErrorRendererInterface {
         public ?ErrorContext $context = null;
 
         public function render($request, $context): Response

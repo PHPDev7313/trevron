@@ -6,6 +6,8 @@
 
 namespace JDS\Error\Rendering;
 
+use JDS\Contracts\Error\Rendering\ErrorRendererInterface;
+use JDS\Contracts\Error\Rendering\TemplateEngineInterface;
 use JDS\Error\ErrorContext;
 use JDS\Http\Request;
 use JDS\Http\Response;
@@ -13,7 +15,7 @@ use JDS\Http\Response;
 /**
  * HtmlErrorRenderer v1.2 FINAL
  *
- * This ifle is ARCHITECTURALLY FROZEN.
+ * This file is ARCHITECTURALLY FROZEN.
  *
  * Any behavioral change requires:
  * - Contract test updates
