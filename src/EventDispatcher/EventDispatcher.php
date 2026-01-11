@@ -8,7 +8,7 @@ use Psr\EventDispatcher\StoppableEventInterface;
 
 class EventDispatcher implements EventDispatcherInterface
 {
-    /** @var array<string, array<int, list<<callable>>>>
+    /** @var array<string, array<int, list<<callable>> > >
      *  [
      *      EventClass => [
      *          priority => [callable, callable]
