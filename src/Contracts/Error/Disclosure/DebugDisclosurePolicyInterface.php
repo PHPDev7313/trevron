@@ -1,6 +1,6 @@
 <?php
 
-namespace JDS\Error\Disclosure;
+namespace JDS\Contracts\Error\Disclosure;
 //
 // Version 1.2 Final (v1.2 §6)
 //

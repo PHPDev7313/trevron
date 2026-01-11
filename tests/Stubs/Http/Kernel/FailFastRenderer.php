@@ -2,8 +2,8 @@
 
 namespace Tests\Stubs\Http\Kernel;
 
+use JDS\Contracts\Error\Rendering\ErrorRendererInterface;
 use JDS\Error\ErrorContext;
-use JDS\Error\Rendering\ErrorRendererInterface;
 use JDS\Http\Request;
 use JDS\Http\Response;
 

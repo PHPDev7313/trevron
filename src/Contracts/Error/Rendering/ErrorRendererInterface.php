@@ -1,6 +1,6 @@
 <?php
 
-namespace JDS\Error\Rendering;
+namespace JDS\Contracts\Error\Rendering;
 //
 // Version 1.2 Final (v1.2 §8)
 //

@@ -1,6 +1,6 @@
 <?php
 
-namespace JDS\Error\Rendering;
+namespace JDS\Contracts\Error\Rendering;
 
 interface TemplateEngineInterface
 {

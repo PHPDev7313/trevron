@@ -2,9 +2,7 @@
 
 namespace Tests\Contract\Stubs\Http\Kernel;
 
-use JDS\Error\ErrorContext;
-use JDS\Error\Rendering\ErrorRendererInterface;
-use JDS\Http\Request;
+use JDS\Contracts\Error\Rendering\ErrorRendererInterface;
 use JDS\Http\Response;
 use RuntimeException;
 

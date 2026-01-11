@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Error\Response;
 
-use JDS\Error\Rendering\ErrorRendererInterface;
+use JDS\Contracts\Error\Rendering\ErrorRendererInterface;
 use JDS\Http\Response;
 
 final class FakeRenderer implements ErrorRendererInterface
