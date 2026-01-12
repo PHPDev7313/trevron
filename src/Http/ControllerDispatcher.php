@@ -16,7 +16,7 @@ use ReflectionMethod;
 use ReflectionNamedType;
 use Throwable;
 
-class ControllerDispatcher implements ControllerDispatcherInterface
+final class ControllerDispatcher implements ControllerDispatcherInterface
 {
     public function __construct(
         private readonly ContainerInterface $container,
@@ -33,59 +33,60 @@ class ControllerDispatcher implements ControllerDispatcherInterface
                 "Cannot dispatch controller because no Route is attached to the Request."
             );
         }
+        $handler = $route->getHandler();
 
-        [$controllerClass, $method] = $route->getHandler();
-
-        // -------------------------------------------------------
-        // 1. Instantiate Controller from Container
-        // -------------------------------------------------------
-        if (!$this->container->has($controllerClass)) {
-            throw new ControllerNotFoundException(
-                "Controller '{$controllerClass}' was not found in the container."
+        // v1.2 FINAL: handler must be [ControllerClass::class, 'method']
+        if (!is_array($handler) || count($handler) < 2 || !is_string($handler[0]) || !is_string($handler[1])) {
+            throw new ControllerInvocationException(
+                "Invalid route handler shape. Expected [controllerClass, method]. Got: " . gettype($handler)
             );
         }
 
-        $controller = $this->container->get($controllerClass);
+        [$controllerClass, $method] = [$handler[0], $handler[1]];
 
-        //
-        // Inject dependencies into AbstractController
-        //
+        // ---------------------------------------------
+        // 1. Instantiate Controller (DO NOT gate on has())
+        // ---------------------------------------------
+        try {
+            $controller = $this->container->get($controllerClass);
+        } catch (Throwable $e) {
+            throw new ControllerNotFoundException(
+                "Controller '{$controllerClass}' resolution failed: {$e->getMessage()}. [Controller:Dispatcher].", previous: $e
+            );
+        }
+        // ------------------------------------------
+        // 2. Inject Request + Container for legacy controllers
+        // ------------------------------------------
         if ($controller instanceof AbstractController) {
             $controller->setRequest($request);
             $controller->setContainer($this->container);
         }
 
-        //
-        // Ensure method exists
-        //
+        // -------------------------------------------
+        // 3. Ensure method exists
+        // -------------------------------------------
         if (!method_exists($controller, $method)) {
             throw new ControllerMethodNotFoundException(
-                "Method '{$method}' does not exist on controller '{$controllerClass}'."
+                "Method '{$method}' does not exist on controller '{$controllerClass}'. [Controller:Dispatcher]."
             );
         }
 
         $refMethod = new ReflectionMethod($controller, $method);
 
         // ----------------------------------------------------------------
-        // 2. Resolve arguments (request injection, casting, transformation, validation)
+        // 4. Resolve arguments (request injection, casting, transformation, validation)
         // ----------------------------------------------------------------
         $args = $this->resolveArguments($refMethod, $request);
 
-        // ------------------------------------------
-        // 3. Invoke Controller
-        // ------------------------------------------
         try {
             $result = $refMethod->invokeArgs($controller, $args);
         } catch (Throwable $e) {
             throw new ControllerInvocationException(
-                "Error invoking controller '{$controllerClass}@{$method}': " . $e->getMessage(),
+                "Error invoking controller '{$controllerClass}@{$method}': " . $e->getMessage() . ". [Controller:Dispatcher].",
                 previous: $e
             );
         }
 
-        // ------------------------------------------
-        // 4. Normalize result into Response
-        // ------------------------------------------
         return $this->normalizeResult($result);
     }
 
@@ -125,7 +126,7 @@ class ControllerDispatcher implements ControllerDispatcherInterface
 
                 // No parameter → fail hard
                 throw new ControllerInvocationException(
-                    "Cannot resolve argument '{$name}' for controller method '{$method->getName()}'."
+                    "Cannot resolve argument '{$name}' for controller method '{$method->getName()}'. [Controller:Dispatcher]."
                 );
             }
 
@@ -169,7 +170,7 @@ class ControllerDispatcher implements ControllerDispatcherInterface
                 // ---- c) Untransformable object type → fail ----
                 //
                 throw new ControllerInvocationException(
-                    "Cannot resolve argument '{$name}'. No transformer for type '{$targetType}'."
+                    "Cannot resolve argument '{$name}'. No transformer for type '{$targetType}'. [Controller:Dispatcher]."
                 );
             }
 
@@ -210,10 +211,9 @@ class ControllerDispatcher implements ControllerDispatcherInterface
         // Invalid return type
         //
         throw new ControllerInvocationException(
-            "Controller must return Response or TemplateResponse; " . gettype($result) . " returned."
+            "Controller must return Response or TemplateResponse; " . gettype($result) . " returned. [Controller:Dispatcher]."
         );
     }
-
 
     // ======================================================
     // Scalar Casting
@@ -229,24 +229,24 @@ class ControllerDispatcher implements ControllerDispatcherInterface
             "bool"   => filter_var($value, FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE) ?? false,
             "string" => (string) $value,
             default  => throw new ControllerInvocationException(
-                "Unsupported builtin type '{$target}' for parameter '{$name}'."
+                "Unsupported builtin type '{$target}' for parameter '{$name}'. [Controller:Dispatcher]."
             )
         };
     }
 
     public function dispatchFallback(string $controllerClass, Request $request): Response
     {
-        if (!$this->container->has($controllerClass)) {
+        try {
+            $controller = $this->container->get($controllerClass);
+        } catch (Throwable $e) {
             throw new ControllerInvocationException(
-                "Fallback controller '{$controllerClass}' not found."
+                "Fallback controller '{$controllerClass}' could not be resolved. [Controller:Dispatcher].", previous: $e
             );
         }
 
-        $controller = $this->container->get($controllerClass);
-
         if (!is_callable($controller)) {
             throw new ControllerInvocationException(
-                "Fallback controller '{$controllerClass}' is not invokable."
+                "Fallback controller '{$controllerClass}' is not invokable. [Controller:Dispatcher]."
             );
         }
 
