@@ -144,11 +144,3 @@ it('[v1.2 FINAL] Throwable path normalizes to SERVER_INTERNAL_ERROR and delegate
     expect($capturing->context->category)->toBe(StatusCode::HTTP_ROUTE_DISPATCH_FAILURE->category());
 });
 
-
-
-
-
-
-
-
-
