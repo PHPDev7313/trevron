@@ -52,7 +52,7 @@ final class BootstrapRunner
         if (in_array($phaseEnum, $this->registeredPhases, true)) {
             if (!$phaseEnum->isRepeatable()) {
                 throw new BootstrapInvariantViolationException(
-                    "Bootstrap phase {$phaseEnum->name} is non-repeatable and was registered more than once."
+                    "Bootstrap phase {$phaseEnum->name} is non-repeatable and was registered more than once. [Bootstrap:Runner]."
                 );
             }
         }
@@ -96,7 +96,7 @@ final class BootstrapRunner
         foreach ($this->requiredPhases as $required) {
             if (!in_array($required, $this->addedPhases, true)) {
                 throw new BootstrapInvariantViolationException(
-                    "Required bootstrap phase missing: {$required->name}"
+                    "Required bootstrap phase missing: {$required->name}. [Bootstrap:Runner]."
                 );
             }
         }
@@ -114,7 +114,7 @@ final class BootstrapRunner
 
         if ($values !== $sorted) {
             throw new BootstrapInvariantViolationException(
-                "Bootstrap phases are registered out of order."
+                'Bootstrap phases are registered out of order. [Bootstrap:Runner].'
             );
         }
     }

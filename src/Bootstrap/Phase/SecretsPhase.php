@@ -31,7 +31,7 @@ final class SecretsPhase implements BootstrapPhaseInterface
     {
         if (!$container->has(LockableSecretsInterface::class)) {
             throw new BootstrapInvariantViolationException(
-                "Lockable secrets service must be registered before SECRETS phase."
+                'Lockable secrets service must be registered before SECRETS phase. [Secrets:Phase].'
             );
         }
 
@@ -40,7 +40,7 @@ final class SecretsPhase implements BootstrapPhaseInterface
 
         if ($secrets->isLocked()) {
             throw new BootstrapInvariantViolationException(
-                "SECRETS phase executed more than once."
+                'SECRETS phase executed more than once.'
             );
         }
 

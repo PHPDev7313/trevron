@@ -67,7 +67,7 @@ class AppBootstrapper
         //
         if ($container->has(ExceptionHandler::class)) {
             ExceptionHandler::initializeWithEnvironment(
-                $config->get('environment')
+                $config->getEnvironment()
             );
         }
 
