@@ -5221,20 +5221,20 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "8.3.1",
-            "version_normalized": "8.3.1.0",
+            "version": "8.3.2",
+            "version_normalized": "8.3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "d611e7b064eab7808a0d8d581776c5884a5b687a"
+                "reference": "4b043a865f1978056f6649638b2e983c0624ff66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/d611e7b064eab7808a0d8d581776c5884a5b687a",
-                "reference": "d611e7b064eab7808a0d8d581776c5884a5b687a",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/4b043a865f1978056f6649638b2e983c0624ff66",
+                "reference": "4b043a865f1978056f6649638b2e983c0624ff66",
                 "shasum": ""
             },
-            "time": "2025-12-17T00:53:22+00:00",
+            "time": "2026-01-14T01:01:47+00:00",
             "type": "component",
             "extra": {
                 "component": {
@@ -5277,7 +5277,7 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/8.3.1"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/8.3.2"
             },
             "install-path": "../tinymce/tinymce"
         },
@@ -5365,17 +5365,17 @@
         },
         {
             "name": "webmozart/assert",
-            "version": "2.1.1",
-            "version_normalized": "2.1.1.0",
+            "version": "2.1.2",
+            "version_normalized": "2.1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozarts/assert.git",
-                "reference": "bdbabc199a7ba9965484e4725d66170e5711323b"
+                "reference": "ce6a2f100c404b2d32a1dd1270f9b59ad4f57649"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/bdbabc199a7ba9965484e4725d66170e5711323b",
-                "reference": "bdbabc199a7ba9965484e4725d66170e5711323b",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/ce6a2f100c404b2d32a1dd1270f9b59ad4f57649",
+                "reference": "ce6a2f100c404b2d32a1dd1270f9b59ad4f57649",
                 "shasum": ""
             },
             "require": {
@@ -5389,7 +5389,7 @@
                 "ext-simplexml": "",
                 "ext-spl": ""
             },
-            "time": "2026-01-08T11:28:40+00:00",
+            "time": "2026-01-13T14:02:24+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -5424,7 +5424,7 @@
             ],
             "support": {
                 "issues": "https://github.com/webmozarts/assert/issues",
-                "source": "https://github.com/webmozarts/assert/tree/2.1.1"
+                "source": "https://github.com/webmozarts/assert/tree/2.1.2"
             },
             "install-path": "../webmozart/assert"
         }
