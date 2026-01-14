@@ -15,6 +15,7 @@
 namespace JDS\Configuration;
 
 use JDS\Contracts\Configuration\ConfigInterface;
+use RuntimeException;
 
 class Config implements ConfigInterface
 {
@@ -179,6 +180,54 @@ class Config implements ConfigInterface
     public function isStaging(): bool
     {
         return $this->environment === 'staging';
+    }
+
+    /**
+     * Always returns an array.
+     */
+    public function getArray(string $key, array $default = []): array
+    {
+        $value = $this->get($key, $default);
+
+        if ($value === null) {
+            return $default;
+        }
+
+        if (is_array($value)) {
+            return $value;
+        }
+
+        return [$value];
+    }
+
+    /**
+     * Returns the first value of an array-or-scalar config entry.
+     */
+    public function getFirst(string $key, mixed $default = null): mixed
+    {
+        $value = $this->get($key, $default);
+
+        if (is_array($value)) {
+            return $value[0] ?? $default;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Returns the Domain Specific Twig Template Root
+     */
+    public function twigTemplateRoot(): string
+    {
+        $paths = $this->getArray('twig.templates.paths');
+
+        if ($paths === []) {
+            throw new RuntimeException(
+                'No twig template paths configured. [Config].'
+            );
+        }
+
+        return (string) $paths[0];
     }
 }
 

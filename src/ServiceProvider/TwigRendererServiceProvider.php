@@ -30,11 +30,26 @@ class TwigRendererServiceProvider implements ServiceProviderInterface
         $container->add(FilesystemLoader::class, function () use ($container) {
             $config = $container->get(Config::class);
             $basePath = rtrim($config->get('app.basePath'), '/');
-            $templates = ltrim($config->get('twig.templates.paths'), '/');
+            $templates = trim($config->twigTemplateRoot(), '/');
+
+
+//            $templates = ltrim($config->getFirst('twig.templates.paths'), '/');
+
+//            // Normalize to array (safe for future expansion)
+//            if (is_string($paths)) {
+//                $paths = [$paths];
+//            }
+//
+//            if (!is_array($paths) || $paths === []) {
+//                throw new RuntimeException(
+//                    'Twig templates paths must be a string or array. [Twig:Renderer:Service:Provider].'
+//                );
+//            }
+//            $templates = trim($paths[0], '/');
 
             $path = "{$basePath}/{$templates}";
 
-            if (!$path || !is_dir($path)) {
+            if (!is_dir($path)) {
                 throw new RuntimeException(
                     "Twig templates path is missing or invalid: {$path}. [Twig:Renderer:Service:Provider]."
                 );
