@@ -23,18 +23,17 @@ class TwigRendererServiceProvider implements ServiceProviderInterface
     /** @noinspection PhpVariableNamingConventionInspection */
     public function register(Container $container): void
     {
-        $config = $container->get(Config::class);
         //
         // 1. Twig Loader
         //
-        $container->add(FilesystemLoader::class, function () use ($container, $config) {
+        $container->add(FilesystemLoader::class, function () use ($container) {
+            $config = $container->get(Config::class);
 
-
-            $path = $config->get('templates.path');
+            $path = $config->get('twig.templates.path');
 
             if (!$path || !is_dir($path)) {
                 throw new \RuntimeException(
-                    'Twig templates path is missing or invalid: {$path}. [Twig:Renderer:Service:Provider].'
+                    "Twig templates path is missing or invalid: {$path}. [Twig:Renderer:Service:Provider]."
                 );
             }
             return new FilesystemLoader($path);
@@ -44,9 +43,9 @@ class TwigRendererServiceProvider implements ServiceProviderInterface
         //
         // 2. Twig Environment
         //
-        $container->add(Environment::class, function () use ($container, $config) {
+        $container->add(Environment::class, function () use ($container) {
             $loader = $container->get(FilesystemLoader::class);
-
+            $config = $container->get(Config::class);
             return new Environment($loader, [
                 'cache'       => false,
                 'debug'       => (bool)$config->get('debug'),
