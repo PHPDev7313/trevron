@@ -8,6 +8,7 @@ use JDS\Contracts\Rendering\RendererInterface;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Rendering\TwigRenderer;
 use League\Container\Container;
+use RuntimeException;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -29,10 +30,10 @@ class TwigRendererServiceProvider implements ServiceProviderInterface
         $container->add(FilesystemLoader::class, function () use ($container) {
             $config = $container->get(Config::class);
 
-            $path = $config->get('twig.templates.path');
+            $path = $config->get('twig.templates.paths');
 
             if (!$path || !is_dir($path)) {
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     "Twig templates path is missing or invalid: {$path}. [Twig:Renderer:Service:Provider]."
                 );
             }
