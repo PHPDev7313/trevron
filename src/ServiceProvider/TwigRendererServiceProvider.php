@@ -1,4 +1,20 @@
 <?php /** @noinspection PhpClassNamingConventionInspection */
+/*
+ * Trevron Framework — v1.2 FINAL
+ *
+ * © 2026 Jessop Digital Systems
+ * Date: January 5, 2026
+ *
+ * FINAL: January 13, 2026
+ *
+ * This file is part of the v1.2 FINAL architectural baseline.
+ * Changes require an architecture review and a version bump.
+ *
+ * See: BootstrapLifecycleAndInvariants.v1.2.FINAL.md
+ *    : ConsoleBootstrapLifecycle.v1.2.2.FINAL.md
+ */
+
+
 declare(strict_types=1);
 
 namespace JDS\ServiceProvider;
@@ -24,49 +40,56 @@ class TwigRendererServiceProvider implements ServiceProviderInterface
     /** @noinspection PhpVariableNamingConventionInspection */
     public function register(Container $container): void
     {
+        // -----------------------------------------
+        // Bootstrap invariant: Config must exist
+        // -----------------------------------------
+        if (!$container->has(Config::class)) {
+            throw new RuntimeException(
+                'Config service missing: Twig Renderer Service Provider cannot boot. [Twig:Renderer:Service:Provider].'
+            );
+        }
+
+        /** @var Config $config */
+        $config = $container->get(Config::class);
+
+        // --------------------------------------------
+        // Resolve and normalize template root ONCE
+        // --------------------------------------------
+        $basePath = rtrim((string) $config->get('app.basePath'), '/');
+        $templateDir = trim($config->twigTemplateRoot(), '/');
+
+        if ($basePath === '') {
+            throw new RuntimeException(
+                'app basePath is missing or empty. [Twig:Renderer:Service:Provider].'
+            );
+        }
+
+        $templatePath = $basePath . '/' . $templateDir;
+        $templatePath = str_replace('\\', '/', $templatePath);
+
+        if (!is_dir($templatePath)) {
+            throw new RuntimeException(
+                "Twig templates path is invalid or does not exist: {$templatePath}. [Twig:Renderer:Service:Provider]."
+            );
+        }
+
         //
-        // 1. Twig Loader
+        // 1. FilesystemLoader IMMUTABLE (Twig Loader)
         //
-        $container->add(FilesystemLoader::class, function () use ($container) {
-            $config = $container->get(Config::class);
-            $basePath = rtrim($config->get('app.basePath'), '/');
-            $templates = trim($config->twigTemplateRoot(), '/');
-
-
-//            $templates = ltrim($config->getFirst('twig.templates.paths'), '/');
-
-//            // Normalize to array (safe for future expansion)
-//            if (is_string($paths)) {
-//                $paths = [$paths];
-//            }
-//
-//            if (!is_array($paths) || $paths === []) {
-//                throw new RuntimeException(
-//                    'Twig templates paths must be a string or array. [Twig:Renderer:Service:Provider].'
-//                );
-//            }
-//            $templates = trim($paths[0], '/');
-
-            $path = "{$basePath}/{$templates}";
-
-            if (!is_dir($path)) {
-                throw new RuntimeException(
-                    "Twig templates path is missing or invalid: {$path}. [Twig:Renderer:Service:Provider]."
-                );
-            }
-            return new FilesystemLoader($path);
+        $container->add(FilesystemLoader::class, function () use ($templatePath) {
+            return new FilesystemLoader($templatePath);
         })
         ->setShared(true);
 
         //
         // 2. Twig Environment
         //
-        $container->add(Environment::class, function () use ($container) {
+        $container->add(Environment::class, function () use ($container, $config) {
             $loader = $container->get(FilesystemLoader::class);
-            $config = $container->get(Config::class);
+
             return new Environment($loader, [
                 'cache'       => false,
-                'debug'       => (bool)$config->get('debug'),
+                'debug'       => $config->isDevelopment(),
                 'auto_reload' => true,
             ]);
         })

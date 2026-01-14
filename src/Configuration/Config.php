@@ -5,6 +5,8 @@
  * © 2026 Jessop Digital Systems
  * Date: January 5, 2026
  *
+ * FINAL: January 13, 2026
+ *
  * This file is part of the v1.2 FINAL architectural baseline.
  * Changes require an architecture review and a version bump.
  *
