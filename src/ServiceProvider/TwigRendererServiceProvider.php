@@ -29,8 +29,10 @@ class TwigRendererServiceProvider implements ServiceProviderInterface
         //
         $container->add(FilesystemLoader::class, function () use ($container) {
             $config = $container->get(Config::class);
+            $basePath = rtrim($config->get('app.basePath'), '/');
+            $templates = ltrim($config->get('twig.templates.paths'), '/');
 
-            $path = $config->get('twig.templates.paths');
+            $path = "{$basePath}/{$templates}";
 
             if (!$path || !is_dir($path)) {
                 throw new RuntimeException(
