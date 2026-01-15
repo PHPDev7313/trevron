@@ -5,7 +5,7 @@ namespace JDS\Rendering;
 use JDS\Contracts\Rendering\RendererInterface;
 use Twig\Environment;
 
-class TwigRenderer implements RendererInterface
+final class TwigRenderer implements RendererInterface
 {
     public function __construct(
         private readonly Environment $twig
@@ -16,3 +16,4 @@ class TwigRenderer implements RendererInterface
         return $this->twig->render($template, $params);
     }
 }
+
