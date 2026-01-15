@@ -87,11 +87,26 @@ class TwigRendererServiceProvider implements ServiceProviderInterface
         $container->add(Environment::class, function () use ($container, $config) {
             $loader = $container->get(FilesystemLoader::class);
 
-            return new Environment($loader, [
+            $twig =  new Environment($loader, [
                 'cache'       => false,
                 'debug'       => $config->isDevelopment(),
                 'auto_reload' => true,
             ]);
+
+            // ---------------------------------------------
+            // Register Twig extension declared in config
+            // ---------------------------------------------
+            foreach ($config->getArray('twig.extensions') as $extensionClass) {
+                if (!$container->has($extensionClass)) {
+                    throw new RuntimeException(
+                        "Twig extension {$extensionClass} is not registered. [Twig:Renderer:Service:Provider]."
+                    );
+                }
+
+                $twig->addExtension($container->get($extensionClass));
+            }
+
+            return $twig;
         })
         ->setShared(true);
 
