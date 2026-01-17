@@ -1,4 +1,10 @@
 <?php
+declare(strict_types=1);
+/*
+ * Trevron Framework - v1.2 FINAL
+ *
+ * Controller JSON Render Contract
+ */
 
 namespace JDS\ServiceProvider;
 
@@ -14,6 +20,11 @@ use League\Container\Container;
 
 class JsonReaderServiceProvider implements ServiceProviderInterface
 {
+    protected array $provides = [
+        JsonDecoderInterface::class,
+        FilePathValidator::class,
+        JsonLoader::class,
+    ];
 
     public function register(Container $container): void
     {
