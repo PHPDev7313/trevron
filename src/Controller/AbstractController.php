@@ -13,7 +13,7 @@
 
 namespace JDS\Controller;
 
-use JDS\Contracts\Rendering\RendererInterface;
+use JDS\Contracts\Http\Response\HttpRendererInterface;
 use JDS\Http\Request;
 use JDS\Http\Response;
 use JDS\Http\TemplateResponse;
@@ -53,14 +53,16 @@ abstract class AbstractController
      * Render a template using the application's RendererInterface.
      * Controllers should NOT contain rendering logic.
      */
-    protected function render(string $template, array $params = []): Response
+    protected function render(
+        string $template,
+        array $context = [],
+        int $status = 200,
+        array $headers = []
+    ): Response
     {
-        /** @var RendererInterface $renderer */
-        $renderer = $this->container->get(RendererInterface::class);
+        return $this->container->get(HttpRendererInterface::class)
+            ->render($template, $context, $status, $headers);
 
-        $content = $renderer->render($template, $params);
-
-        return new Response($content, 200);
     }
 
     /**
