@@ -14,13 +14,12 @@
  *    : ConsoleBootstrapLifecycle.v1.2.2.FINAL.md
  */
 
-
 declare(strict_types=1);
 
 namespace JDS\ServiceProvider;
 
 use JDS\Configuration\Config;
-use JDS\Contracts\Rendering\RendererInterface;
+use JDS\Contracts\Error\Rendering\TemplateEngineInterface;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
 use JDS\Rendering\TwigRenderer;
 use League\Container\Container;
@@ -34,7 +33,7 @@ class TwigRendererServiceProvider implements ServiceProviderInterface
     protected array $provides = [
         FilesystemLoader::class,
         Environment::class,
-        RendererInterface::class,
+        TemplateEngineInterface::class,
     ];
 
     /** @noinspection PhpVariableNamingConventionInspection */
@@ -109,13 +108,6 @@ class TwigRendererServiceProvider implements ServiceProviderInterface
             return $twig;
         })
         ->setShared(true);
-
-        //
-        // 3. TwigRenderer binds to RendererInterface
-        //
-        $container->add(RendererInterface::class, TwigRenderer::class)
-            ->addArgument(Environment::class)
-            ->setShared(true);
     }
 }
 
