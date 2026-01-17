@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace JDS\Controller;
 
 use JDS\Contracts\Http\Rendering\HttpRendererInterface;
+use JDS\Contracts\Http\Rendering\JsonRendererInterface;
 use JDS\Http\Request;
 use JDS\Http\Response;
 use JDS\Http\TemplateResponse;
@@ -72,14 +73,13 @@ abstract class AbstractController
 
     }
 
-    /**
-     * Shortcut: return a JSON response.
-     */
-    protected function json(array $data, int $status = 200): Response
-    {
-        return new Response(json_encode($data), $status, [
-            'Content-Type' => 'application/json'
-        ]);
+    protected function jsonRender(
+        array $data,
+        int $status = 200,
+        array $headers = []
+    ): Response {
+        return $this->container->get(JsonRendererInterface::class)
+            ->render($data, $status, $headers);
     }
 
     /**
