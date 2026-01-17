@@ -10,14 +10,16 @@
  *
  * See: RoutingFINALv12ARCHITECTURE.md
  */
+declare(strict_types=1);
 
 namespace JDS\Controller;
 
-use JDS\Contracts\Http\Response\HttpRendererInterface;
+use JDS\Contracts\Http\Rendering\HttpRendererInterface;
 use JDS\Http\Request;
 use JDS\Http\Response;
 use JDS\Http\TemplateResponse;
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 
 abstract class AbstractController
 {
@@ -60,6 +62,11 @@ abstract class AbstractController
         array $headers = []
     ): Response
     {
+        if (!isset($this->container)) {
+            throw new RuntimeException(
+                'Controller container not initialized. [Abstract:Controller].'
+            );
+        }
         return $this->container->get(HttpRendererInterface::class)
             ->render($template, $context, $status, $headers);
 
