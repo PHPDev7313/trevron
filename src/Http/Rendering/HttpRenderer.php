@@ -6,6 +6,7 @@ namespace JDS\Http\Rendering;
 use JDS\Contracts\Error\Rendering\TemplateEngineInterface;
 use JDS\Contracts\Http\Rendering\HttpRendererInterface;
 use JDS\Error\StatusCode;
+use JDS\Exceptions\Error\StatusException;
 use JDS\Exceptions\Http\HttpRuntimeException;
 use JDS\Http\Response;
 use Throwable;
@@ -31,9 +32,8 @@ final class HttpRenderer implements HttpRendererInterface
         try {
             $content = $this->engine->render($template, $context);
         } catch (Throwable $e) {
-            throw new HttpRuntimeException(
-                StatusCode::TEMPLATE_RENDERING_FAILED->name,
-                StatusCode::TEMPLATE_RENDERING_FAILED->value,
+            throw new StatusException(
+                StatusCode::TEMPLATE_RENDERING_FAILED,
                 previous: $e
             );
         }
