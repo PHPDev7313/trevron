@@ -21,7 +21,6 @@ namespace JDS\ServiceProvider;
 use JDS\Configuration\Config;
 use JDS\Contracts\Error\Rendering\TemplateEngineInterface;
 use JDS\Contracts\Security\ServiceProvider\ServiceProviderInterface;
-use JDS\Rendering\TwigRenderer;
 use League\Container\Container;
 use RuntimeException;
 use Twig\Environment;

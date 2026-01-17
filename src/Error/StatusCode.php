@@ -16,6 +16,12 @@ namespace JDS\Error;
 enum StatusCode: int
 {
     // -------------------------------------------------
+    // HTTP Success (200-299)
+    // -------------------------------------------------
+    case HTTP_OK = 200;
+    case HTTP_CREATED = 201;
+
+    // -------------------------------------------------
     // 400 ClientErrors
     // -------------------------------------------------
     case HTTP_BAD_REQUEST = 400;
@@ -194,6 +200,11 @@ enum StatusCode: int
     public function defaultMessage(): string
     {
         return match ($this) {
+            // HTTP Success
+            self::HTTP_OK => "HTTP 200: Ok",
+
+            self::HTTP_CREATED => "HTTP 201: Resource created successfully",
+
             // HTTP Client Errors
             self::HTTP_BAD_REQUEST =>
             "HTTP Error 400: The request is malformed or invalid.",

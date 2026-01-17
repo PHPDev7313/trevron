@@ -10,14 +10,17 @@
  *
  * See: RoutingFINALv12ARCHITECTURE.md
  */
+declare(strict_types=1);
 
 namespace JDS\Controller;
 
-use JDS\Contracts\Http\Response\HttpRendererInterface;
+use JDS\Contracts\Http\Rendering\HttpRendererInterface;
+use JDS\Contracts\Http\Rendering\JsonRendererInterface;
 use JDS\Http\Request;
 use JDS\Http\Response;
 use JDS\Http\TemplateResponse;
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 
 abstract class AbstractController
 {
@@ -60,19 +63,23 @@ abstract class AbstractController
         array $headers = []
     ): Response
     {
+        if (!isset($this->container)) {
+            throw new RuntimeException(
+                'Controller container not initialized. [Abstract:Controller].'
+            );
+        }
         return $this->container->get(HttpRendererInterface::class)
             ->render($template, $context, $status, $headers);
 
     }
 
-    /**
-     * Shortcut: return a JSON response.
-     */
-    protected function json(array $data, int $status = 200): Response
-    {
-        return new Response(json_encode($data), $status, [
-            'Content-Type' => 'application/json'
-        ]);
+    protected function jsonRender(
+        array $data,
+        int $status = 200,
+        array $headers = []
+    ): Response {
+        return $this->container->get(JsonRendererInterface::class)
+            ->render($data, $status, $headers);
     }
 
     /**
