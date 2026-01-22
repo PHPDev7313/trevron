@@ -10,6 +10,7 @@ use JDS\Contracts\Security\TokenManagerInterface;
 use JDS\Contracts\Security\TokenStoreInterface;
 use League\Container\Argument\Literal\StringArgument;
 use League\Container\Container;
+use RuntimeException;
 
 class TokenServiceProvider implements ServiceProviderInterface
 {
@@ -25,12 +26,15 @@ class TokenServiceProvider implements ServiceProviderInterface
 
     public function register(Container $container): void
     {
+        if ($container->has(Config::class)) {
+            throw new RuntimeException(
+                'Configuration Service is not in the container. [Token:Service:Provider[.'
+            );
+        }
 
-        /** @var Config $config */
-        $config = $container->get('config');
+        // Secrets must be available to get jwtSecretkey
 
-        // You can change this key name if you prefer.
-        $secret = $config->get('jwtSecretKey');
+
 
         $container->add(TokenManager::class)
             ->addArgument(new StringArgument($secret));

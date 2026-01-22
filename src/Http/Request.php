@@ -1,4 +1,8 @@
 <?php
+/** @noinspection PhpMethodNamingConventionInspection */
+declare(strict_types=1);
+
+
 /*
  * Trevron Framework — v1.2 FINAL
  *
@@ -12,7 +16,6 @@
  */
 
 namespace JDS\Http;
-
 
 use JDS\Routing\Route;
 use JDS\Session\Session;
@@ -133,6 +136,68 @@ class Request
     {
         return $this->files;
     }
+
+    /**
+     * Return a single header line (case-insensitive).
+     * Backward compatible: reads from $server.
+     */
+    public function getHeaderLine(string $name): string
+    {
+        $value = $this->getHeader($name);
+        if ($value === null) {
+            return '';
+        }
+        return is_array($value) ? implode(', ', $value) : (string) $value;
+    }
+
+    /**
+     * Return header as string|array|null (like a friendly helper).
+     */
+    public function getHeader(string $name): string|array|null
+    {
+        $key = strtoupper(str_replace('-', '_', $name));
+        $serverKey = match ($key) {
+            'CONTENT_TYPE' => 'CONTENT_TYPE',
+            'CONTENT_LENGTH' => 'CONTENT_LENGTH',
+            default => 'HTTP_' . $key,
+        };
+
+        return $this->server[$serverKey] ?? null;
+    }
+
+    /**
+     * Return all headers as an associative array.
+     * (Builds from $server; no BC break.)
+     *
+     * @return array<string,string>
+     */
+    public function getHeaders(): array
+    {
+        $headers = [];
+
+        foreach ($this->server as $key => $value) {
+            if (str_starts_with($key, 'HTTP_')) {
+                $name = str_replace('_', '-', substr($key, 5));
+                $headers[$this->normalizeHeaderName($name)] = (string) $value;
+            }
+            if ($key === 'CONTENT_TYPE') {
+                $headers['Content-Type'] = (string) $value;
+            }
+            if ($key === 'CONTENT_LENGTH') {
+                $headers['Content-Length'] = (string) $value;
+            }
+        }
+
+        return $headers;
+    }
+
+    private function normalizeHeaderName(string $name): string
+    {
+        $name = strtolower($name);
+        $name = str_replace(' ', '-', $name);
+        return implode('-', array_map('ucfirst', explode('-', $name)));
+    }
+
 
     // ============================================================
     // Route Object
@@ -255,7 +320,7 @@ class Request
         //
         // 1. Explicit Accept header
         //
-        $accept = $this->server['HTTP_ACCEPT'] ?? '';
+        $accept = $this->getHeaderLine('Accept');
         if (str_contains($accept, 'application/json')) {
             return true;
         }
@@ -263,8 +328,8 @@ class Request
         //
         // 2. XHR / Fetch request
         //
-        $requestdWith = $this->server['HTTP_X_REQUESTED_WITH'] ?? '';
-        if (strtolower($requestdWith) === 'xmlhttprequest') {
+        $requestedWith = $this->server['HTTP_X_REQUESTED_WITH'] ?? '';
+        if (strtolower($requestedWith) === 'xmlhttprequest') {
             return true;
         }
 

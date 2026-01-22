@@ -11,6 +11,6 @@ use JDS\Http\Response;
 
 interface ErrorRendererInterface
 {
-    public function render(Request $request, ErrorContext $context): Response;
+public function render(Request $request, ErrorContext $context): Response;
 }
 

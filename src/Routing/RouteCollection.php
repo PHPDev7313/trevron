@@ -10,6 +10,7 @@
  *
  * See: RoutingFINALv12ARCHITECTURE.md
  */
+declare(strict_types=1);
 
 namespace JDS\Routing;
 
