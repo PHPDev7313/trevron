@@ -4,10 +4,10 @@ declare(strict_types=1);
 /*
  * Trevron Framework — v1.2 FINAL
  *
- * © 2025 Jessop Digital Systems
+ * © 2026 Jessop Digital Systems
  * Date: December 19, 2025
  *
- * FINAL: January 13, 2026
+ * FINAL: January 17, 2026
  *
  * This file is part of the v1.2 FINAL architectural baseline.
  * Changes require an architecture review and a version bump.
@@ -16,13 +16,10 @@ declare(strict_types=1);
  */
 namespace JDS\Http;
 
+use JDS\Contracts\Error\Rendering\ErrorRendererInterface;
 use JDS\Contracts\Http\ControllerDispatcherInterface;
 use JDS\Contracts\Middleware\MiddlewareResolverInterface;
-use JDS\Error\ErrorContext;
-use JDS\Error\Response\ErrorResponder;
-use JDS\Error\StatusCode;
 use JDS\EventDispatcher\EventDispatcher;
-use JDS\Exceptions\Error\StatusException;
 use JDS\Http\Event\ResponseEvent;
 use JDS\Http\Event\TerminateEvent;
 use JDS\Http\Middleware\MiddlewareQueue;
@@ -34,7 +31,7 @@ final class Kernel
         private readonly MiddlewareResolverInterface    $resolver,
 		private readonly ControllerDispatcherInterface  $controllerDispatcher,
         private readonly EventDispatcher                $eventDispatcher,
-        private readonly ErrorResponder                 $errorResponder,
+        private readonly ErrorRendererInterface         $errorRenderer,
 	)
 	{
 	}
@@ -50,8 +47,9 @@ final class Kernel
         // mark request start time for profiling & lifecycle monitoring
         //
         $start = microtime(true);
-        $request->setStartTime($start);
-
+        if ($request->getStartTime() === 0.0) {
+            $request->setStartTime($start);
+        }
 
 		try {
             //
@@ -79,39 +77,9 @@ final class Kernel
             //
             return $this->dispatchResponseEvent($request, $response);
 
-        } catch (StatusException $e) {
-            $statusCode = $e->getStatusCodeEnum();
-
-            $context = new ErrorContext(
-                    httpStatus: $e->getHttpStatus(),
-                    statusCode: $statusCode,
-                      category: $statusCode->category(),
-                 publicMessage: $statusCode->defaultmessage(),
-                     exception: $e,
-                         debug: [
-                            'exception_class' => get_class($e),
-                            'message' => $e->getMessage(),
-                        ]
-            );
-
-            return $this->errorResponder->respond($request, $context);
-
 		} catch (Throwable $e) {
-            $statusCode = StatusCode::SERVER_INTERNAL_ERROR;
 
-            $context = new ErrorContext(
-                    httpStatus: $statusCode->valueInt(),
-                    statusCode: $statusCode,
-                      category: $statusCode->category(),
-                 publicMessage: $statusCode->defaultmessage(),
-                     exception: $e,
-                         debug: [
-                            'exception_class' => get_class($e),
-                            'message' => $e->getMessage(),
-                        ]
-            );
-
-            return $this->errorResponder->respond($request, $context);
+            return $this->errorRenderer->render($request, $e);
 		}
     }
 
@@ -164,13 +132,19 @@ final class Kernel
         }
 	}
 
-    private function dispatchResponseEvent(Request $request, Response $reponse): Response
+    private function dispatchResponseEvent(Request $request, Response $response): Response
     {
-        $event = new ResponseEvent($request, $reponse);
+        $event = new ResponseEvent($request, $response);
 
         $this->eventDispatcher->dispatch($event);
 
-        return $event->getResponse();
+        $final = $event->getResponse();
+
+       if (!$final instanceof Response) {
+           return $response;
+       }
+
+       return $final;
     }
 }
 

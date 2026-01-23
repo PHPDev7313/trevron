@@ -10,6 +10,7 @@
  *
  * See: BootstrapLifecycleAndInvariants.v1.2.FINAL.md
  */
+declare(strict_types=1);
 
 namespace JDS\Routing;
 

@@ -2,7 +2,7 @@
 
 namespace JDS\Http;
 
-use JDS\Contracts\Rendering\RendererInterface;
+use JDS\Contracts\Templates\RendererInterface;
 
 final class TemplateResponse
 {

@@ -7,7 +7,6 @@ use JDS\Contracts\Error\Rendering\TemplateEngineInterface;
 use JDS\Contracts\Http\Rendering\HttpRendererInterface;
 use JDS\Error\StatusCode;
 use JDS\Exceptions\Error\StatusException;
-use JDS\Exceptions\Http\HttpRuntimeException;
 use JDS\Http\Response;
 use Throwable;
 

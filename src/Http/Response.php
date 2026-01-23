@@ -10,6 +10,7 @@
  *
  * See: RoutingFINALv12ARCHITECTURE.md
  */
+declare(strict_types=1);
 
 namespace JDS\Http;
 
@@ -27,13 +28,14 @@ class Response
 		private array $headers = []
 	)
 	{
-		// must be set before sending content
-		// so best to create on instantiation like here
-		http_response_code($this->status);
 	}
 
 	public function send(): void
 	{
+        // must be set before sending content
+        // so best to create on instantiation like here
+        http_response_code($this->status);
+
 		// start output buffering
 		ob_start();
 
@@ -61,7 +63,7 @@ class Response
 
 	public function getHeader(string $header): mixed
 	{
-		return $this->headers[$header];
+		return $this->headers[$header] ?? null;
 	}
 
 	public function getHeaders(): array
@@ -79,7 +81,6 @@ class Response
 		return $this->content;
 	}
 
-
     public function getStatusCode(): int
     {
         return $this->status;
@@ -88,6 +89,29 @@ class Response
     public function setStatusCode(int $status): void
     {
         $this->status = $status;
+    }
+
+    public function getHeaderLine(string $name): string
+    {
+        $value = $this->headers[$name] ?? null;
+        if ($value === null) {
+            return '';
+        }
+        return is_array($value) ? implode(', ', $value) : (string) $value;
+    }
+
+    public function withHeader(string $name, string $value): self
+    {
+        $clone = clone $this;
+        $clone->headers[$name] = $value;
+        return $clone;
+    }
+
+    public function withStatus(int $status): self
+    {
+        $clone = clone $this;
+        $clone->status = $status;
+        return $clone;
     }
 }
 
