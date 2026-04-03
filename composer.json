@@ -29,7 +29,6 @@
     "psr/event-dispatcher": "^1.0",
     "doctrine/dbal": "^4.0",
     "firebase/php-jwt": "^6.10",
-    "paragonie/sodium_compat": "^2.0",
     "ext-openssl": "*",
     "ext-simplexml": "*",
     "monolog/monolog": "^3.8",
